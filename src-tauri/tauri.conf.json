@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nicosaurus/tauri-schema-generator/main/schema/2.0.0/schema.json",
+  "productName": "BluePad",
+  "version": "1.0.0",
+  "identifier": "brp.bluepad.desktop",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "BluePad",
+        "width": 1000,
+        "height": 700,
+        "minWidth": 600,
+        "minHeight": 400,
+        "resizable": true,
+        "decorations": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "plugins": {}
+}
