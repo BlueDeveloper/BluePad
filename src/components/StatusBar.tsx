@@ -1,3 +1,5 @@
+import { useI18n } from "../i18n";
+
 interface StatusBarProps {
   chars: number;
   words: number;
@@ -6,21 +8,26 @@ interface StatusBarProps {
   sourceMode: boolean;
   autoSave: boolean;
   fontSize: number;
+  isPro: boolean;
 }
 
-export function StatusBar({ chars, words, lines, filePath, sourceMode, autoSave, fontSize }: StatusBarProps) {
+export function StatusBar({ chars, words, lines, filePath, sourceMode, autoSave, fontSize, isPro }: StatusBarProps) {
+  const { t } = useI18n();
   return (
     <div className="statusbar">
       <span className="statusbar-item statusbar-path">
-        {filePath ?? "새 파일"}
+        {filePath ?? t("status.newFile")}
       </span>
       <div className="statusbar-right">
-        {sourceMode && <span className="statusbar-badge">소스</span>}
-        {autoSave && <span className="statusbar-badge statusbar-badge-auto">자동저장</span>}
+        <span className={`statusbar-badge ${isPro ? "statusbar-badge-pro" : "statusbar-badge-free"}`}>
+          {isPro ? t("status.pro") : t("status.free")}
+        </span>
+        {sourceMode && <span className="statusbar-badge">{t("status.source")}</span>}
+        {autoSave && <span className="statusbar-badge statusbar-badge-auto">{t("status.autoSave")}</span>}
         <span className="statusbar-item">{fontSize}px</span>
-        <span className="statusbar-item">{lines} 줄</span>
-        <span className="statusbar-item">{words} 단어</span>
-        <span className="statusbar-item">{chars} 자</span>
+        <span className="statusbar-item">{lines} {t("status.lines")}</span>
+        <span className="statusbar-item">{words} {t("status.words")}</span>
+        <span className="statusbar-item">{chars} {t("status.chars")}</span>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useI18n } from "../i18n";
 import type { HeadingItem } from "../types";
 
 interface SidebarProps {
@@ -7,16 +8,17 @@ interface SidebarProps {
 }
 
 export function Sidebar({ visible, markdown }: SidebarProps) {
+  const { t } = useI18n();
   const headings = useMemo(() => parseHeadings(markdown), [markdown]);
 
   if (!visible) return null;
 
   return (
     <div className="sidebar">
-      <div className="sidebar-header">개요</div>
+      <div className="sidebar-header">{t("sidebar.outline")}</div>
       <div className="sidebar-content">
         {headings.length === 0 ? (
-          <div className="sidebar-empty">제목 없음</div>
+          <div className="sidebar-empty">{t("sidebar.noHeadings")}</div>
         ) : (
           headings.map((h, i) => (
             <div

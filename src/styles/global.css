@@ -251,6 +251,134 @@ body {
 }
 
 /* ========================================
+   Tab Bar
+   ======================================== */
+
+.tabbar {
+  display: flex;
+  align-items: stretch;
+  height: 36px;
+  min-height: 36px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  user-select: none;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.tabbar-tabs {
+  display: flex;
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.tabbar-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tabbar-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  min-width: 0;
+  max-width: 200px;
+  height: 100%;
+  border-right: 1px solid var(--border-light);
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--bg-secondary);
+  transition: background 0.1s, color 0.1s;
+  flex-shrink: 0;
+}
+
+.tabbar-tab:hover {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.tabbar-tab.active {
+  background: var(--bg);
+  color: var(--text);
+  border-bottom: 2px solid var(--accent);
+  margin-bottom: -1px;
+  font-weight: 600;
+}
+
+.tabbar-tab.drag-over {
+  border-left: 2px solid var(--accent);
+}
+
+.tabbar-tab-name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.tabbar-tab-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.tabbar-tab-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 1;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.1s, background 0.1s;
+}
+
+.tabbar-tab:hover .tabbar-tab-close,
+.tabbar-tab.active .tabbar-tab-close {
+  opacity: 1;
+}
+
+.tabbar-tab-close:hover {
+  background: var(--bg-active);
+  color: var(--text);
+}
+
+.tabbar-new {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 18px;
+  width: 34px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.1s, color 0.1s;
+}
+
+.tabbar-new:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+/* ========================================
    Toolbar
    ======================================== */
 
@@ -1007,4 +1135,192 @@ body {
   border-radius: 6px;
   padding: 16px;
   margin: 0.8em 0;
+}
+
+/* ========================================
+   Dialog / Modal
+   ======================================== */
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+
+.dialog-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  min-width: 380px;
+  max-width: 480px;
+  overflow: hidden;
+}
+
+.dialog-box-sm {
+  min-width: 320px;
+  max-width: 380px;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.dialog-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.dialog-close-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--text-muted);
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog-close-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+.dialog-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* License Dialog */
+.license-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.license-status-label {
+  color: var(--text-secondary);
+}
+
+.license-badge {
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.license-badge.pro {
+  background: var(--accent);
+  color: #fff;
+}
+
+.license-badge.free {
+  background: var(--bg-active);
+  color: var(--text-secondary);
+}
+
+.license-input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.license-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: 'Consolas', monospace;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+}
+
+.license-input:focus {
+  border-color: var(--accent);
+}
+
+.license-activate-btn {
+  padding: 8px 18px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.license-activate-btn:hover {
+  background: var(--accent-hover);
+}
+
+.license-deactivate-btn {
+  padding: 8px 18px;
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.license-deactivate-btn:hover {
+  background: var(--bg-active);
+}
+
+.license-error {
+  color: #e53935;
+  font-size: 13px;
+}
+
+.license-success {
+  color: #48a868;
+  font-size: 13px;
+}
+
+/* Pro Gate */
+.pro-gate-msg {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.pro-gate-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Status bar license badge */
+.statusbar-badge-pro {
+  background: var(--accent);
+}
+
+.statusbar-badge-free {
+  background: var(--bg-active);
+  color: var(--text-secondary);
 }

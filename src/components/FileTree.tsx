@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { readDir } from "@tauri-apps/plugin-fs";
 import { open } from "@tauri-apps/plugin-dialog";
+import { useI18n } from "../i18n";
 
 interface FileTreeProps {
   visible: boolean;
@@ -18,6 +19,7 @@ interface FileEntry {
 const MD_EXTENSIONS = [".md", ".markdown", ".mdx", ".txt"];
 
 export function FileTree({ visible, onOpenFile }: FileTreeProps) {
+  const { t } = useI18n();
   const [rootPath, setRootPath] = useState<string | null>(null);
   const [entries, setEntries] = useState<FileEntry[]>([]);
 
@@ -90,15 +92,15 @@ export function FileTree({ visible, onOpenFile }: FileTreeProps) {
   return (
     <div className="file-tree">
       <div className="file-tree-header">
-        <span>파일</span>
-        <button className="file-tree-open" onClick={openFolder} title="폴더 열기">
+        <span>{t("fileTree.files")}</span>
+        <button className="file-tree-open" onClick={openFolder} title={t("fileTree.openFolder")}>
           &#128193;
         </button>
       </div>
       <div className="file-tree-content">
         {!rootPath ? (
           <div className="file-tree-empty" onClick={openFolder}>
-            폴더를 열어주세요
+            {t("fileTree.pleaseOpen")}
           </div>
         ) : (
           <EntryList

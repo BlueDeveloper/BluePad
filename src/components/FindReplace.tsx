@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useI18n } from "../i18n";
 
 interface FindReplaceProps {
   visible: boolean;
@@ -7,6 +8,7 @@ interface FindReplaceProps {
 }
 
 export function FindReplace({ visible, replaceMode, onClose }: FindReplaceProps) {
+  const { t } = useI18n();
   const [query, setQuery] = useState("");
   const [replace, setReplace] = useState("");
   const [matchCount, setMatchCount] = useState(0);
@@ -192,19 +194,19 @@ export function FindReplace({ visible, replaceMode, onClose }: FindReplaceProps)
           ref={inputRef}
           className="find-input"
           type="text"
-          placeholder="찾기..."
+          placeholder={t("find.placeholder")}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
         <span className="find-count">
-          {matchCount > 0 ? `${currentMatch}/${matchCount}` : "결과 없음"}
+          {matchCount > 0 ? `${currentMatch}/${matchCount}` : t("find.noResults")}
         </span>
-        <button className="find-btn" onClick={findPrev} title="이전 (Shift+Enter)">&#9650;</button>
-        <button className="find-btn" onClick={findNext} title="다음 (Enter)">&#9660;</button>
+        <button className="find-btn" onClick={findPrev} title={t("find.previous")}>&#9650;</button>
+        <button className="find-btn" onClick={findNext} title={t("find.next")}>&#9660;</button>
         <button
           className="find-btn"
           onClick={() => setShowReplace((s) => !s)}
-          title="바꾸기 토글"
+          title={t("find.toggleReplace")}
         >
           {showReplace ? "▾" : "▸"}
         </button>
@@ -215,12 +217,12 @@ export function FindReplace({ visible, replaceMode, onClose }: FindReplaceProps)
           <input
             className="find-input"
             type="text"
-            placeholder="바꾸기..."
+            placeholder={t("find.replacePlaceholder")}
             value={replace}
             onChange={(e) => setReplace(e.target.value)}
           />
-          <button className="find-btn find-action" onClick={replaceOne}>바꾸기</button>
-          <button className="find-btn find-action" onClick={replaceAll}>전체 바꾸기</button>
+          <button className="find-btn find-action" onClick={replaceOne}>{t("find.replace")}</button>
+          <button className="find-btn find-action" onClick={replaceAll}>{t("find.replaceAll")}</button>
         </div>
       )}
     </div>

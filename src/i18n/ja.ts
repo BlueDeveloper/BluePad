@@ -1,0 +1,108 @@
+export const ja = {
+  // Menu
+  "menu.file": "ファイル",
+  "menu.edit": "編集",
+  "menu.view": "表示",
+  "menu.settings": "設定",
+  "menu.newFile": "新規ファイル",
+  "menu.open": "開く",
+  "menu.save": "保存",
+  "menu.saveAs": "名前を付けて保存",
+  "menu.autoSave": "自動保存",
+  "menu.exportHtml": "HTMLとしてエクスポート",
+  "menu.find": "検索",
+  "menu.replace": "置換",
+  "menu.sourceMode": "ソースモード",
+  "menu.outlineSidebar": "アウトライン",
+  "menu.fileTree": "ファイルツリー",
+  "menu.focusMode": "集中モード",
+  "menu.fontIncrease": "フォントサイズを大きく",
+  "menu.fontDecrease": "フォントサイズを小さく",
+  "menu.fontReset": "フォントサイズをリセット",
+  "menu.theme": "テーマ",
+  "menu.language": "言語",
+  "menu.license": "ライセンス登録",
+  "menu.about": "BluePadについて",
+
+  // Toolbar
+  "toolbar.bold": "太字 (Ctrl+B)",
+  "toolbar.italic": "斜体 (Ctrl+I)",
+  "toolbar.strikethrough": "取り消し線",
+  "toolbar.inlineCode": "インラインコード",
+  "toolbar.heading1": "見出し1",
+  "toolbar.heading2": "見出し2",
+  "toolbar.heading3": "見出し3",
+  "toolbar.bulletList": "箇条書き",
+  "toolbar.orderedList": "番号リスト",
+  "toolbar.blockquote": "引用",
+  "toolbar.codeBlock": "コードブロック",
+  "toolbar.table": "表を挿入",
+  "toolbar.horizontalRule": "水平線",
+  "toolbar.link": "リンク",
+
+  // Tab Bar
+  "tab.close": "閉じる",
+  "tab.newTab": "新しいタブ (Ctrl+N)",
+
+  // Status Bar
+  "status.newFile": "新規ファイル",
+  "status.source": "ソース",
+  "status.autoSave": "自動保存",
+  "status.lines": "行",
+  "status.words": "語",
+  "status.chars": "文字",
+  "status.free": "Free",
+  "status.pro": "Pro",
+
+  // Sidebar
+  "sidebar.outline": "アウトライン",
+  "sidebar.noHeadings": "見出しなし",
+
+  // File Tree
+  "fileTree.files": "ファイル",
+  "fileTree.openFolder": "フォルダを開く",
+  "fileTree.pleaseOpen": "フォルダを開いてください",
+
+  // Find & Replace
+  "find.placeholder": "検索...",
+  "find.noResults": "結果なし",
+  "find.previous": "前へ (Shift+Enter)",
+  "find.next": "次へ (Enter)",
+  "find.toggleReplace": "置換を切替",
+  "find.replacePlaceholder": "置換...",
+  "find.replace": "置換",
+  "find.replaceAll": "すべて置換",
+
+  // Focus Mode
+  "focus.label": "集中モード",
+  "focus.exit": "ESCで解除",
+
+  // Title Bar
+  "title.modified": "変更あり",
+  "title.untitled": "Untitled",
+
+  // Tooltips
+  "tooltip.sourceMode": "ソースモード (Ctrl+/)",
+  "tooltip.fileTree": "ファイルツリー",
+  "tooltip.outlineSidebar": "アウトライン (Ctrl+Shift+L)",
+  "tooltip.focusMode": "集中モード (F11)",
+
+  // License
+  "license.title": "ライセンス登録",
+  "license.inputPlaceholder": "ライセンスキーを入力",
+  "license.activate": "有効化",
+  "license.activated": "Proライセンスが有効になりました！",
+  "license.invalid": "無効なライセンスキーです。",
+  "license.deactivate": "無効化",
+  "license.status": "ライセンス状態",
+  "license.free": "無料版",
+  "license.pro": "Pro版",
+  "license.proFeature": "この機能はPro版で利用できます。",
+  "license.upgradeTitle": "Proにアップグレード",
+
+  // Dialog
+  "dialog.unsavedChanges": "に未保存の変更があります。\n保存しますか？",
+  "dialog.dontSave": "保存しない",
+  "dialog.cancel": "キャンセル",
+  "dialog.close": "閉じる",
+};

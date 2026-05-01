@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { useI18n, LANGUAGES } from "../i18n";
+import type { Lang } from "../i18n";
 
 interface MenuBarProps {
   fileName: string;
@@ -10,6 +12,7 @@ interface MenuBarProps {
   autoSaveEnabled: boolean;
   recentFiles: string[];
   fontSize: number;
+  isPro: boolean;
   onNew: () => void;
   onOpen: () => Promise<void>;
   onSave: () => Promise<void>;
@@ -29,6 +32,10 @@ interface MenuBarProps {
   theme: string;
   themes: readonly { readonly id: string; readonly label: string }[];
   onThemeChange: (id: string) => void;
+  lang: Lang;
+  onLangChange: (lang: Lang) => void;
+  onOpenLicense: () => void;
+  onProGate: () => void;
 }
 
 interface MenuItem {
@@ -37,7 +44,6 @@ interface MenuItem {
   action: () => void;
   checked?: boolean;
   divider?: boolean;
-  submenu?: MenuItem[];
 }
 
 interface MenuDef {
@@ -55,6 +61,7 @@ export function MenuBar({
   autoSaveEnabled,
   recentFiles,
   fontSize,
+  isPro,
   onNew,
   onOpen,
   onSave,
@@ -74,7 +81,12 @@ export function MenuBar({
   theme,
   themes,
   onThemeChange,
+  lang,
+  onLangChange,
+  onOpenLicense,
+  onProGate,
 }: MenuBarProps) {
+  const { t } = useI18n();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -83,14 +95,18 @@ export function MenuBar({
     return parts[parts.length - 1] || path;
   };
 
+  const proAction = (action: () => void) => {
+    return isPro ? action : onProGate;
+  };
+
   const menus: MenuDef[] = [
     {
-      label: "파일",
+      label: t("menu.file"),
       items: [
-        { label: "새 파일", shortcut: "Ctrl+N", action: onNew },
-        { label: "열기", shortcut: "Ctrl+O", action: onOpen },
-        { label: "저장", shortcut: "Ctrl+S", action: onSave },
-        { label: "다른 이름으로 저장", shortcut: "Ctrl+Shift+S", action: onSaveAs },
+        { label: t("menu.newFile"), shortcut: "Ctrl+N", action: onNew },
+        { label: t("menu.open"), shortcut: "Ctrl+O", action: onOpen },
+        { label: t("menu.save"), shortcut: "Ctrl+S", action: onSave },
+        { label: t("menu.saveAs"), shortcut: "Ctrl+Shift+S", action: onSaveAs },
         { label: "", action: () => {}, divider: true },
         ...(recentFiles.length > 0
           ? [
@@ -101,35 +117,47 @@ export function MenuBar({
               { label: "", action: () => {}, divider: true },
             ]
           : []),
-        { label: "자동 저장", action: onToggleAutoSave, checked: autoSaveEnabled },
+        { label: t("menu.autoSave"), action: proAction(onToggleAutoSave), checked: autoSaveEnabled && isPro },
         { label: "", action: () => {}, divider: true },
-        { label: "HTML로 내보내기", action: onExportHtml },
+        { label: t("menu.exportHtml"), action: proAction(onExportHtml) },
       ],
     },
     {
-      label: "편집",
+      label: t("menu.edit"),
       items: [
-        { label: "찾기", shortcut: "Ctrl+F", action: onFind },
-        { label: "바꾸기", shortcut: "Ctrl+H", action: onReplace },
+        { label: t("menu.find"), shortcut: "Ctrl+F", action: onFind },
+        { label: t("menu.replace"), shortcut: "Ctrl+H", action: onReplace },
       ],
     },
     {
-      label: "보기",
+      label: t("menu.view"),
       items: [
-        { label: "소스 모드", shortcut: "Ctrl+/", action: onToggleSource, checked: sourceMode },
-        { label: "개요 사이드바", shortcut: "Ctrl+Shift+L", action: onToggleSidebar, checked: sidebarVisible },
-        { label: "파일 트리", action: onToggleFileTree, checked: fileTreeVisible },
-        { label: "집중 모드", shortcut: "F11", action: onToggleFocus, checked: focusMode },
+        { label: t("menu.sourceMode"), shortcut: "Ctrl+/", action: onToggleSource, checked: sourceMode },
+        { label: t("menu.outlineSidebar"), shortcut: "Ctrl+Shift+L", action: onToggleSidebar, checked: sidebarVisible },
+        { label: t("menu.fileTree"), action: onToggleFileTree, checked: fileTreeVisible },
+        { label: t("menu.focusMode"), shortcut: "F11", action: proAction(onToggleFocus), checked: focusMode },
         { label: "", action: () => {}, divider: true },
-        { label: `글꼴 크기 키우기 (${fontSize}px)`, shortcut: "Ctrl+=", action: onFontIncrease },
-        { label: "글꼴 크기 줄이기", shortcut: "Ctrl+-", action: onFontDecrease },
-        { label: "글꼴 크기 초기화", shortcut: "Ctrl+0", action: onFontReset },
+        { label: `${t("menu.fontIncrease")} (${fontSize}px)`, shortcut: "Ctrl+=", action: onFontIncrease },
+        { label: t("menu.fontDecrease"), shortcut: "Ctrl+-", action: onFontDecrease },
+        { label: t("menu.fontReset"), shortcut: "Ctrl+0", action: onFontReset },
         { label: "", action: () => {}, divider: true },
-        ...themes.map((t) => ({
-          label: `테마: ${t.label}`,
-          action: () => onThemeChange(t.id),
-          checked: theme === t.id,
+        ...themes.map((th) => ({
+          label: `${t("menu.theme")}: ${th.label}`,
+          action: th.id === "classic" || isPro ? () => onThemeChange(th.id) : onProGate,
+          checked: theme === th.id,
         })),
+      ],
+    },
+    {
+      label: t("menu.settings"),
+      items: [
+        ...LANGUAGES.map((l) => ({
+          label: `${t("menu.language")}: ${l.label}`,
+          action: () => onLangChange(l.id),
+          checked: lang === l.id,
+        })),
+        { label: "", action: () => {}, divider: true },
+        { label: t("menu.license"), action: onOpenLicense },
       ],
     },
   ];
@@ -196,34 +224,34 @@ export function MenuBar({
         ))}
       </div>
       <div className="menubar-title">
-        {isModified ? `${fileName} — 수정됨` : fileName}
+        {isModified ? `${fileName} — ${t("title.modified")}` : fileName}
       </div>
       <div className="menubar-toggles">
         <button
           className={`toggle-btn ${sourceMode ? "active" : ""}`}
           onClick={onToggleSource}
-          title="소스 모드 (Ctrl+/)"
+          title={t("tooltip.sourceMode")}
         >
           {"</>"}
         </button>
         <button
           className={`toggle-btn ${fileTreeVisible ? "active" : ""}`}
           onClick={onToggleFileTree}
-          title="파일 트리"
+          title={t("tooltip.fileTree")}
         >
           &#128193;
         </button>
         <button
           className={`toggle-btn ${sidebarVisible ? "active" : ""}`}
           onClick={onToggleSidebar}
-          title="개요 사이드바 (Ctrl+Shift+L)"
+          title={t("tooltip.outlineSidebar")}
         >
           &#9776;
         </button>
         <button
           className={`toggle-btn ${focusMode ? "active" : ""}`}
-          onClick={onToggleFocus}
-          title="집중 모드 (F11)"
+          onClick={() => (isPro ? onToggleFocus() : onProGate())}
+          title={t("tooltip.focusMode")}
         >
           &#9974;
         </button>

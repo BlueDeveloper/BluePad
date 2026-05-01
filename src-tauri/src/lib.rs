@@ -12,12 +12,19 @@ fn get_cli_file_path() -> Option<String> {
     None
 }
 
+#[tauri::command]
+fn get_hostname() -> String {
+    hostname::get()
+        .map(|h| h.to_string_lossy().into_owned())
+        .unwrap_or_else(|_| "Unknown".to_string())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
-        .invoke_handler(tauri::generate_handler![get_cli_file_path])
+        .invoke_handler(tauri::generate_handler![get_cli_file_path, get_hostname])
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();
             // Set window title based on CLI arg
