@@ -29,6 +29,20 @@
     "icon": [
       "icons/icon.ico",
       "icons/icon.png"
+    ],
+    "fileAssociations": [
+      {
+        "ext": ["md", "markdown", "mdx"],
+        "mimeType": "text/markdown",
+        "description": "Markdown Document",
+        "role": "Editor"
+      },
+      {
+        "ext": ["txt"],
+        "mimeType": "text/plain",
+        "description": "Text Document",
+        "role": "Editor"
+      }
     ]
   },
   "plugins": {}
