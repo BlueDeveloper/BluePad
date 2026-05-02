@@ -180,10 +180,10 @@ function App() {
     [fileManager, updateWordCount]
   );
 
-  const handleExportHtml = useCallback(() => {
+  const handleExportHtml = useCallback(async () => {
     const editorEl = document.querySelector(".editor-content");
     if (!editorEl) return;
-    const html = `<!DOCTYPE html>
+    const htmlContent = `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
 <meta charset="UTF-8">
@@ -208,13 +208,19 @@ a { color: #4183c4; }
 ${editorEl.innerHTML}
 </body>
 </html>`;
-    const blob = new Blob([html], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = fileManager.fileName.replace(/\.[^.]+$/, "") + ".html";
-    a.click();
-    URL.revokeObjectURL(url);
+    try {
+      const { save } = await import("@tauri-apps/plugin-dialog");
+      const { writeTextFile } = await import("@tauri-apps/plugin-fs");
+      const selected = await save({
+        filters: [{ name: "HTML", extensions: ["html"] }],
+        defaultPath: fileManager.fileName.replace(/\.[^.]+$/, "") + ".html",
+      });
+      if (selected) {
+        await writeTextFile(selected, htmlContent);
+      }
+    } catch {
+      // ignore
+    }
   }, [fileManager.fileName, lang]);
 
   const handleExportPdf = useCallback(() => {
