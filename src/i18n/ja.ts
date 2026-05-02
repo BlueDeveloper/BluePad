@@ -10,6 +10,8 @@ export const ja = {
   "menu.saveAs": "名前を付けて保存",
   "menu.autoSave": "自動保存",
   "menu.exportHtml": "HTMLとしてエクスポート",
+  "menu.exportPdf": "PDFとしてエクスポート",
+  "menu.wordTarget": "単語目標設定",
   "menu.find": "検索",
   "menu.replace": "置換",
   "menu.sourceMode": "ソースモード",
@@ -53,6 +55,7 @@ export const ja = {
   "status.chars": "文字",
   "status.free": "Free",
   "status.pro": "Pro",
+  "status.wordTarget": "目標",
 
   // Sidebar
   "sidebar.outline": "アウトライン",
@@ -99,6 +102,13 @@ export const ja = {
   "license.pro": "Pro版",
   "license.proFeature": "この機能はPro版で利用できます。",
   "license.upgradeTitle": "Proにアップグレード",
+
+  // About
+  "about.version": "バージョン",
+  "about.tagline": "軽量で高速なマークダウンエディタ",
+  "about.copyright": "\u00a9 2026 BRP (BlueRedPolarity)",
+  "about.website": "ウェブサイト",
+  "about.ossTitle": "オープンソースライセンス",
 
   // Dialog
   "dialog.unsavedChanges": "に未保存の変更があります。\n保存しますか？",

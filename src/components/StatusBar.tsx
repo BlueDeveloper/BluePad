@@ -9,10 +9,12 @@ interface StatusBarProps {
   autoSave: boolean;
   fontSize: number;
   isPro: boolean;
+  wordTarget: number | null;
 }
 
-export function StatusBar({ chars, words, lines, filePath, sourceMode, autoSave, fontSize, isPro }: StatusBarProps) {
+export function StatusBar({ chars, words, lines, filePath, sourceMode, autoSave, fontSize, isPro, wordTarget }: StatusBarProps) {
   const { t } = useI18n();
+  const progress = wordTarget ? Math.min(100, Math.round((words / wordTarget) * 100)) : 0;
   return (
     <div className="statusbar">
       <span className="statusbar-item statusbar-path">
@@ -24,6 +26,14 @@ export function StatusBar({ chars, words, lines, filePath, sourceMode, autoSave,
         </span>
         {sourceMode && <span className="statusbar-badge">{t("status.source")}</span>}
         {autoSave && <span className="statusbar-badge statusbar-badge-auto">{t("status.autoSave")}</span>}
+        {wordTarget && (
+          <span className="statusbar-item statusbar-word-target">
+            <span className="statusbar-word-target-label">{t("status.wordTarget")}: {words} / {wordTarget}</span>
+            <span className="statusbar-progress">
+              <span className="statusbar-progress-bar" style={{ width: `${progress}%` }} />
+            </span>
+          </span>
+        )}
         <span className="statusbar-item">{fontSize}px</span>
         <span className="statusbar-item">{lines} {t("status.lines")}</span>
         <span className="statusbar-item">{words} {t("status.words")}</span>

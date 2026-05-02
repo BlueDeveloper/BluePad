@@ -9,6 +9,7 @@ import { FileTree } from "./components/FileTree";
 import { StatusBar } from "./components/StatusBar";
 import { FindReplace } from "./components/FindReplace";
 import { LicenseDialog } from "./components/LicenseDialog";
+import { AboutDialog } from "./components/AboutDialog";
 import { ProGate } from "./components/ProGate";
 import { useFileManager } from "./hooks/useFileManager";
 import { useLicense } from "./hooks/useLicense";
@@ -20,6 +21,7 @@ const RECENT_KEY = "bluepad_recent_files";
 const FONT_SIZE_KEY = "bluepad_font_size";
 const THEME_KEY = "bluepad_theme";
 const LANG_KEY = "bluepad_lang";
+const WORD_TARGET_KEY = "bluepad_word_target";
 const AUTO_SAVE_INTERVAL = 30000;
 
 const THEMES = [
@@ -38,6 +40,7 @@ function App() {
   const [findVisible, setFindVisible] = useState(false);
   const [findReplaceMode, setFindReplaceMode] = useState(false);
   const [licenseDialogVisible, setLicenseDialogVisible] = useState(false);
+  const [aboutDialogVisible, setAboutDialogVisible] = useState(false);
   const [proGateVisible, setProGateVisible] = useState(false);
   const [fontSize, setFontSize] = useState(() => {
     try {
@@ -54,6 +57,14 @@ function App() {
     }
   });
   const [autoSaveEnabled, setAutoSaveEnabled] = useState(true);
+  const [wordTarget, setWordTarget] = useState<number | null>(() => {
+    try {
+      const stored = localStorage.getItem(WORD_TARGET_KEY);
+      return stored ? parseInt(stored, 10) : null;
+    } catch {
+      return null;
+    }
+  });
   const [theme, setTheme] = useState(() => localStorage.getItem(THEME_KEY) || "classic");
   const [lang, setLang] = useState<Lang>(() => (localStorage.getItem(LANG_KEY) as Lang) || "ko");
 
@@ -123,6 +134,16 @@ function App() {
     try { localStorage.setItem(FONT_SIZE_KEY, String(fontSize)); } catch { /* ignore */ }
   }, [fontSize]);
 
+  useEffect(() => {
+    try {
+      if (wordTarget !== null) {
+        localStorage.setItem(WORD_TARGET_KEY, String(wordTarget));
+      } else {
+        localStorage.removeItem(WORD_TARGET_KEY);
+      }
+    } catch { /* ignore */ }
+  }, [wordTarget]);
+
   const updateWordCount = useCallback((text: string) => {
     const chars = text.length;
     const words = text.trim() ? text.trim().split(/\s+/).length : 0;
@@ -174,6 +195,69 @@ ${editorEl.innerHTML}
     a.click();
     URL.revokeObjectURL(url);
   }, [fileManager.fileName, lang]);
+
+  const handleExportPdf = useCallback(() => {
+    if (!license.isPro) {
+      setProGateVisible(true);
+      return;
+    }
+    const editorEl = document.querySelector(".editor-content");
+    if (!editorEl) return;
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "fixed";
+    iframe.style.left = "-9999px";
+    iframe.style.top = "-9999px";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    document.body.appendChild(iframe);
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!doc) { document.body.removeChild(iframe); return; }
+    doc.open();
+    doc.write(`<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+<meta charset="UTF-8">
+<title>${fileManager.fileName}</title>
+<style>
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #333; line-height: 1.7; }
+h1 { border-bottom: 1px solid #eee; padding-bottom: 0.3em; }
+h2 { border-bottom: 1px solid #eee; padding-bottom: 0.2em; }
+code { background: #f6f8fa; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+pre { background: #f6f8fa; padding: 16px; border-radius: 6px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+blockquote { border-left: 3px solid #ddd; padding-left: 16px; color: #666; margin-left: 0; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+th { background: #f6f8fa; }
+img { max-width: 100%; }
+a { color: #4183c4; }
+</style>
+</head>
+<body>
+${editorEl.innerHTML}
+</body>
+</html>`);
+    doc.close();
+    setTimeout(() => {
+      iframe.contentWindow?.print();
+      setTimeout(() => { document.body.removeChild(iframe); }, 1000);
+    }, 250);
+  }, [license.isPro, fileManager.fileName, lang]);
+
+  const handleSetWordTarget = useCallback(() => {
+    const input = prompt(i18n.t("menu.wordTarget"), wordTarget ? String(wordTarget) : "");
+    if (input === null) return;
+    const num = parseInt(input, 10);
+    if (!num || num <= 0) {
+      setWordTarget(null);
+    } else {
+      setWordTarget(num);
+    }
+  }, [wordTarget, i18n]);
+
+  const handlePrint = useCallback(() => {
+    window.print();
+  }, []);
 
   const handleToggleFocus = useCallback(() => {
     setFocusMode((prev) => {
@@ -236,6 +320,9 @@ ${editorEl.innerHTML}
       } else if (e.ctrlKey && e.key === "0") {
         e.preventDefault();
         setFontSize(15);
+      } else if (e.ctrlKey && e.key === "p") {
+        e.preventDefault();
+        handlePrint();
       } else if (e.ctrlKey && e.key === "w") {
         e.preventDefault();
         fileManager.closeTab(fileManager.activeTabId);
@@ -253,7 +340,7 @@ ${editorEl.innerHTML}
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [changeFontSize, fileManager]);
+  }, [changeFontSize, fileManager, handlePrint]);
 
   // ESC focus mode exit + fullscreen sync
   useEffect(() => {
@@ -304,6 +391,8 @@ ${editorEl.innerHTML}
             onSave={fileManager.saveFile}
             onSaveAs={fileManager.saveFileAs}
             onExportHtml={handleExportHtml}
+            onExportPdf={handleExportPdf}
+            onSetWordTarget={handleSetWordTarget}
             onToggleSource={() => setSourceMode((s) => !s)}
             onToggleSidebar={() => setSidebarVisible((s) => !s)}
             onToggleFocus={handleToggleFocus}
@@ -322,6 +411,7 @@ ${editorEl.innerHTML}
             lang={lang}
             onLangChange={setLang}
             onOpenLicense={() => setLicenseDialogVisible(true)}
+            onOpenAbout={() => setAboutDialogVisible(true)}
             onProGate={() => setProGateVisible(true)}
           />
         )}
@@ -369,6 +459,7 @@ ${editorEl.innerHTML}
             autoSave={autoSaveEnabled}
             fontSize={fontSize}
             isPro={license.isPro}
+            wordTarget={wordTarget}
           />
         )}
         <LicenseDialog
@@ -377,6 +468,11 @@ ${editorEl.innerHTML}
           onActivate={license.activate}
           onDeactivate={license.deactivate}
           onClose={() => setLicenseDialogVisible(false)}
+        />
+        <AboutDialog
+          visible={aboutDialogVisible}
+          isPro={license.isPro}
+          onClose={() => setAboutDialogVisible(false)}
         />
         <ProGate
           visible={proGateVisible}

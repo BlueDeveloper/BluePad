@@ -10,6 +10,8 @@ export const en = {
   "menu.saveAs": "Save As",
   "menu.autoSave": "Auto Save",
   "menu.exportHtml": "Export as HTML",
+  "menu.exportPdf": "Export as PDF",
+  "menu.wordTarget": "Set Word Target",
   "menu.find": "Find",
   "menu.replace": "Replace",
   "menu.sourceMode": "Source Mode",
@@ -53,6 +55,7 @@ export const en = {
   "status.chars": "chars",
   "status.free": "Free",
   "status.pro": "Pro",
+  "status.wordTarget": "Target",
 
   // Sidebar
   "sidebar.outline": "Outline",
@@ -99,6 +102,13 @@ export const en = {
   "license.pro": "Pro Version",
   "license.proFeature": "This feature is available in Pro version.",
   "license.upgradeTitle": "Upgrade to Pro",
+
+  // About
+  "about.version": "Version",
+  "about.tagline": "A lightweight markdown editor",
+  "about.copyright": "\u00a9 2026 BRP (BlueRedPolarity)",
+  "about.website": "Website",
+  "about.ossTitle": "Open Source Licenses",
 
   // Dialog
   "dialog.unsavedChanges": " has unsaved changes.\nDo you want to save?",

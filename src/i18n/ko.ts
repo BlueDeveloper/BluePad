@@ -10,6 +10,8 @@ export const ko = {
   "menu.saveAs": "다른 이름으로 저장",
   "menu.autoSave": "자동 저장",
   "menu.exportHtml": "HTML로 내보내기",
+  "menu.exportPdf": "PDF로 내보내기",
+  "menu.wordTarget": "단어 목표 설정",
   "menu.find": "찾기",
   "menu.replace": "바꾸기",
   "menu.sourceMode": "소스 모드",
@@ -53,6 +55,7 @@ export const ko = {
   "status.chars": "자",
   "status.free": "Free",
   "status.pro": "Pro",
+  "status.wordTarget": "목표",
 
   // Sidebar
   "sidebar.outline": "개요",
@@ -99,6 +102,13 @@ export const ko = {
   "license.pro": "Pro 버전",
   "license.proFeature": "이 기능은 Pro 버전에서 사용할 수 있습니다.",
   "license.upgradeTitle": "Pro 업그레이드",
+
+  // About
+  "about.version": "버전",
+  "about.tagline": "가볍고 빠른 마크다운 에디터",
+  "about.copyright": "\u00a9 2026 BRP (BlueRedPolarity)",
+  "about.website": "웹사이트",
+  "about.ossTitle": "오픈소스 라이선스",
 
   // Dialog
   "dialog.unsavedChanges": "에 저장하지 않은 변경사항이 있습니다.\n저장하시겠습니까?",

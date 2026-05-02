@@ -18,6 +18,8 @@ interface MenuBarProps {
   onSave: () => Promise<void>;
   onSaveAs: () => Promise<void>;
   onExportHtml: () => void;
+  onExportPdf: () => void;
+  onSetWordTarget: () => void;
   onToggleSource: () => void;
   onToggleSidebar: () => void;
   onToggleFocus: () => void;
@@ -35,6 +37,7 @@ interface MenuBarProps {
   lang: Lang;
   onLangChange: (lang: Lang) => void;
   onOpenLicense: () => void;
+  onOpenAbout: () => void;
   onProGate: () => void;
 }
 
@@ -67,6 +70,8 @@ export function MenuBar({
   onSave,
   onSaveAs,
   onExportHtml,
+  onExportPdf,
+  onSetWordTarget,
   onToggleSource,
   onToggleSidebar,
   onToggleFocus,
@@ -84,6 +89,7 @@ export function MenuBar({
   lang,
   onLangChange,
   onOpenLicense,
+  onOpenAbout,
   onProGate,
 }: MenuBarProps) {
   const { t } = useI18n();
@@ -120,6 +126,7 @@ export function MenuBar({
         { label: t("menu.autoSave"), action: proAction(onToggleAutoSave), checked: autoSaveEnabled && isPro },
         { label: "", action: () => {}, divider: true },
         { label: t("menu.exportHtml"), action: proAction(onExportHtml) },
+        { label: t("menu.exportPdf"), action: onExportPdf },
       ],
     },
     {
@@ -136,6 +143,8 @@ export function MenuBar({
         { label: t("menu.outlineSidebar"), shortcut: "Ctrl+Shift+L", action: onToggleSidebar, checked: sidebarVisible },
         { label: t("menu.fileTree"), action: onToggleFileTree, checked: fileTreeVisible },
         { label: t("menu.focusMode"), shortcut: "F11", action: proAction(onToggleFocus), checked: focusMode },
+        { label: "", action: () => {}, divider: true },
+        { label: t("menu.wordTarget"), action: onSetWordTarget },
         { label: "", action: () => {}, divider: true },
         { label: `${t("menu.fontIncrease")} (${fontSize}px)`, shortcut: "Ctrl+=", action: onFontIncrease },
         { label: t("menu.fontDecrease"), shortcut: "Ctrl+-", action: onFontDecrease },
@@ -158,6 +167,8 @@ export function MenuBar({
         })),
         { label: "", action: () => {}, divider: true },
         { label: t("menu.license"), action: onOpenLicense },
+        { label: "", action: () => {}, divider: true },
+        { label: t("menu.about"), action: onOpenAbout },
       ],
     },
   ];
