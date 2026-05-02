@@ -30,6 +30,12 @@
       "icons/icon.ico",
       "icons/icon.png"
     ],
+    "windows": {
+      "wix": {
+        "bannerPath": "wix-banner.bmp",
+        "dialogImagePath": "wix-dialog.bmp"
+      }
+    },
     "fileAssociations": [
       {
         "ext": ["md", "markdown", "mdx"],
