@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://bluepad.work/</loc>
+    <loc>https://bluepad.work/en/</loc>
     <lastmod>2026-05-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/blog/</loc>
+    <loc>https://bluepad.work/en/blog/</loc>
     <lastmod>2026-05-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/blog/best-markdown-editors-2026.html</loc>
+    <loc>https://bluepad.work/en/blog/best-markdown-editors-2026.html</loc>
     <lastmod>2026-05-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/blog/typora-free-alternative.html</loc>
+    <loc>https://bluepad.work/en/blog/typora-free-alternative.html</loc>
     <lastmod>2026-05-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/blog/markdown-writing-tips.html</loc>
+    <loc>https://bluepad.work/en/blog/markdown-writing-tips.html</loc>
     <lastmod>2026-05-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/blog/lightweight-note-app-windows.html</loc>
+    <loc>https://bluepad.work/en/blog/lightweight-note-app-windows.html</loc>
     <lastmod>2026-05-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/blog/focus-mode-distraction-free-writing.html</loc>
+    <loc>https://bluepad.work/en/blog/focus-mode-distraction-free-writing.html</loc>
     <lastmod>2026-05-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/blog/markdown-editor-for-developers.html</loc>
+    <loc>https://bluepad.work/en/blog/markdown-editor-for-developers.html</loc>
     <lastmod>2026-05-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

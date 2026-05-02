@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BluePad Blog — Markdown Tips & Guides</title>
+  <meta name="description" content="Tips, guides, and comparisons for markdown writers. Learn about the best editors, writing techniques, and productivity tools.">
+  <link rel="canonical" href="https://bluepad.work/en/blog/">
+  <link rel="alternate" hreflang="en" href="https://bluepad.work/en/blog/">
+  <link rel="alternate" hreflang="ko" href="https://bluepad.work/ko/blog/">
+  <link rel="alternate" hreflang="ja" href="https://bluepad.work/ja/blog/">
+  <link rel="alternate" hreflang="x-default" href="https://bluepad.work/en/blog/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="BluePad Blog — Markdown Tips & Guides">
+  <meta property="og:description" content="Tips, guides, and comparisons for markdown writers.">
+  <meta property="og:url" content="https://bluepad.work/en/blog/">
+  <meta property="og:site_name" content="BluePad">
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --blue: #155dfc;
+      --blue-light: #3b7dff;
+      --blue-dark: #0e47c7;
+      --bg-dark: #0b0f1a;
+      --bg-dark-2: #111827;
+      --bg-light: #f8f9fc;
+      --bg-white: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --text-on-dark: #e2e8f0;
+      --text-on-dark-muted: #94a3b8;
+      --border: #e2e8f0;
+      --border-dark: #1e293b;
+      --radius: 10px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+    /* Nav */
+    .nav-bar {
+      background: var(--bg-dark);
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--blue);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-on-dark-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: #fff; }
+
+    .nav-cta {
+      background: var(--blue) !important;
+      color: #fff !important;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover { background: var(--blue-light) !important; }
+
+    /* Page Header */
+    .page-header {
+      background: var(--bg-dark);
+      padding: 60px 0 80px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+
+    .page-header p {
+      font-size: 18px;
+      color: var(--text-on-dark-muted);
+    }
+
+    /* Blog Grid */
+    .blog-section {
+      padding: 60px 0 100px;
+      background: var(--bg-light);
+    }
+
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+    }
+
+    .blog-card {
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.25s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .blog-card:hover {
+      border-color: rgba(21,93,252,0.25);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .blog-card-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+
+    .blog-card h2 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .blog-card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .blog-card-meta {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--bg-dark);
+      padding: 40px 0;
+      border-top: 1px solid var(--border-dark);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-left {
+      font-size: 14px;
+      color: var(--text-on-dark-muted);
+    }
+
+    .footer-left strong { color: var(--text-on-dark); }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--text-on-dark-muted);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: #fff; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .blog-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+    }
+  
+    .lang-switch { display: inline-flex; gap: 8px; font-size: 13px; }
+    .lang-switch a { color: var(--text-on-dark-muted); text-decoration: none; transition: color 0.2s; }
+    .lang-switch a:hover, .lang-switch a.active { color: #fff; }
+    .lang-switch span { color: var(--text-on-dark-muted); opacity: 0.4; }
+  </style>
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wkokfmayny");</script>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<meta name="naver-site-verification" content="9b479417f022befdffd0b837c015469b604758d3" />
+</head>
+<body>
+
+  <header class="nav-bar">
+    <div class="container">
+      <nav class="nav">
+        <a href="/" class="nav-logo">
+          <div class="nav-logo-icon">B</div>
+          BluePad
+        </a>
+        <ul class="nav-links">
+          <li><a href="/#features">Features</a></li>
+          <li><a href="/#pricing">Pricing</a></li>
+          <li><a href="/en/blog/">Blog</a></li>
+          <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener" class="nav-cta">Download</a></li>
+          <li style="font-size:12px;color:var(--text-on-dark-muted)"><a href="/en/blog/" style="color:#fff;text-decoration:none">EN</a> | <a href="/ko/blog/" style="color:var(--text-on-dark-muted);text-decoration:none">KO</a> | <a href="/ja/blog/" style="color:var(--text-on-dark-muted);text-decoration:none">JA</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <h1>BluePad Blog</h1>
+      <p>Markdown tips, editor comparisons, and writing guides.</p>
+    </div>
+  </section>
+
+  <section class="blog-section">
+    <div class="container">
+      <div class="blog-grid">
+        <a href="/en/blog/best-markdown-editors-2026.html" class="blog-card">
+          <span class="blog-card-tag">Comparison</span>
+          <h2>5 Best Markdown Editors in 2026 — Which One Is Right for You?</h2>
+          <p>We compare BluePad, Typora, Obsidian, Mark Text, and VS Code to help you pick the perfect markdown editor.</p>
+          <div class="blog-card-meta">May 2, 2026 &middot; 5 min read</div>
+        </a>
+        <a href="/en/blog/typora-free-alternative.html" class="blog-card">
+          <span class="blog-card-tag">Alternative</span>
+          <h2>Looking for a Free Typora Alternative? Try BluePad</h2>
+          <p>Typora went paid at $14.99. Here's why BluePad offers a similar WYSIWYG experience for free.</p>
+          <div class="blog-card-meta">May 2, 2026 &middot; 4 min read</div>
+        </a>
+        <a href="/en/blog/markdown-writing-tips.html" class="blog-card">
+          <span class="blog-card-tag">Guide</span>
+          <h2>10 Markdown Tips Every Writer Should Know</h2>
+          <p>Master tables, code blocks, task lists, math equations, and more with these practical markdown tips.</p>
+          <div class="blog-card-meta">May 2, 2026 &middot; 5 min read</div>
+        </a>
+        <a href="/en/blog/lightweight-note-app-windows.html" class="blog-card">
+          <span class="blog-card-tag">Productivity</span>
+          <h2>The Best Lightweight Note-Taking Apps for Windows in 2026</h2>
+          <p>Compare lightweight editors vs heavy apps like Notion and Evernote. Find the ideal middle ground.</p>
+          <div class="blog-card-meta">May 2, 2026 &middot; 4 min read</div>
+        </a>
+        <a href="/en/blog/focus-mode-distraction-free-writing.html" class="blog-card">
+          <span class="blog-card-tag">Writing</span>
+          <h2>How Focus Mode Helps You Write Better — Distraction-Free Writing Guide</h2>
+          <p>Learn the benefits of distraction-free writing and how BluePad's focus mode can boost your productivity.</p>
+          <div class="blog-card-meta">May 2, 2026 &middot; 4 min read</div>
+        </a>
+        <a href="/en/blog/markdown-editor-for-developers.html" class="blog-card">
+          <span class="blog-card-tag">Developer</span>
+          <h2>Why Every Developer Needs a Dedicated Markdown Editor</h2>
+          <p>Why VS Code isn't ideal for pure writing, and how a dedicated markdown editor improves your README, docs, and blog workflow.</p>
+          <div class="blog-card-meta">May 2, 2026 &middot; 5 min read</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-left">&copy; 2026 <strong>BRP</strong>. Built with Tauri.</div>
+        <ul class="footer-links">
+          <li><a href="/legal/privacy">Privacy Policy</a></li>
+          <li><a href="/legal/eula">EULA</a></li>
+          <li><a href="/legal/opensource">Open Source</a></li>
+          <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener">Releases</a></li>
+          <li><a href="https://github.com/BlueDeveloper/BluePad/issues" target="_blank" rel="noopener">Report a Bug</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

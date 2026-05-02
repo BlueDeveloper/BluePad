@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10 Markdown Tips Every Writer Should Know | BluePad Blog</title>
+  <meta name="description" content="Master markdown with these 10 practical tips: tables, code blocks, task lists, math equations, Mermaid diagrams, and more. With examples.">
+  <meta name="keywords" content="markdown tips, markdown guide, markdown tutorial, markdown table, markdown code block, markdown task list">
+  <link rel="canonical" href="https://bluepad.work/en/blog/markdown-writing-tips.html">
+  <link rel="alternate" hreflang="en" href="https://bluepad.work/en/blog/markdown-writing-tips.html">
+  <link rel="alternate" hreflang="ko" href="https://bluepad.work/ko/blog/markdown-writing-tips.html">
+  <link rel="alternate" hreflang="ja" href="https://bluepad.work/ja/blog/markdown-writing-tips.html">
+  <link rel="alternate" hreflang="x-default" href="https://bluepad.work/en/blog/markdown-writing-tips.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="10 Markdown Tips Every Writer Should Know">
+  <meta property="og:description" content="Master markdown with these 10 practical tips covering tables, code blocks, task lists, and more.">
+  <meta property="og:url" content="https://bluepad.work/en/blog/markdown-writing-tips.html">
+  <meta property="og:site_name" content="BluePad">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="10 Markdown Tips Every Writer Should Know">
+  <meta name="twitter:description" content="Practical markdown tips with examples.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "10 Markdown Tips Every Writer Should Know",
+    "datePublished": "2026-05-02",
+    "dateModified": "2026-05-02",
+    "author": { "@type": "Organization", "name": "BluePad Team" },
+    "publisher": { "@type": "Organization", "name": "BluePad" },
+    "description": "Master markdown with these 10 practical tips: tables, code blocks, task lists, math equations, Mermaid diagrams, and more.",
+    "mainEntityOfPage": "https://bluepad.work/en/blog/markdown-writing-tips.html"
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --blue: #155dfc;
+      --blue-light: #3b7dff;
+      --bg-dark: #0b0f1a;
+      --bg-light: #f8f9fc;
+      --bg-white: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --text-on-dark: #e2e8f0;
+      --text-on-dark-muted: #94a3b8;
+      --border: #e2e8f0;
+      --border-dark: #1e293b;
+      --radius: 10px;
+      --radius-lg: 16px;
+    }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: var(--text-primary); line-height: 1.6; }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+    .nav-bar { background: var(--bg-dark); border-bottom: 1px solid var(--border-dark); }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+    .nav-logo-icon { width: 32px; height: 32px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #fff; font-weight: 800; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { color: var(--text-on-dark-muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: #fff; }
+    .nav-cta { background: var(--blue) !important; color: #fff !important; padding: 8px 18px; border-radius: 8px; font-size: 14px; transition: background 0.2s !important; }
+    .nav-cta:hover { background: var(--blue-light) !important; }
+
+    .article-header { background: var(--bg-dark); padding: 60px 0 80px; text-align: center; }
+    .article-header h1 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; color: #fff; letter-spacing: -0.03em; margin-bottom: 16px; max-width: 720px; margin-left: auto; margin-right: auto; line-height: 1.2; }
+    .article-meta { font-size: 14px; color: var(--text-on-dark-muted); }
+
+    .article-body {
+      max-width: 720px; margin: -40px auto 0; background: var(--bg-white);
+      border-radius: var(--radius-lg); border: 1px solid var(--border);
+      padding: 48px 40px 56px; position: relative; z-index: 2;
+      line-height: 1.8; font-size: 16px;
+    }
+
+    .article-body h2 { font-size: 24px; font-weight: 700; margin: 40px 0 16px; letter-spacing: -0.02em; }
+    .article-body p { margin-bottom: 16px; color: var(--text-secondary); }
+    .article-body strong { color: var(--text-primary); }
+    .article-body ul, .article-body ol { margin: 0 0 16px 24px; color: var(--text-secondary); }
+    .article-body li { margin-bottom: 8px; }
+
+    .code-example {
+      background: #1e293b;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 16px 0 24px;
+      overflow-x: auto;
+      font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #e2e8f0;
+    }
+
+    .tip-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 700;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .cta-banner { margin-top: 48px; background: linear-gradient(135deg, var(--blue), var(--blue-light)); border-radius: var(--radius-lg); padding: 40px 32px; text-align: center; }
+    .cta-banner h3 { color: #fff; font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+    .cta-banner p { color: rgba(255,255,255,0.85); margin-bottom: 20px; font-size: 15px; }
+    .cta-btn { display: inline-block; background: #fff; color: var(--blue); padding: 14px 32px; border-radius: 10px; font-size: 15px; font-weight: 600; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+    .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+
+    .footer { background: var(--bg-dark); padding: 40px 0; border-top: 1px solid var(--border-dark); margin-top: 80px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; }
+    .footer-left { font-size: 14px; color: var(--text-on-dark-muted); }
+    .footer-left strong { color: var(--text-on-dark); }
+    .footer-links { display: flex; gap: 24px; list-style: none; }
+    .footer-links a { color: var(--text-on-dark-muted); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    .footer-links a:hover { color: #fff; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .article-body { padding: 32px 20px 40px; margin-top: -24px; }
+      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+    }
+  
+    .lang-switch { display: inline-flex; gap: 8px; font-size: 13px; }
+    .lang-switch a { color: var(--text-on-dark-muted); text-decoration: none; transition: color 0.2s; }
+    .lang-switch a:hover, .lang-switch a.active { color: #fff; }
+    .lang-switch span { color: var(--text-on-dark-muted); opacity: 0.4; }
+  </style>
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wkokfmayny");</script>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<meta name="naver-site-verification" content="9b479417f022befdffd0b837c015469b604758d3" />
+</head>
+<body>
+
+  <header class="nav-bar">
+    <div class="container">
+      <nav class="nav">
+        <a href="/" class="nav-logo"><div class="nav-logo-icon">B</div> BluePad</a>
+        <ul class="nav-links">
+          <li><a href="/#features">Features</a></li>
+          <li><a href="/#pricing">Pricing</a></li>
+          <li><a href="/en/blog/">Blog</a></li>
+          <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener" class="nav-cta">Download</a></li>
+          <li style="font-size:12px;color:var(--text-on-dark-muted)"><a href="/en/blog/markdown-writing-tips.html" style="color:#fff;text-decoration:none">EN</a> | <a href="/ko/blog/markdown-writing-tips.html" style="color:var(--text-on-dark-muted);text-decoration:none">KO</a> | <a href="/ja/blog/markdown-writing-tips.html" style="color:var(--text-on-dark-muted);text-decoration:none">JA</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="article-header">
+    <div class="container">
+      <h1>10 Markdown Tips Every Writer Should Know</h1>
+      <p class="article-meta">May 2, 2026 &middot; BluePad Team &middot; 5 min read</p>
+    </div>
+  </section>
+
+  <article class="article-body">
+    <p>Markdown is deceptively simple. Most writers learn the basics — headings, bold, italics, links — and stop there. But markdown has powerful features that can transform your writing workflow. Here are 10 tips that will level up your markdown game.</p>
+
+    <h2><span class="tip-number">1</span> Tables Don't Have to Be Painful</h2>
+    <p>Many writers avoid markdown tables because they think the syntax is tedious. The trick is to not worry about alignment — most parsers don't require it.</p>
+    <div class="code-example">
+| Feature | Free | Pro |<br>
+|---|---|---|<br>
+| WYSIWYG | Yes | Yes |<br>
+| Themes | 1 | 4 |<br>
+| Focus Mode | No | Yes |
+    </div>
+    <p><strong>Pro tip:</strong> In BluePad's WYSIWYG mode, tables are rendered with a visual editor — you can add rows and columns without touching the syntax.</p>
+
+    <h2><span class="tip-number">2</span> Use Fenced Code Blocks with Language Tags</h2>
+    <p>Always specify the language after your opening triple backticks. This enables syntax highlighting in most editors and renderers.</p>
+    <div class="code-example">
+```javascript<br>
+const greeting = "Hello, markdown!";<br>
+console.log(greeting);<br>
+```
+    </div>
+    <p>BluePad supports syntax highlighting for over 150 languages in both WYSIWYG and source mode.</p>
+
+    <h2><span class="tip-number">3</span> Task Lists for Quick TODOs</h2>
+    <p>Turn any list into an interactive checklist with <code>[ ]</code> and <code>[x]</code> syntax:</p>
+    <div class="code-example">
+- [x] Write first draft<br>
+- [x] Add code examples<br>
+- [ ] Proofread<br>
+- [ ] Publish
+    </div>
+    <p>In BluePad, checkboxes are clickable in WYSIWYG mode — perfect for managing writing tasks.</p>
+
+    <h2><span class="tip-number">4</span> Blockquotes for Callouts</h2>
+    <p>Use blockquotes to highlight important information or create callout boxes:</p>
+    <div class="code-example">
+&gt; **Note:** This is an important callout that<br>
+&gt; draws the reader's attention to key information.
+    </div>
+    <p>You can nest blockquotes with multiple <code>&gt;</code> characters for hierarchical quotes.</p>
+
+    <h2><span class="tip-number">5</span> Horizontal Rules as Section Dividers</h2>
+    <p>Three hyphens, asterisks, or underscores create a clean section break:</p>
+    <div class="code-example">
+## Section One<br>
+<br>
+Content here...<br>
+<br>
+---<br>
+<br>
+## Section Two<br>
+<br>
+More content...
+    </div>
+
+    <h2><span class="tip-number">6</span> Math Equations with KaTeX</h2>
+    <p>For academic writing or technical documentation, inline and block math notation is invaluable:</p>
+    <div class="code-example">
+Inline: $E = mc^2$<br>
+<br>
+Block:<br>
+$$<br>
+\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}<br>
+$$
+    </div>
+    <p>BluePad Pro renders KaTeX equations in real-time as you type — no need to preview separately.</p>
+
+    <h2><span class="tip-number">7</span> Mermaid Diagrams from Text</h2>
+    <p>Create flowcharts, sequence diagrams, and more without any drawing tool:</p>
+    <div class="code-example">
+```mermaid<br>
+graph TD<br>
+&nbsp;&nbsp;A[Start Writing] --&gt; B{Good idea?}<br>
+&nbsp;&nbsp;B --&gt;|Yes| C[Draft]<br>
+&nbsp;&nbsp;B --&gt;|No| D[Brainstorm]<br>
+&nbsp;&nbsp;D --&gt; B<br>
+&nbsp;&nbsp;C --&gt; E[Publish]<br>
+```
+    </div>
+    <p>BluePad Pro renders Mermaid diagrams inline, making it easy to visualize workflows while you write.</p>
+
+    <h2><span class="tip-number">8</span> Link References for Clean Documents</h2>
+    <p>Instead of cluttering your text with long URLs, use reference-style links:</p>
+    <div class="code-example">
+Read the [installation guide][install] and [FAQ][faq].<br>
+<br>
+[install]: https://example.com/docs/install<br>
+[faq]: https://example.com/docs/faq
+    </div>
+    <p>This keeps your source readable while maintaining all your links at the bottom.</p>
+
+    <h2><span class="tip-number">9</span> Footnotes for Academic Writing</h2>
+    <p>Add footnotes to provide additional context without interrupting the flow:</p>
+    <div class="code-example">
+Markdown was created by John Gruber[^1] in 2004.<br>
+<br>
+[^1]: John Gruber is also known for his blog, Daring Fireball.
+    </div>
+    <p>Footnotes are automatically numbered and linked — readers can jump between the reference and the note.</p>
+
+    <h2><span class="tip-number">10</span> Escape Characters When Needed</h2>
+    <p>When you actually want to display markdown characters literally, use a backslash:</p>
+    <div class="code-example">
+\*This is not italic\*<br>
+\# This is not a heading<br>
+\- This is not a list item
+    </div>
+    <p>This is particularly useful when writing documentation about markdown itself.</p>
+
+    <h2>Practice Makes Perfect</h2>
+    <p>The best way to master these tips is to use them regularly in a proper markdown editor. BluePad's WYSIWYG mode lets you see the rendered output instantly, making it easier to learn and experiment with advanced syntax.</p>
+
+    <p>Whether you're writing documentation, blog posts, or personal notes, these ten techniques will make your markdown documents more professional and easier to read.</p>
+
+    <div class="cta-banner">
+      <h3>Try BluePad Free</h3>
+      <p>Practice all these markdown tips in a fast, WYSIWYG editor. Supports tables, code blocks, task lists, and more.</p>
+      <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener" class="cta-btn">Download for Windows</a>
+    </div>
+  </article>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-left">&copy; 2026 <strong>BRP</strong>. Built with Tauri.</div>
+        <ul class="footer-links">
+          <li><a href="/legal/privacy">Privacy Policy</a></li>
+          <li><a href="/legal/eula">EULA</a></li>
+          <li><a href="/legal/opensource">Open Source</a></li>
+          <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener">Releases</a></li>
+          <li><a href="https://github.com/BlueDeveloper/BluePad/issues" target="_blank" rel="noopener">Report a Bug</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
