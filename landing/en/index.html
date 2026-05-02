@@ -3,29 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BluePad — Lightweight Markdown Editor for Windows</title>
-  <meta name="description" content="BluePad is a fast, distraction-free markdown editor for Windows. WYSIWYG editing, multiple themes, focus mode, and more.">
-  <meta name="keywords" content="markdown editor, windows, WYSIWYG, lightweight, distraction-free, writing">
-  <link rel="canonical" href="https://bluepad.work/">
+  <title>BluePad — Markdown Editor for Windows</title>
+  <meta name="description" content="BluePad is a fast, distraction-free Markdown editor for Windows. WYSIWYG editing, multiple themes, focus mode, and more.">
+  <meta name="keywords" content="markdown editor, windows, wysiwyg, lightweight, focus mode, writing">
+  <link rel="canonical" href="https://bluepad.work/en/">
   <link rel="alternate" hreflang="en" href="https://bluepad.work/">
   <link rel="alternate" hreflang="ko" href="https://bluepad.work/ko/">
   <link rel="alternate" hreflang="ja" href="https://bluepad.work/ja/">
   <link rel="alternate" hreflang="x-default" href="https://bluepad.work/">
-
-  <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="BluePad — Lightweight Markdown Editor for Windows">
-  <meta property="og:description" content="A fast, distraction-free markdown editor for Windows. Write beautifully with WYSIWYG editing, themes, and focus mode.">
-  <meta property="og:url" content="https://bluepad.work/">
+  <meta property="og:title" content="BluePad — Markdown Editor for Windows">
+  <meta property="og:description" content="A fast, distraction-free Markdown editor for Windows.">
+  <meta property="og:url" content="https://bluepad.work/en/">
   <meta property="og:site_name" content="BluePad">
   <meta property="og:image" content="https://bluepad.work/og-image.png">
-
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="BluePad — Lightweight Markdown Editor for Windows">
-  <meta name="twitter:description" content="A fast, distraction-free markdown editor for Windows.">
-
-  <!-- Structured Data -->
+  <meta name="twitter:title" content="BluePad — Markdown Editor for Windows">
+  <meta name="twitter:description" content="A fast, distraction-free Markdown editor for Windows.">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -33,826 +27,552 @@
     "name": "BluePad",
     "operatingSystem": "Windows",
     "applicationCategory": "DeveloperApplication",
-    "description": "A lightweight, distraction-free markdown editor for Windows with WYSIWYG editing, multiple themes, and focus mode.",
+    "description": "A Markdown editor for Windows with WYSIWYG editing, multiple themes, and focus mode.",
+    "inLanguage": "en",
     "offers": [
-      {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD",
-        "name": "Free"
-      },
-      {
-        "@type": "Offer",
-        "price": "14.99",
-        "priceCurrency": "USD",
-        "name": "Pro License"
-      }
+      { "@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free" },
+      { "@type": "Offer", "price": "14.99", "priceCurrency": "USD", "name": "Pro License" }
     ],
-    "author": {
-      "@type": "Organization",
-      "name": "BRP"
-    }
+    "author": { "@type": "Organization", "name": "BRP" }
   }
   </script>
-
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <meta name="naver-site-verification" content="9b479417f022befdffd0b837c015469b604758d3" />
+  <script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wkokfmayny");</script>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <style>
-    /* ── Reset & Base ── */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --blue: #155dfc;
-      --blue-light: #3b7dff;
-      --blue-dark: #0e47c7;
-      --blue-glow: rgba(21, 93, 252, 0.15);
-      --bg-dark: #0b0f1a;
-      --bg-dark-2: #111827;
-      --bg-light: #f8f9fc;
-      --bg-white: #ffffff;
-      --text-primary: #0f172a;
-      --text-secondary: #475569;
-      --text-muted: #94a3b8;
-      --text-on-dark: #e2e8f0;
-      --text-on-dark-muted: #94a3b8;
-      --border: #e2e8f0;
-      --border-dark: #1e293b;
-      --radius: 10px;
-      --radius-lg: 16px;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
-      --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+      --c-bg: #09090b;
+      --c-bg-raised: #111113;
+      --c-bg-card: #18181b;
+      --c-bg-light: #fafafa;
+      --c-bg-white: #fff;
+      --c-border: #27272a;
+      --c-border-subtle: #1c1c1f;
+      --c-border-light: #e4e4e7;
+      --c-text: #fafafa;
+      --c-text-2: #a1a1aa;
+      --c-text-3: #52525b;
+      --c-text-dark: #09090b;
+      --c-text-dark-2: #52525b;
+      --c-text-dark-3: #a1a1aa;
+      --c-accent: #155dfc;
+      --c-accent-hover: #3b7dff;
+      --font: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
     }
 
-    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      color: var(--text-primary);
-      line-height: 1.6;
-      overflow-x: hidden;
+    body { font-family: var(--font); background: var(--c-bg); color: var(--c-text); overflow-x: hidden; }
+
+    ::selection { background: rgba(21,93,252,0.3); color: #fff; }
+
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+
+    /* ═══════════ NAV ═══════════ */
+    .nav-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      background: rgba(9,9,11,0.75);
+      border-bottom: 1px solid var(--c-border-subtle);
     }
-
-    /* ── Utilities ── */
-    .container {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 0 24px;
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
     }
-
-    /* ── Hero ── */
-    .hero {
-      position: relative;
-      background: var(--bg-dark);
-      padding: 0 0 80px;
-      overflow: hidden;
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--c-text);
+      font-weight: 720; font-size: 17px; letter-spacing: -0.03em;
     }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -40%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 900px;
-      height: 900px;
-      background: radial-gradient(circle, rgba(21,93,252,0.12) 0%, transparent 65%);
-      pointer-events: none;
+    .nav-mark {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: var(--c-accent); color: #fff;
+      display: grid; place-items: center;
+      font-size: 14px; font-weight: 800;
     }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(21,93,252,0.3), transparent);
-    }
-
-    /* ── Nav ── */
-    .nav {
-      position: relative;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 0;
-    }
-
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: #fff;
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
-    .nav-logo-icon {
-      width: 32px;
-      height: 32px;
-      background: var(--blue);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      color: #fff;
-      font-weight: 800;
-    }
-
     .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      list-style: none;
+      display: flex; align-items: center; gap: 6px; list-style: none;
     }
-
     .nav-links a {
-      color: var(--text-on-dark-muted);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      transition: color 0.2s;
+      display: block; padding: 6px 14px; border-radius: 7px;
+      color: var(--c-text-2); text-decoration: none;
+      font-size: 13.5px; font-weight: 500;
+      transition: color .15s, background .15s;
     }
-
-    .nav-links a:hover { color: #fff; }
-
-    .nav-cta {
-      background: var(--blue) !important;
-      color: #fff !important;
-      padding: 8px 18px;
-      border-radius: 8px;
-      font-size: 14px;
-      transition: background 0.2s !important;
+    .nav-links a:hover { color: var(--c-text); background: rgba(255,255,255,0.05); }
+    .nav-dl {
+      background: var(--c-accent) !important; color: #fff !important;
+      font-weight: 620 !important;
+      transition: background .15s !important;
     }
+    .nav-dl:hover { background: var(--c-accent-hover) !important; }
+    .nav-lang {
+      display: flex; gap: 2px; margin-left: 8px;
+      border: 1px solid var(--c-border); border-radius: 7px; overflow: hidden;
+    }
+    .nav-lang a {
+      padding: 5px 10px !important; border-radius: 0 !important;
+      font-size: 12px !important; font-weight: 600 !important; letter-spacing: 0.02em;
+    }
+    .nav-lang a.on { background: rgba(255,255,255,0.08) !important; color: #fff !important; }
 
-    .nav-cta:hover { background: var(--blue-light) !important; }
-
-    /* ── Hero Content ── */
-    .hero-content {
+    /* ═══════════ HERO ═══════════ */
+    .hero {
+      padding: 160px 0 100px;
       position: relative;
-      z-index: 2;
-      text-align: center;
-      padding: 80px 0 0;
     }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      background: rgba(21,93,252,0.1);
-      border: 1px solid rgba(21,93,252,0.2);
-      border-radius: 100px;
-      color: var(--blue-light);
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 28px;
-      letter-spacing: 0.02em;
+    .hero::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--c-border) 20%, var(--c-border) 80%, transparent 100%);
     }
-
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12.5px; font-weight: 500; letter-spacing: 0.08em;
+      color: var(--c-accent); text-transform: uppercase;
+      margin-bottom: 24px;
+    }
     .hero h1 {
-      font-size: clamp(40px, 6vw, 64px);
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: -0.035em;
-      line-height: 1.1;
-      margin-bottom: 20px;
-    }
-
-    .hero h1 span {
-      background: linear-gradient(135deg, var(--blue-light), #60a5fa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero-sub {
-      font-size: clamp(16px, 2vw, 19px);
-      color: var(--text-on-dark-muted);
-      max-width: 520px;
-      margin: 0 auto 40px;
-      line-height: 1.6;
-    }
-
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 28px;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 600;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-primary {
-      background: var(--blue);
-      color: #fff;
-      box-shadow: 0 0 0 0 rgba(21,93,252,0), 0 2px 8px rgba(21,93,252,0.3);
-    }
-
-    .btn-primary:hover {
-      background: var(--blue-light);
-      box-shadow: 0 0 0 4px rgba(21,93,252,0.15), 0 4px 16px rgba(21,93,252,0.3);
-      transform: translateY(-1px);
-    }
-
-    .btn-ghost {
-      background: rgba(255,255,255,0.06);
-      color: var(--text-on-dark);
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .btn-ghost:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(255,255,255,0.2);
-    }
-
-    .hero-meta {
-      margin-top: 24px;
-      font-size: 13px;
-      color: var(--text-on-dark-muted);
-    }
-
-    .hero-meta span { margin: 0 6px; opacity: 0.4; }
-
-    /* ── Screenshot ── */
-    .hero-screenshot {
-      position: relative;
-      z-index: 2;
-      max-width: 920px;
-      margin: 56px auto 0;
-    }
-
-    .screenshot-frame {
-      background: var(--bg-dark-2);
-      border: 1px solid var(--border-dark);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03) inset;
-    }
-
-    .screenshot-titlebar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border-dark);
-    }
-
-    .screenshot-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #334155;
-    }
-
-    .screenshot-dot:nth-child(1) { background: #ef4444; }
-    .screenshot-dot:nth-child(2) { background: #f59e0b; }
-    .screenshot-dot:nth-child(3) { background: #22c55e; }
-
-    .screenshot-body {
-      padding: 32px 40px 40px;
-      min-height: 320px;
-      display: flex;
-      gap: 40px;
-    }
-
-    .screenshot-sidebar {
-      width: 160px;
-      flex-shrink: 0;
-    }
-
-    .screenshot-sidebar-item {
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 13px;
-      color: var(--text-on-dark-muted);
-      margin-bottom: 4px;
-      font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
-    }
-
-    .screenshot-sidebar-item.active {
-      background: rgba(21,93,252,0.15);
-      color: var(--blue-light);
-    }
-
-    .screenshot-editor { flex: 1; }
-
-    .screenshot-line {
-      font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
-      font-size: 14px;
-      line-height: 2;
-      color: var(--text-on-dark-muted);
-    }
-
-    .screenshot-line .h1 {
-      color: #fff;
-      font-weight: 700;
-      font-size: 22px;
-    }
-
-    .screenshot-line .h2 {
-      color: #e2e8f0;
-      font-weight: 600;
-      font-size: 16px;
-    }
-
-    .screenshot-line .bold { color: #e2e8f0; font-weight: 600; }
-    .screenshot-line .accent { color: var(--blue-light); }
-    .screenshot-line .muted { color: #475569; }
-    .screenshot-line .green { color: #4ade80; }
-
-    /* ── Features ── */
-    .features {
-      padding: 100px 0;
-      background: var(--bg-light);
-    }
-
-    .section-label {
-      display: inline-block;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--blue);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-size: clamp(28px, 4vw, 40px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: var(--text-primary);
-      margin-bottom: 12px;
-    }
-
-    .section-desc {
-      font-size: 17px;
-      color: var(--text-secondary);
-      max-width: 480px;
-      margin-bottom: 56px;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    .feature-card {
-      background: var(--bg-white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 32px 28px;
-      transition: all 0.25s;
-    }
-
-    .feature-card:hover {
-      border-color: rgba(21,93,252,0.25);
-      box-shadow: var(--shadow-md), 0 0 0 1px rgba(21,93,252,0.05);
-      transform: translateY(-2px);
-    }
-
-    .feature-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, rgba(21,93,252,0.08), rgba(21,93,252,0.04));
-      border: 1px solid rgba(21,93,252,0.1);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      margin-bottom: 20px;
-    }
-
-    .feature-card h3 {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      letter-spacing: -0.01em;
-    }
-
-    .feature-card p {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    /* ── Pricing ── */
-    .pricing {
-      padding: 100px 0;
-      background: var(--bg-white);
-    }
-
-    .pricing-header {
-      text-align: center;
-      margin-bottom: 56px;
-    }
-
-    .pricing-header .section-desc {
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-      max-width: 780px;
-      margin: 0 auto;
-    }
-
-    .pricing-card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 36px 32px;
-      position: relative;
-    }
-
-    .pricing-card.featured {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 1px var(--blue), var(--shadow-lg);
-    }
-
-    .pricing-card.featured::before {
-      content: 'BEST VALUE';
-      position: absolute;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--blue);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      padding: 4px 14px;
-      border-radius: 100px;
-    }
-
-    .pricing-tier {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 8px;
-    }
-
-    .pricing-price {
-      font-size: 44px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 4px;
-    }
-
-    .pricing-price .currency {
-      font-size: 22px;
-      font-weight: 600;
-      vertical-align: top;
-      line-height: 2.4;
-    }
-
-    .pricing-note {
-      font-size: 13px;
-      color: var(--text-muted);
+      font-size: clamp(44px, 7vw, 72px);
+      font-weight: 800; letter-spacing: -0.045em;
+      line-height: 1.05;
+      color: var(--c-text);
       margin-bottom: 28px;
     }
-
-    .pricing-features {
-      list-style: none;
-      margin-bottom: 32px;
+    .hero h1 em {
+      font-style: normal;
+      color: var(--c-accent);
     }
-
-    .pricing-features li {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 0;
-      font-size: 14px;
-      color: var(--text-secondary);
+    .hero-desc {
+      font-size: 18px; line-height: 1.7;
+      color: var(--c-text-2);
+      max-width: 460px;
+      margin-bottom: 44px;
     }
-
-    .pricing-features li::before {
-      content: '✓';
-      font-weight: 700;
-      color: #22c55e;
-      font-size: 14px;
-      flex-shrink: 0;
+    .hero-cta {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
     }
-
-    .pricing-features li.disabled {
-      color: var(--text-muted);
-      text-decoration: line-through;
-      opacity: 0.6;
+    .btn-main {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 28px; border-radius: 9px;
+      background: var(--c-accent); color: #fff;
+      font-size: 14.5px; font-weight: 640;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: background .15s, transform .1s;
     }
-
-    .pricing-features li.disabled::before {
-      content: '—';
-      color: var(--text-muted);
-    }
-
-    .btn-pricing {
-      display: block;
-      width: 100%;
-      text-align: center;
-      padding: 14px;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 600;
+    .btn-main:hover { background: var(--c-accent-hover); }
+    .btn-main:active { transform: scale(0.97); }
+    .btn-main svg { width: 16px; height: 16px; }
+    .btn-sec {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 28px; border-radius: 9px;
+      background: transparent; color: var(--c-text-2);
+      font-size: 14.5px; font-weight: 540;
       text-decoration: none;
-      transition: all 0.2s;
+      border: 1px solid var(--c-border);
+      transition: border-color .15s, color .15s;
+    }
+    .btn-sec:hover { border-color: var(--c-text-3); color: var(--c-text); }
+    .hero-note {
+      margin-top: 20px;
+      font-family: var(--font-mono);
+      font-size: 12px; color: var(--c-text-3); letter-spacing: 0.01em;
     }
 
-    .btn-pricing-outline {
-      background: transparent;
-      color: var(--text-primary);
-      border: 1px solid var(--border);
+    /* ═══════════ PREVIEW ═══════════ */
+    .preview {
+      padding: 0 0 120px;
+      position: relative;
+    }
+    .preview-window {
+      margin-top: 72px;
+      border: 1px solid var(--c-border);
+      border-radius: 12px;
+      background: var(--c-bg-raised);
+      overflow: hidden;
+    }
+    .pw-bar {
+      height: 40px; display: flex; align-items: center; gap: 8px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--c-border-subtle);
+      background: var(--c-bg);
+    }
+    .pw-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .pw-dot:nth-child(1) { background: #f87171; }
+    .pw-dot:nth-child(2) { background: #fbbf24; }
+    .pw-dot:nth-child(3) { background: #34d399; }
+    .pw-tabs {
+      display: flex; gap: 2px; margin-left: 16px;
+    }
+    .pw-tab {
+      padding: 4px 14px; border-radius: 5px;
+      font-family: var(--font-mono); font-size: 11.5px; color: var(--c-text-3);
+    }
+    .pw-tab.on { background: rgba(255,255,255,0.06); color: var(--c-text-2); }
+    .pw-body {
+      display: grid; grid-template-columns: 180px 1fr;
+      min-height: 340px;
+    }
+    .pw-side {
+      border-right: 1px solid var(--c-border-subtle);
+      padding: 16px 12px;
+    }
+    .pw-side-item {
+      padding: 7px 12px; border-radius: 6px;
+      font-family: var(--font-mono); font-size: 12.5px;
+      color: var(--c-text-3); margin-bottom: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .pw-side-item.on { background: rgba(21,93,252,0.1); color: var(--c-accent); }
+    .pw-editor { padding: 28px 36px; }
+    .pw-ln {
+      font-family: var(--font-mono); font-size: 13.5px;
+      line-height: 2; color: var(--c-text-2);
+    }
+    .pw-ln .t1 { color: #fff; font-weight: 700; font-size: 20px; }
+    .pw-ln .t2 { color: #e4e4e7; font-weight: 600; font-size: 15px; }
+    .pw-ln .hi { color: var(--c-accent); }
+    .pw-ln .gr { color: #4ade80; }
+    .pw-ln .dm { color: #3f3f46; }
+
+    /* ═══════════ FEATURES ═══════════ */
+    .feat {
+      padding: 120px 0;
+      background: var(--c-bg-light);
+      color: var(--c-text-dark);
+      position: relative;
+    }
+    .feat::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 1px;
+      background: var(--c-border-light);
+    }
+    .sec-label {
+      font-family: var(--font-mono);
+      font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
+      color: var(--c-accent); text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .sec-title {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 780; letter-spacing: -0.035em;
+      line-height: 1.15; margin-bottom: 16px;
+    }
+    .sec-desc {
+      font-size: 17px; color: var(--c-text-dark-2);
+      line-height: 1.65; max-width: 440px;
+      margin-bottom: 64px;
+    }
+    .feat-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--c-border-light);
+      border: 1px solid var(--c-border-light);
+      border-radius: 14px; overflow: hidden;
+    }
+    .feat-cell {
+      background: var(--c-bg-white);
+      padding: 36px 32px;
+      transition: background .2s;
+    }
+    .feat-cell:hover { background: #f4f4f5; }
+    .feat-ico {
+      width: 40px; height: 40px; border-radius: 10px;
+      border: 1px solid var(--c-border-light);
+      display: grid; place-items: center;
+      font-size: 18px; margin-bottom: 20px;
+      background: var(--c-bg-light);
+    }
+    .feat-cell h3 {
+      font-size: 15.5px; font-weight: 680;
+      letter-spacing: -0.01em; margin-bottom: 8px;
+      color: var(--c-text-dark);
+    }
+    .feat-cell p {
+      font-size: 13.5px; color: var(--c-text-dark-2);
+      line-height: 1.6;
     }
 
-    .btn-pricing-outline:hover {
-      border-color: var(--text-muted);
-      background: var(--bg-light);
+    /* ═══════════ PRICING ═══════════ */
+    .price {
+      padding: 120px 0;
+      background: var(--c-bg);
     }
-
-    .btn-pricing-fill {
-      background: var(--blue);
-      color: #fff;
-      border: 1px solid var(--blue);
-      box-shadow: 0 2px 8px rgba(21,93,252,0.3);
+    .price-head { text-align: center; margin-bottom: 64px; }
+    .price-head .sec-desc { margin-left: auto; margin-right: auto; color: var(--c-text-2); }
+    .price-head .sec-title { color: var(--c-text); }
+    .price-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 20px; max-width: 720px; margin: 0 auto;
     }
-
-    .btn-pricing-fill:hover {
-      background: var(--blue-light);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(21,93,252,0.3);
+    .price-card {
+      border: 1px solid var(--c-border);
+      border-radius: 14px;
+      padding: 36px 32px;
+      background: var(--c-bg-raised);
+      position: relative;
     }
-
-    /* ── Footer ── */
-    .footer {
-      background: var(--bg-dark);
-      padding: 40px 0;
-      border-top: 1px solid var(--border-dark);
+    .price-card.hi {
+      border-color: var(--c-accent);
+      background: linear-gradient(180deg, rgba(21,93,252,0.04) 0%, var(--c-bg-raised) 100%);
     }
-
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .price-card.hi::after {
+      content: 'Recommended'; position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+      background: var(--c-accent); color: #fff;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+      padding: 3px 16px; border-radius: 100px;
     }
-
-    .footer-left {
-      font-size: 14px;
-      color: var(--text-on-dark-muted);
+    .price-tier {
+      font-family: var(--font-mono);
+      font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--c-text-2);
+      margin-bottom: 12px;
     }
-
-    .footer-left strong { color: var(--text-on-dark); }
-
-    .footer-links {
-      display: flex;
-      gap: 24px;
-      list-style: none;
+    .price-amt {
+      font-size: 48px; font-weight: 800; letter-spacing: -0.04em;
+      color: var(--c-text); margin-bottom: 4px;
     }
-
-    .footer-links a {
-      color: var(--text-on-dark-muted);
-      text-decoration: none;
-      font-size: 14px;
-      transition: color 0.2s;
+    .price-amt .sm { font-size: 20px; font-weight: 600; vertical-align: top; line-height: 2.6; }
+    .price-sub {
+      font-size: 13px; color: var(--c-text-3); margin-bottom: 28px;
     }
+    .price-list { list-style: none; margin-bottom: 32px; }
+    .price-list li {
+      display: flex; align-items: center; gap: 10px;
+      padding: 7px 0; font-size: 13.5px; color: var(--c-text-2);
+    }
+    .price-list li::before {
+      content: ''; width: 16px; height: 16px; border-radius: 50%;
+      background: rgba(34,197,94,0.15); flex-shrink: 0;
+      display: grid; place-items: center;
+    }
+    .price-list li::before { content: '✓'; font-size: 10px; font-weight: 700; color: #22c55e; }
+    .price-list li.off { color: var(--c-text-3); opacity: 0.5; }
+    .price-list li.off::before { content: '—'; background: rgba(255,255,255,0.04); color: var(--c-text-3); }
+    .price-btn {
+      display: block; width: 100%; text-align: center;
+      padding: 13px; border-radius: 9px;
+      font-size: 14px; font-weight: 620;
+      text-decoration: none; transition: all .15s;
+    }
+    .price-btn-outline {
+      background: transparent; color: var(--c-text-2);
+      border: 1px solid var(--c-border);
+    }
+    .price-btn-outline:hover { border-color: var(--c-text-3); color: var(--c-text); }
+    .price-btn-fill {
+      background: var(--c-accent); color: #fff;
+      border: 1px solid var(--c-accent);
+    }
+    .price-btn-fill:hover { background: var(--c-accent-hover); }
 
-    .footer-links a:hover { color: #fff; }
+    /* ═══════════ FOOTER ═══════════ */
+    .foot {
+      border-top: 1px solid var(--c-border-subtle);
+      padding: 32px 0;
+    }
+    .foot-inner {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .foot-copy {
+      font-size: 13px; color: var(--c-text-3);
+    }
+    .foot-copy strong { color: var(--c-text-2); font-weight: 600; }
+    .foot-links {
+      display: flex; gap: 24px; list-style: none;
+    }
+    .foot-links a {
+      color: var(--c-text-3); text-decoration: none;
+      font-size: 13px; transition: color .15s;
+    }
+    .foot-links a:hover { color: var(--c-text); }
 
-    /* ── Responsive ── */
+    /* ═══════════ ANIMATIONS ═══════════ */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-eyebrow { animation: rise .6s ease both; }
+    .hero h1 { animation: rise .6s ease .1s both; }
+    .hero-desc { animation: rise .6s ease .2s both; }
+    .hero-cta { animation: rise .6s ease .3s both; }
+    .preview-window { animation: rise .7s ease .45s both; }
+
+    /* ═══════════ RESPONSIVE ═══════════ */
     @media (max-width: 768px) {
       .nav-links { display: none; }
-
-      .hero-content { padding-top: 48px; }
-
-      .screenshot-body {
-        flex-direction: column;
-        padding: 20px 24px 28px;
-        gap: 20px;
-      }
-
-      .screenshot-sidebar { width: 100%; display: flex; gap: 4px; overflow-x: auto; }
-
-      .features-grid { grid-template-columns: 1fr; gap: 16px; }
-
-      .pricing-grid {
-        grid-template-columns: 1fr;
-        max-width: 400px;
-      }
-
-      .footer-inner {
-        flex-direction: column;
-        gap: 20px;
-        text-align: center;
-      }
+      .hero { padding: 120px 0 80px; }
+      .feat-grid { grid-template-columns: 1fr; }
+      .price-grid { grid-template-columns: 1fr; max-width: 380px; }
+      .pw-body { grid-template-columns: 1fr; }
+      .pw-side { display: none; }
+      .foot-inner { flex-direction: column; gap: 16px; text-align: center; }
     }
-
     @media (max-width: 480px) {
-      .hero-actions { flex-direction: column; width: 100%; padding: 0 16px; }
-      .btn { width: 100%; justify-content: center; }
+      .hero-cta { flex-direction: column; width: 100%; }
+      .btn-main, .btn-sec { width: 100%; justify-content: center; }
+      .wrap { padding: 0 20px; }
     }
-  
-    .lang-switch { display: inline-flex; gap: 8px; font-size: 13px; }
-    .lang-switch a { color: var(--text-on-dark-muted); text-decoration: none; transition: color 0.2s; }
-    .lang-switch a:hover, .lang-switch a.active { color: #fff; }
-    .lang-switch span { color: var(--text-on-dark-muted); opacity: 0.4; }
   </style>
-<link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-<meta name="naver-site-verification" content="9b479417f022befdffd0b837c015469b604758d3" />
 </head>
 <body>
 
-  <!-- ── Hero ── -->
+  <!-- NAV -->
+  <header class="nav-bar">
+    <div class="wrap nav-inner">
+      <a href="/en/" class="nav-brand">
+        <div class="nav-mark">B</div>BluePad
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="/en/blog/">Blog</a></li>
+        <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" class="nav-dl">Download</a></li>
+        <li>
+          <div class="nav-lang">
+            <a href="/en/" class="on">EN</a>
+            <a href="/ko/">KO</a>
+            <a href="/ja/">JA</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- HERO -->
   <section class="hero">
-    <div class="container">
-      <nav class="nav">
-        <a href="/" class="nav-logo">
-          <div class="nav-logo-icon">B</div>
-          BluePad
+    <div class="wrap">
+      <div class="hero-eyebrow">Windows &mdash; Markdown Editor</div>
+      <h1>Writing,<br>focused on<br><em>what matters.</em></h1>
+      <p class="hero-desc">We removed everything unnecessary. A lightweight, fast Markdown editor — the cleanest way to turn thoughts into words.</p>
+      <div class="hero-cta">
+        <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" class="btn-main">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v9m0 0l-3-3m3 3l3-3M3 13h10"/></svg>
+          Free Download
         </a>
-        <ul class="nav-links">
-          <li><a href="#features">Features</a></li>
-          <li><a href="#pricing">Pricing</a></li>
-          <li><a href="/en/blog/">Blog</a></li>
-          <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener" class="nav-cta">Download</a></li>
-          <li style="font-size:12px;color:var(--text-on-dark-muted)"><a href="/" style="color:#fff;text-decoration:none">EN</a> | <a href="/ko/" style="color:var(--text-on-dark-muted);text-decoration:none">KO</a> | <a href="/ja/" style="color:var(--text-on-dark-muted);text-decoration:none">JA</a></li>
-        </ul>
-      </nav>
-
-      <div class="hero-content">
-        <div class="hero-badge">&#9889; Now available for Windows</div>
-        <h1>Write <span>beautifully.</span></h1>
-        <p class="hero-sub">A lightweight, distraction-free markdown editor for Windows. Focus on your words — BluePad handles the rest.</p>
-        <div class="hero-actions">
-          <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener" class="btn btn-primary">
-            &#11015;&#65039; Download for Windows
-          </a>
-          <a href="#features" class="btn btn-ghost">See Features</a>
-        </div>
-        <p class="hero-meta">Windows 10+ <span>&middot;</span> Free to use <span>&middot;</span> ~8 MB</p>
+        <a href="#features" class="btn-sec">Explore Features</a>
       </div>
+      <p class="hero-note">Windows 10+ &nbsp;&middot;&nbsp; Free &nbsp;&middot;&nbsp; ~4 MB &nbsp;&middot;&nbsp; Built with Tauri</p>
+    </div>
+  </section>
 
-      <!-- Screenshot mockup -->
-      <div class="hero-screenshot">
-        <div class="screenshot-frame">
-          <div class="screenshot-titlebar">
-            <div class="screenshot-dot"></div>
-            <div class="screenshot-dot"></div>
-            <div class="screenshot-dot"></div>
+  <!-- PREVIEW -->
+  <section class="preview">
+    <div class="wrap">
+      <div class="preview-window">
+        <div class="pw-bar">
+          <div class="pw-dot"></div><div class="pw-dot"></div><div class="pw-dot"></div>
+          <div class="pw-tabs">
+            <div class="pw-tab on">README.md</div>
+            <div class="pw-tab">notes.md</div>
+            <div class="pw-tab">draft.md</div>
           </div>
-          <div class="screenshot-body">
-            <div class="screenshot-sidebar">
-              <div class="screenshot-sidebar-item active">README.md</div>
-              <div class="screenshot-sidebar-item">notes.md</div>
-              <div class="screenshot-sidebar-item">draft.md</div>
-            </div>
-            <div class="screenshot-editor">
-              <div class="screenshot-line"><span class="h1"># BluePad</span></div>
-              <div class="screenshot-line">&nbsp;</div>
-              <div class="screenshot-line"><span class="h2">## Getting Started</span></div>
-              <div class="screenshot-line">&nbsp;</div>
-              <div class="screenshot-line">Welcome to <span class="bold">BluePad</span>, your new favorite</div>
-              <div class="screenshot-line">markdown editor. It's <span class="accent">fast</span>, <span class="accent">clean</span>, and</div>
-              <div class="screenshot-line">built for writers who value <span class="bold">simplicity</span>.</div>
-              <div class="screenshot-line">&nbsp;</div>
-              <div class="screenshot-line"><span class="muted">```javascript</span></div>
-              <div class="screenshot-line"><span class="green">const editor</span> <span class="accent">=</span> <span class="green">new BluePad</span>();</div>
-              <div class="screenshot-line"><span class="green">editor</span>.<span class="accent">write</span>(<span class="green">"Hello, world!"</span>);</div>
-              <div class="screenshot-line"><span class="muted">```</span></div>
-            </div>
+        </div>
+        <div class="pw-body">
+          <div class="pw-side">
+            <div class="pw-side-item on">README.md</div>
+            <div class="pw-side-item">notes.md</div>
+            <div class="pw-side-item">draft.md</div>
+            <div class="pw-side-item">changelog.md</div>
+          </div>
+          <div class="pw-editor">
+            <div class="pw-ln"><span class="t1"># BluePad</span></div>
+            <div class="pw-ln">&nbsp;</div>
+            <div class="pw-ln"><span class="t2">## Getting Started</span></div>
+            <div class="pw-ln">&nbsp;</div>
+            <div class="pw-ln">Welcome to <span class="hi">BluePad</span>.</div>
+            <div class="pw-ln">Designed to let you focus solely on writing.</div>
+            <div class="pw-ln">&nbsp;</div>
+            <div class="pw-ln"><span class="dm">```javascript</span></div>
+            <div class="pw-ln"><span class="gr">const</span> editor = <span class="gr">new</span> <span class="hi">BluePad</span>();</div>
+            <div class="pw-ln">editor.<span class="hi">write</span>(<span class="gr">"Hello"</span>);</div>
+            <div class="pw-ln"><span class="dm">```</span></div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── Features ── -->
-  <section class="features" id="features">
-    <div class="container">
-      <span class="section-label">Features</span>
-      <h2 class="section-title">Everything you need,<br>nothing you don't.</h2>
-      <p class="section-desc">Built for speed and clarity. No bloat, no Electron — just a fast native app powered by Tauri.</p>
-
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">&#9998;</div>
-          <h3>WYSIWYG + Source Mode</h3>
-          <p>Switch between rich text editing and raw markdown source with a single shortcut. See your formatting live or work directly with syntax.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">&#128196;</div>
-          <h3>Multi-tab Editing</h3>
-          <p>Work on multiple documents side by side with a clean tab interface. Quickly switch context without losing your place.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">&#127912;</div>
-          <h3>4 Beautiful Themes</h3>
-          <p>Classic light, soft sepia, dark mode, and deep night. Pick the palette that matches your mood and environment.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">&#128374;</div>
-          <h3>Focus Mode</h3>
-          <p>Dim everything except the current paragraph. Eliminate distractions and stay in the flow of your writing.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">&#128269;</div>
-          <h3>Find &amp; Replace</h3>
-          <p>Powerful search with regex support. Find any text across your document and replace it instantly.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">&#127760;</div>
-          <h3>Multi-language</h3>
-          <p>Full UI support for English, Korean, and Japanese. Write in any language with proper CJK text rendering.</p>
-        </div>
+  <!-- FEATURES -->
+  <section class="feat" id="features">
+    <div class="wrap">
+      <div class="sec-label">Features</div>
+      <h2 class="sec-title">Only what you need.<br>Nothing you don't.</h2>
+      <p class="sec-desc">A native app built on Tauri, not Electron. Fast from launch, lighter the more you use it.</p>
+      <div class="feat-grid">
+        <div class="feat-cell"><div class="feat-ico">&#9998;</div><h3>WYSIWYG + Source</h3><p>Switch between rich editing and Markdown source with a single shortcut.</p></div>
+        <div class="feat-cell"><div class="feat-ico">&#9701;</div><h3>Multi-Tab</h3><p>Manage multiple documents in tabs. Drag to reorder, Ctrl+Tab to switch.</p></div>
+        <div class="feat-cell"><div class="feat-ico">&#9678;</div><h3>4 Themes</h3><p>Classic, Blue, Red, Polarity. Choose the palette that fits your mood.</p></div>
+        <div class="feat-cell"><div class="feat-ico">&#8967;</div><h3>Focus Mode</h3><p>Hide all UI and concentrate on writing. Press ESC to return instantly.</p></div>
+        <div class="feat-cell"><div class="feat-ico">&#8981;</div><h3>Find &amp; Replace</h3><p>Quickly search and instantly replace text within your document.</p></div>
+        <div class="feat-cell"><div class="feat-ico">&#9775;</div><h3>KO / EN / JA</h3><p>Three-language UI. Renders CJK text flawlessly.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- ── Pricing ── -->
-  <section class="pricing" id="pricing">
-    <div class="container">
-      <div class="pricing-header">
-        <span class="section-label">Pricing</span>
-        <h2 class="section-title">Start free, upgrade when ready.</h2>
-        <p class="section-desc">BluePad is free for everyday writing. Go Pro for the full toolkit — one payment, yours forever.</p>
+  <!-- PRICING -->
+  <section class="price" id="pricing">
+    <div class="wrap">
+      <div class="price-head">
+        <div class="sec-label">Pricing</div>
+        <h2 class="sec-title">Start for free.</h2>
+        <p class="sec-desc">Everyday writing is free. Need all features? Pay once, own it forever.</p>
       </div>
-
-      <div class="pricing-grid">
-        <!-- Free -->
-        <div class="pricing-card">
-          <div class="pricing-tier">Free</div>
-          <div class="pricing-price"><span class="currency">$</span>0</div>
-          <div class="pricing-note">Free forever</div>
-          <ul class="pricing-features">
-            <li>Up to 3 open tabs</li>
+      <div class="price-grid">
+        <div class="price-card">
+          <div class="price-tier">Free</div>
+          <div class="price-amt"><span class="sm">$</span>0</div>
+          <div class="price-sub">Free forever</div>
+          <ul class="price-list">
+            <li>Up to 3 tabs</li>
             <li>Classic theme</li>
             <li>WYSIWYG + Source mode</li>
             <li>Find &amp; Replace</li>
             <li>Multi-language UI</li>
-            <li class="disabled">All 4 themes</li>
-            <li class="disabled">Auto-save</li>
-            <li class="disabled">Focus mode</li>
-            <li class="disabled">HTML export</li>
-            <li class="disabled">Mermaid &amp; Math</li>
+            <li class="off">All themes</li>
+            <li class="off">Auto-save</li>
+            <li class="off">Focus mode</li>
           </ul>
-          <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener" class="btn-pricing btn-pricing-outline">Download Free</a>
+          <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" class="price-btn price-btn-outline">Free Download</a>
         </div>
-
-        <!-- Pro -->
-        <div class="pricing-card featured">
-          <div class="pricing-tier">Pro</div>
-          <div class="pricing-price"><span class="currency">$</span>14<span style="font-size:28px;font-weight:700">.99</span></div>
-          <div class="pricing-note">One-time purchase &middot; Lifetime updates</div>
-          <ul class="pricing-features">
+        <div class="price-card hi">
+          <div class="price-tier">Pro</div>
+          <div class="price-amt"><span class="sm">$</span>14<span style="font-size:24px;font-weight:700">.99</span></div>
+          <div class="price-sub">One-time payment &middot; Lifetime updates</div>
+          <ul class="price-list">
             <li>Unlimited tabs</li>
             <li>All 4 themes</li>
-            <li>WYSIWYG + Source mode</li>
-            <li>Find &amp; Replace</li>
-            <li>Multi-language UI</li>
             <li>Auto-save</li>
             <li>Focus mode</li>
-            <li>HTML export</li>
+            <li>HTML / PDF export</li>
             <li>Mermaid diagrams</li>
-            <li>Math (KaTeX) support</li>
+            <li>Math (KaTeX)</li>
+            <li>Priority support</li>
           </ul>
-          <a href="#" class="btn-pricing btn-pricing-fill">Get Pro License</a>
+          <a href="#" class="price-btn price-btn-fill">Buy Pro</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── Footer ── -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-inner">
-        <div class="footer-left">&copy; 2026 <strong>BRP</strong>. Built with Tauri.</div>
-        <ul class="footer-links">
-          <li><a href="/legal/privacy">Privacy Policy</a></li>
-          <li><a href="/legal/eula">EULA</a></li>
-          <li><a href="/legal/opensource">Open Source</a></li>
-          <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
-        </ul>
-      </div>
+  <!-- FOOTER -->
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <div class="foot-copy">&copy; 2026 <strong>BRP</strong></div>
+      <ul class="foot-links">
+        <li><a href="/en/blog/">Blog</a></li>
+        <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="/legal/privacy.html">Privacy Policy</a></li>
+        <li><a href="/legal/eula.html">Terms of Use</a></li>
+        <li><a href="/legal/opensource.html">Open Source</a></li>
+      </ul>
     </div>
   </footer>
 
