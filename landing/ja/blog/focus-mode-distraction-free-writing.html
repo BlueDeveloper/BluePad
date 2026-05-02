@@ -36,113 +36,235 @@
   }
   </script>
 
+  
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wkokfmayny");</script>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<meta name="naver-site-verification" content="9b479417f022befdffd0b837c015469b604758d3" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --blue: #155dfc;
-      --blue-light: #3b7dff;
-      --bg-dark: #0b0f1a;
-      --bg-light: #f8f9fc;
-      --bg-white: #ffffff;
-      --text-primary: #0f172a;
-      --text-secondary: #475569;
-      --text-muted: #94a3b8;
-      --text-on-dark: #e2e8f0;
-      --text-on-dark-muted: #94a3b8;
-      --border: #e2e8f0;
-      --border-dark: #1e293b;
-      --radius: 10px;
-      --radius-lg: 16px;
+      --c-bg: #09090b;
+      --c-bg-raised: #111113;
+      --c-bg-card: #18181b;
+      --c-border: #27272a;
+      --c-border-subtle: #1c1c1f;
+      --c-text: #fafafa;
+      --c-text-2: #a1a1aa;
+      --c-text-3: #52525b;
+      --c-accent: #155dfc;
+      --c-accent-hover: #3b7dff;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
     }
 
-    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: var(--text-primary); line-height: 1.6; }
-    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { font-family: var(--font); background: var(--c-bg); color: var(--c-text); overflow-x: hidden; }
+    ::selection { background: rgba(21,93,252,0.3); color: #fff; }
 
-    .nav-bar { background: var(--bg-dark); border-bottom: 1px solid var(--border-dark); }
-    .nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; }
-    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
-    .nav-logo-icon { width: 32px; height: 32px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #fff; font-weight: 800; }
-    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
-    .nav-links a { color: var(--text-on-dark-muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
-    .nav-links a:hover { color: #fff; }
-    .nav-cta { background: var(--blue) !important; color: #fff !important; padding: 8px 18px; border-radius: 8px; font-size: 14px; transition: background 0.2s !important; }
-    .nav-cta:hover { background: var(--blue-light) !important; }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
 
-    .article-header { background: var(--bg-dark); padding: 60px 0 80px; text-align: center; }
-    .article-header h1 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; color: #fff; letter-spacing: -0.03em; margin-bottom: 16px; max-width: 720px; margin-left: auto; margin-right: auto; line-height: 1.2; }
-    .article-meta { font-size: 14px; color: var(--text-on-dark-muted); }
+    /* NAV */
+    .nav-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      background: rgba(9,9,11,0.75);
+      border-bottom: 1px solid var(--c-border-subtle);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--c-text);
+      font-weight: 720; font-size: 17px; letter-spacing: -0.03em;
+    }
+    .nav-mark {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: var(--c-accent); color: #fff;
+      display: grid; place-items: center;
+      font-size: 14px; font-weight: 800;
+    }
+    .nav-links { display: flex; align-items: center; gap: 6px; list-style: none; }
+    .nav-links a {
+      display: block; padding: 6px 14px; border-radius: 7px;
+      color: var(--c-text-2); text-decoration: none;
+      font-size: 13.5px; font-weight: 500;
+      transition: color .15s, background .15s;
+    }
+    .nav-links a:hover { color: var(--c-text); background: rgba(255,255,255,0.05); }
+    .nav-dl {
+      background: var(--c-accent) !important; color: #fff !important;
+      font-weight: 620 !important; transition: background .15s !important;
+    }
+    .nav-dl:hover { background: var(--c-accent-hover) !important; }
+    .nav-lang {
+      display: flex; gap: 2px; margin-left: 8px;
+      border: 1px solid var(--c-border); border-radius: 7px; overflow: hidden;
+    }
+    .nav-lang a {
+      padding: 5px 10px !important; border-radius: 0 !important;
+      font-size: 12px !important; font-weight: 600 !important; letter-spacing: 0.02em;
+    }
+    .nav-lang a.on { background: rgba(255,255,255,0.08) !important; color: #fff !important; }
 
-    .article-body {
-      max-width: 720px; margin: -40px auto 0; background: var(--bg-white);
-      border-radius: var(--radius-lg); border: 1px solid var(--border);
-      padding: 48px 40px 56px; position: relative; z-index: 2;
-      line-height: 1.8; font-size: 16px;
+    /* FOOTER */
+    .foot { border-top: 1px solid var(--c-border-subtle); padding: 32px 0; }
+    .foot-inner { display: flex; align-items: center; justify-content: space-between; }
+    .foot-copy { font-size: 13px; color: var(--c-text-3); }
+    .foot-copy strong { color: var(--c-text-2); font-weight: 600; }
+    .foot-links { display: flex; gap: 24px; list-style: none; }
+    .foot-links a { color: var(--c-text-3); text-decoration: none; font-size: 13px; transition: color .15s; }
+    .foot-links a:hover { color: var(--c-text); }
+
+    /* ARTICLE HEADER */
+    .article-hero {
+      padding: 140px 0 80px;
+      position: relative;
+    }
+    .article-hero::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--c-border) 20%, var(--c-border) 80%, transparent 100%);
+    }
+    .article-hero h1 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800; letter-spacing: -0.035em;
+      line-height: 1.15; color: var(--c-text);
+      max-width: 720px; margin-bottom: 16px;
+    }
+    .article-meta {
+      font-family: var(--font-mono);
+      font-size: 13px; color: var(--c-text-3); letter-spacing: 0.01em;
     }
 
-    .article-body h2 { font-size: 24px; font-weight: 700; margin: 40px 0 16px; letter-spacing: -0.02em; }
-    .article-body h3 { font-size: 20px; font-weight: 600; margin: 32px 0 12px; }
-    .article-body p { margin-bottom: 16px; color: var(--text-secondary); }
-    .article-body strong { color: var(--text-primary); }
-    .article-body ul, .article-body ol { margin: 0 0 16px 24px; color: var(--text-secondary); }
-    .article-body li { margin-bottom: 8px; }
+    /* ARTICLE BODY */
+    .article-content {
+      max-width: 720px; margin: 0 auto;
+      padding: 64px 0 80px;
+      line-height: 1.85; font-size: 16px;
+    }
+    .article-content h2 {
+      font-size: 24px; font-weight: 720;
+      margin: 48px 0 16px; letter-spacing: -0.02em;
+      color: var(--c-text);
+    }
+    .article-content h3 {
+      font-size: 19px; font-weight: 640;
+      margin: 36px 0 12px; color: var(--c-text);
+    }
+    .article-content p { margin-bottom: 18px; color: var(--c-text-2); }
+    .article-content strong { color: var(--c-text); }
+    .article-content ul, .article-content ol {
+      margin: 0 0 18px 24px; color: var(--c-text-2);
+    }
+    .article-content li { margin-bottom: 8px; }
+    .article-content a { color: var(--c-accent); text-decoration: underline; text-underline-offset: 3px; }
+    .article-content a:hover { color: var(--c-accent-hover); }
 
-    .cta-banner { margin-top: 48px; background: linear-gradient(135deg, var(--blue), var(--blue-light)); border-radius: var(--radius-lg); padding: 40px 32px; text-align: center; }
-    .cta-banner h3 { color: #fff; font-size: 22px; font-weight: 700; margin-bottom: 12px; }
-    .cta-banner p { color: rgba(255,255,255,0.85); margin-bottom: 20px; font-size: 15px; }
-    .cta-btn { display: inline-block; background: #fff; color: var(--blue); padding: 14px 32px; border-radius: 10px; font-size: 15px; font-weight: 600; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
-    .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+    /* TABLE */
+    .comparison-table {
+      width: 100%; border-collapse: collapse;
+      margin: 24px 0 32px; font-size: 14px;
+    }
+    .comparison-table th, .comparison-table td {
+      padding: 12px 14px;
+      border: 1px solid var(--c-border);
+      text-align: left; color: var(--c-text-2);
+    }
+    .comparison-table th {
+      background: var(--c-bg-raised);
+      font-weight: 600; font-size: 12px;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      color: var(--c-text-3);
+    }
+    .comparison-table td strong { color: var(--c-text); }
+    .comparison-table tr:hover td { background: rgba(21,93,252,0.03); }
 
-    .footer { background: var(--bg-dark); padding: 40px 0; border-top: 1px solid var(--border-dark); margin-top: 80px; }
-    .footer-inner { display: flex; align-items: center; justify-content: space-between; }
-    .footer-left { font-size: 14px; color: var(--text-on-dark-muted); }
-    .footer-left strong { color: var(--text-on-dark); }
-    .footer-links { display: flex; gap: 24px; list-style: none; }
-    .footer-links a { color: var(--text-on-dark-muted); text-decoration: none; font-size: 14px; transition: color 0.2s; }
-    .footer-links a:hover { color: #fff; }
+    /* CODE EXAMPLE */
+    .code-example {
+      background: var(--c-bg-raised);
+      border: 1px solid var(--c-border);
+      border-radius: 10px; padding: 20px 24px;
+      font-family: var(--font-mono); font-size: 13.5px;
+      color: var(--c-text-2); line-height: 1.7;
+      margin: 16px 0 20px; overflow-x: auto;
+    }
 
+    /* TIP NUMBER */
+    .tip-number {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(21,93,252,0.12); color: var(--c-accent);
+      font-size: 13px; font-weight: 700; margin-right: 8px;
+    }
+
+    /* CTA */
+    .cta-banner {
+      margin-top: 56px;
+      border: 1px solid var(--c-border);
+      border-radius: 14px;
+      padding: 44px 32px;
+      text-align: center;
+      background: var(--c-bg-raised);
+    }
+    .cta-banner h3 { color: var(--c-text); font-size: 22px; font-weight: 720; margin-bottom: 10px; }
+    .cta-banner p { color: var(--c-text-2); margin-bottom: 24px; font-size: 15px; }
+    .cta-btn {
+      display: inline-block;
+      background: var(--c-accent); color: #fff;
+      padding: 13px 32px; border-radius: 9px;
+      font-size: 14.5px; font-weight: 620;
+      text-decoration: none; transition: background .15s, transform .1s;
+    }
+    .cta-btn:hover { background: var(--c-accent-hover); }
+    .cta-btn:active { transform: scale(0.97); }
+
+    /* RESPONSIVE */
     @media (max-width: 768px) {
       .nav-links { display: none; }
-      .article-body { padding: 32px 20px 40px; margin-top: -24px; }
-      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+      .foot-inner { flex-direction: column; gap: 16px; text-align: center; }
+      .wrap { padding: 0 20px; }
+      .article-hero { padding: 110px 0 60px; }
+      .article-content { padding: 40px 0 60px; }
+      .comparison-table { font-size: 12px; }
+      .comparison-table th, .comparison-table td { padding: 8px 6px; }
     }
-  
-    .lang-switch { display: inline-flex; gap: 8px; font-size: 13px; }
-    .lang-switch a { color: var(--text-on-dark-muted); text-decoration: none; transition: color 0.2s; }
-    .lang-switch a:hover, .lang-switch a.active { color: #fff; }
-    .lang-switch span { color: var(--text-on-dark-muted); opacity: 0.4; }
   </style>
-<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wkokfmayny");</script>
-<link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-<meta name="naver-site-verification" content="9b479417f022befdffd0b837c015469b604758d3" />
 </head>
 <body>
 
   <header class="nav-bar">
-    <div class="container">
-      <nav class="nav">
-        <a href="/ja/" class="nav-logo"><div class="nav-logo-icon">B</div> BluePad</a>
-        <ul class="nav-links">
-          <li><a href="/ja/#features">機能</a></li>
-          <li><a href="/ja/#pricing">価格</a></li>
-          <li><a href="/ja/blog/">ブログ</a></li>
-          <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener" class="nav-cta">ダウンロード</a></li>
-          <li style="font-size:12px;color:var(--text-on-dark-muted)"><a href="/blog/focus-mode-distraction-free-writing.html" style="color:#fff;text-decoration:none">EN</a> | <a href="/ko/blog/focus-mode-distraction-free-writing.html" style="color:var(--text-on-dark-muted);text-decoration:none">KO</a> | <a href="/ja/blog/focus-mode-distraction-free-writing.html" style="color:var(--text-on-dark-muted);text-decoration:none">JA</a></li>
-        </ul>
-      </nav>
+    <div class="wrap nav-inner">
+      <a href="/ja/" class="nav-brand">
+        <div class="nav-mark">B</div>BluePad
+      </a>
+      <ul class="nav-links">
+        <li><a href="/ja/#features">機能</a></li>
+        <li><a href="/ja/#pricing">料金</a></li>
+        <li><a href="/ja/blog/">ブログ</a></li>
+        <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" class="nav-dl">ダウンロード</a></li>
+        <li>
+          <div class="nav-lang">
+            <a href="/blog/focus-mode-distraction-free-writing.html">EN</a>
+            <a href="/ko/blog/focus-mode-distraction-free-writing.html">KO</a>
+            <a href="/ja/blog/focus-mode-distraction-free-writing.html" class="on">JA</a>
+          </div>
+        </li>
+      </ul>
     </div>
   </header>
 
-  <section class="article-header">
-    <div class="container">
+  <section class="article-hero">
+    <div class="wrap">
       <h1>フォーカスモードで執筆が向上する理由 — 集中執筆ガイド</h1>
       <p class="article-meta">2026年5月2日 &middot; BluePadチーム &middot; 4分で読める</p>
     </div>
   </section>
 
-  <article class="article-body">
+  <article class="article-content wrap">
+    
     <p>The average knowledge worker is interrupted every <strong>11 minutes</strong>, and it takes 23 minutes to fully regain focus. For writers, this constant context-switching destroys creative flow. Distraction-free writing tools with focus mode are designed to solve exactly this problem.</p>
 
     <p>In this guide, we'll explore why distraction-free writing matters, how focus mode works in practice, and practical tips to achieve deep work in your writing sessions.</p>
@@ -227,18 +349,19 @@
       <p>BluePadのフォーカスモードで集中して執筆。無料で試して、準備ができたらアップグレード。</p>
       <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener" class="cta-btn">Windows版ダウンロード</a>
     </div>
+  
   </article>
 
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-inner">
-        <div class="footer-left">&copy; 2026 <strong>BRP</strong>. Tauriで構築。</div>
-        <ul class="footer-links">
-          <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener">リリース</a></li>
-          <li><a href="https://github.com/BlueDeveloper/BluePad/issues" target="_blank" rel="noopener">バグ報告</a></li>
-        </ul>
-      </div>
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <div class="foot-copy">&copy; 2026 <strong>BRP</strong></div>
+      <ul class="foot-links">
+        <li><a href="/ja/blog/">ブログ</a></li>
+        <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="/legal/privacy.html">プライバシー</a></li>
+        <li><a href="/legal/eula.html">利用規約</a></li>
+        <li><a href="/legal/opensource.html">オープンソース</a></li>
+      </ul>
     </div>
   </footer>
 
