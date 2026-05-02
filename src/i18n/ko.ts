@@ -118,6 +118,9 @@ export const ko = {
   "dialog.close": "닫기",
 
   // Trial
-  "trial.expired": "Pro 체험 기간이 만료되었습니다. 계속 Pro 기능을 사용하려면 라이선스를 구매해주세요.",
+  "trial.expired": "Pro 체험 기간이 만료되었습니다.\n계속 Pro 기능을 사용하려면 라이선스를 구매해주세요.",
   "trial.expiringSoon": "Pro 체험 기간이 {days}일 후 만료됩니다.",
+  "trial.welcome": "BluePad에 오신 것을 환영합니다!\n\n14일간 모든 Pro 기능을 무료로 체험할 수 있습니다.\n\n• 무제한 탭\n• 4가지 테마\n• 집중 모드\n• HTML/PDF 내보내기",
+  "trial.welcomeTitle": "14일 무료 체험",
+  "trial.buyNow": "Pro 구매",
 };

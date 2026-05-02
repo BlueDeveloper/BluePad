@@ -118,6 +118,9 @@ export const en = {
   "dialog.close": "Close",
 
   // Trial
-  "trial.expired": "Your Pro trial has expired. Purchase a license to continue using Pro features.",
+  "trial.expired": "Your Pro trial has expired.\nPurchase a license to continue using Pro features.",
   "trial.expiringSoon": "Your Pro trial expires in {days} days.",
+  "trial.welcome": "Welcome to BluePad!\n\nEnjoy all Pro features free for 14 days.\n\n• Unlimited tabs\n• All 4 themes\n• Focus mode\n• HTML/PDF export",
+  "trial.welcomeTitle": "14-Day Free Trial",
+  "trial.buyNow": "Buy Pro",
 };

@@ -11,6 +11,8 @@ import { FindReplace } from "./components/FindReplace";
 import { LicenseDialog } from "./components/LicenseDialog";
 import { AboutDialog } from "./components/AboutDialog";
 import { ProGate } from "./components/ProGate";
+import { InputDialog } from "./components/InputDialog";
+import { AlertDialog } from "./components/AlertDialog";
 import { useFileManager } from "./hooks/useFileManager";
 import { useLicense } from "./hooks/useLicense";
 import { I18nCtx, t as translate } from "./i18n";
@@ -42,6 +44,9 @@ function App() {
   const [licenseDialogVisible, setLicenseDialogVisible] = useState(false);
   const [aboutDialogVisible, setAboutDialogVisible] = useState(false);
   const [proGateVisible, setProGateVisible] = useState(false);
+  const [wordTargetDialogVisible, setWordTargetDialogVisible] = useState(false);
+  const [trialWelcomeVisible, setTrialWelcomeVisible] = useState(false);
+  const [trialExpiredVisible, setTrialExpiredVisible] = useState(false);
   const [fontSize, setFontSize] = useState(() => {
     try {
       return Math.max(10, Math.min(28, parseInt(localStorage.getItem(FONT_SIZE_KEY) || "15", 10)));
@@ -87,6 +92,21 @@ function App() {
   const fileManager = useFileManager();
   const license = useLicense();
 
+  // 14일 체험 환영/만료 다이얼로그
+  useEffect(() => {
+    const welcomed = localStorage.getItem("bluepad_trial_welcomed");
+    if (license.isTrial && !welcomed) {
+      setTrialWelcomeVisible(true);
+      try { localStorage.setItem("bluepad_trial_welcomed", "1"); } catch { /* ignore */ }
+    } else if (!license.isPro && !license.isTrial && license.trialDaysLeft <= 0) {
+      const expiredShown = sessionStorage.getItem("bluepad_trial_expired_shown");
+      if (!expiredShown) {
+        setTrialExpiredVisible(true);
+        sessionStorage.setItem("bluepad_trial_expired_shown", "1");
+      }
+    }
+  }, [license.isPro, license.isTrial, license.trialDaysLeft]);
+
   // Sync i18n dialog labels to useFileManager
   useEffect(() => {
     fileManager.setDialogLabels({
@@ -130,19 +150,6 @@ function App() {
     return () => clearInterval(timer);
   }, [autoSaveEnabled, fileManager]);
 
-  // Trial expiry alert
-  useEffect(() => {
-    if (!license.isTrial && !license.isPro && localStorage.getItem("bluepad_trial_start")) {
-      // Trial has expired and no license - show alert once per session
-      const shownKey = "bluepad_trial_expired_shown_session";
-      if (!sessionStorage.getItem(shownKey)) {
-        sessionStorage.setItem(shownKey, "1");
-        setTimeout(() => {
-          alert(i18n.t("trial.expired"));
-        }, 500);
-      }
-    }
-  }, [license.isTrial, license.isPro, i18n]);
 
   useEffect(() => {
     try { localStorage.setItem(FONT_SIZE_KEY, String(fontSize)); } catch { /* ignore */ }
@@ -259,15 +266,18 @@ ${editorEl.innerHTML}
   }, [license.isPro, fileManager.fileName, lang]);
 
   const handleSetWordTarget = useCallback(() => {
-    const input = prompt(i18n.t("menu.wordTarget"), wordTarget ? String(wordTarget) : "");
-    if (input === null) return;
-    const num = parseInt(input, 10);
+    setWordTargetDialogVisible(true);
+  }, []);
+
+  const handleWordTargetConfirm = useCallback((value: string) => {
+    setWordTargetDialogVisible(false);
+    const num = parseInt(value, 10);
     if (!num || num <= 0) {
       setWordTarget(null);
     } else {
       setWordTarget(num);
     }
-  }, [wordTarget, i18n]);
+  }, []);
 
   const handlePrint = useCallback(() => {
     window.print();
@@ -494,6 +504,28 @@ ${editorEl.innerHTML}
           visible={proGateVisible}
           onClose={() => setProGateVisible(false)}
           onOpenLicense={() => setLicenseDialogVisible(true)}
+        />
+        <InputDialog
+          visible={wordTargetDialogVisible}
+          title={i18n.t("menu.wordTarget")}
+          placeholder="500"
+          defaultValue={wordTarget ? String(wordTarget) : ""}
+          onConfirm={handleWordTargetConfirm}
+          onCancel={() => setWordTargetDialogVisible(false)}
+        />
+        <AlertDialog
+          visible={trialWelcomeVisible}
+          title={i18n.t("trial.welcomeTitle")}
+          message={i18n.t("trial.welcome")}
+          onClose={() => setTrialWelcomeVisible(false)}
+        />
+        <AlertDialog
+          visible={trialExpiredVisible}
+          title={i18n.t("license.upgradeTitle")}
+          message={i18n.t("trial.expired")}
+          actionLabel={i18n.t("trial.buyNow")}
+          onAction={() => setLicenseDialogVisible(true)}
+          onClose={() => setTrialExpiredVisible(false)}
         />
       </div>
     </I18nCtx.Provider>

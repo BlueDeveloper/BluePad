@@ -118,6 +118,9 @@ export const ja = {
   "dialog.close": "閉じる",
 
   // Trial
-  "trial.expired": "Pro体験期間が終了しました。Pro機能を引き続き使用するにはライセンスを購入してください。",
+  "trial.expired": "Pro体験期間が終了しました。\nPro機能を引き続き使用するにはライセンスを購入してください。",
   "trial.expiringSoon": "Pro体験期間が{days}日後に終了します。",
+  "trial.welcome": "BluePadへようこそ！\n\n14日間、すべてのPro機能を無料でお試しいただけます。\n\n• 無制限タブ\n• 4つのテーマ\n• 集中モード\n• HTML/PDFエクスポート",
+  "trial.welcomeTitle": "14日間無料体験",
+  "trial.buyNow": "Proを購入",
 };
