@@ -1,31 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BluePad — Lightweight Markdown Editor for Windows</title>
-  <meta name="description" content="BluePad is a fast, distraction-free markdown editor for Windows. WYSIWYG editing, multiple themes, focus mode, and more.">
-  <meta name="keywords" content="markdown editor, windows, WYSIWYG, lightweight, distraction-free, writing">
-  <link rel="canonical" href="https://bluepad.bdarchive.site/">
+  <title>BluePad — Windows용 경량 마크다운 에디터</title>
+  <meta name="description" content="BluePad는 빠르고 집중력을 높여주는 Windows용 마크다운 에디터입니다. 위지윅 편집, 다양한 테마, 집중 모드 등을 제공합니다.">
+  <meta name="keywords" content="마크다운 에디터, 윈도우, 위지윅, 경량, 집중 모드, 글쓰기">
+  <link rel="canonical" href="https://bluepad.bdarchive.site/ko/">
   <link rel="alternate" hreflang="en" href="https://bluepad.bdarchive.site/">
   <link rel="alternate" hreflang="ko" href="https://bluepad.bdarchive.site/ko/">
   <link rel="alternate" hreflang="ja" href="https://bluepad.bdarchive.site/ja/">
   <link rel="alternate" hreflang="x-default" href="https://bluepad.bdarchive.site/">
-
-  <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="BluePad — Lightweight Markdown Editor for Windows">
-  <meta property="og:description" content="A fast, distraction-free markdown editor for Windows. Write beautifully with WYSIWYG editing, themes, and focus mode.">
-  <meta property="og:url" content="https://bluepad.bdarchive.site/">
+  <meta property="og:title" content="BluePad — Windows용 경량 마크다운 에디터">
+  <meta property="og:description" content="빠르고 집중력을 높여주는 Windows용 마크다운 에디터.">
+  <meta property="og:url" content="https://bluepad.bdarchive.site/ko/">
   <meta property="og:site_name" content="BluePad">
   <meta property="og:image" content="https://bluepad.bdarchive.site/og-image.png">
-
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="BluePad — Lightweight Markdown Editor for Windows">
-  <meta name="twitter:description" content="A fast, distraction-free markdown editor for Windows.">
-
-  <!-- Structured Data -->
+  <meta name="twitter:title" content="BluePad — Windows용 경량 마크다운 에디터">
+  <meta name="twitter:description" content="빠르고 집중력을 높여주는 Windows용 마크다운 에디터.">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -33,28 +27,15 @@
     "name": "BluePad",
     "operatingSystem": "Windows",
     "applicationCategory": "DeveloperApplication",
-    "description": "A lightweight, distraction-free markdown editor for Windows with WYSIWYG editing, multiple themes, and focus mode.",
+    "description": "위지윅 편집, 다양한 테마, 집중 모드를 제공하는 Windows용 경량 마크다운 에디터입니다.",
+    "inLanguage": "ko",
     "offers": [
-      {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD",
-        "name": "Free"
-      },
-      {
-        "@type": "Offer",
-        "price": "14.99",
-        "priceCurrency": "USD",
-        "name": "Pro License"
-      }
+      { "@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "무료" },
+      { "@type": "Offer", "price": "14.99", "priceCurrency": "USD", "name": "Pro 라이선스" }
     ],
-    "author": {
-      "@type": "Organization",
-      "name": "BRP"
-    }
+    "author": { "@type": "Organization", "name": "BRP" }
   }
   </script>
-
   <style>
     /* ── Reset & Base ── */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -676,48 +657,38 @@
     .lang-switch a:hover, .lang-switch a.active { color: #fff; }
     .lang-switch span { color: var(--text-on-dark-muted); opacity: 0.4; }
   </style>
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wknut8xl14");</script>
 </head>
 <body>
 
-  <!-- ── Hero ── -->
   <section class="hero">
     <div class="container">
       <nav class="nav">
-        <a href="/" class="nav-logo">
-          <div class="nav-logo-icon">B</div>
-          BluePad
-        </a>
+        <a href="/ko/" class="nav-logo"><div class="nav-logo-icon">B</div> BluePad</a>
         <ul class="nav-links">
-          <li><a href="#features">Features</a></li>
-          <li><a href="#pricing">Pricing</a></li>
-          <li><a href="/blog/">Blog</a></li>
+          <li><a href="#features">기능</a></li>
+          <li><a href="#pricing">가격</a></li>
+          <li><a href="/ko/blog/">블로그</a></li>
           <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener" class="nav-cta">Download</a></li>
-          <li style="font-size:12px;color:var(--text-on-dark-muted)"><a href="/" style="color:#fff;text-decoration:none">EN</a> | <a href="/ko/" style="color:var(--text-on-dark-muted);text-decoration:none">KO</a> | <a href="/ja/" style="color:var(--text-on-dark-muted);text-decoration:none">JA</a></li>
+          <li><a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" class="nav-cta">다운로드</a></li>
+          <li class="lang-switch"><a href="/">EN</a><span>|</span><a href="/ko/" class="active">KO</a><span>|</span><a href="/ja/">JA</a></li>
         </ul>
       </nav>
 
       <div class="hero-content">
-        <div class="hero-badge">&#9889; Now available for Windows</div>
-        <h1>Write <span>beautifully.</span></h1>
-        <p class="hero-sub">A lightweight, distraction-free markdown editor for Windows. Focus on your words — BluePad handles the rest.</p>
+        <div class="hero-badge">&#9889; Windows 버전 출시</div>
+        <h1><span>아름답게</span> 쓰세요.</h1>
+        <p class="hero-sub">Windows용 경량 마크다운 에디터. 글쓰기에만 집중하세요 — 나머지는 BluePad가 해결합니다.</p>
         <div class="hero-actions">
-          <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener" class="btn btn-primary">
-            &#11015;&#65039; Download for Windows
-          </a>
-          <a href="#features" class="btn btn-ghost">See Features</a>
+          <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" class="btn btn-primary">&#11015;&#65039; Windows용 다운로드</a>
+          <a href="#features" class="btn btn-ghost">기능 보기</a>
         </div>
-        <p class="hero-meta">Windows 10+ <span>&middot;</span> Free to use <span>&middot;</span> ~8 MB</p>
+        <p class="hero-meta">Windows 10+ <span>&middot;</span> 무료 사용 <span>&middot;</span> ~8 MB</p>
       </div>
 
-      <!-- Screenshot mockup -->
       <div class="hero-screenshot">
         <div class="screenshot-frame">
-          <div class="screenshot-titlebar">
-            <div class="screenshot-dot"></div>
-            <div class="screenshot-dot"></div>
-            <div class="screenshot-dot"></div>
-          </div>
+          <div class="screenshot-titlebar"><div class="screenshot-dot"></div><div class="screenshot-dot"></div><div class="screenshot-dot"></div></div>
           <div class="screenshot-body">
             <div class="screenshot-sidebar">
               <div class="screenshot-sidebar-item active">README.md</div>
@@ -727,15 +698,16 @@
             <div class="screenshot-editor">
               <div class="screenshot-line"><span class="h1"># BluePad</span></div>
               <div class="screenshot-line">&nbsp;</div>
-              <div class="screenshot-line"><span class="h2">## Getting Started</span></div>
+              <div class="screenshot-line"><span class="h2">## 시작하기</span></div>
               <div class="screenshot-line">&nbsp;</div>
-              <div class="screenshot-line">Welcome to <span class="bold">BluePad</span>, your new favorite</div>
-              <div class="screenshot-line">markdown editor. It's <span class="accent">fast</span>, <span class="accent">clean</span>, and</div>
-              <div class="screenshot-line">built for writers who value <span class="bold">simplicity</span>.</div>
+              <div class="screenshot-line"><span class="bold">BluePad</span>에 오신 것을 환영합니다.</div>
+              <div class="screenshot-line">여러분의 새로운 마크다운 에디터입니다.</div>
+              <div class="screenshot-line"><span class="accent">빠르고</span>, <span class="accent">깔끔하며</span>,</div>
+              <div class="screenshot-line"><span class="bold">심플함</span>을 추구하는 작가를 위해 만들어졌습니다.</div>
               <div class="screenshot-line">&nbsp;</div>
               <div class="screenshot-line"><span class="muted">```javascript</span></div>
               <div class="screenshot-line"><span class="green">const editor</span> <span class="accent">=</span> <span class="green">new BluePad</span>();</div>
-              <div class="screenshot-line"><span class="green">editor</span>.<span class="accent">write</span>(<span class="green">"Hello, world!"</span>);</div>
+              <div class="screenshot-line"><span class="green">editor</span>.<span class="accent">write</span>(<span class="green">"안녕하세요!"</span>);</div>
               <div class="screenshot-line"><span class="muted">```</span></div>
             </div>
           </div>
@@ -744,111 +716,62 @@
     </div>
   </section>
 
-  <!-- ── Features ── -->
   <section class="features" id="features">
     <div class="container">
-      <span class="section-label">Features</span>
-      <h2 class="section-title">Everything you need,<br>nothing you don't.</h2>
-      <p class="section-desc">Built for speed and clarity. No bloat, no Electron — just a fast native app powered by Tauri.</p>
-
+      <span class="section-label">기능</span>
+      <h2 class="section-title">필요한 것만,<br>불필요한 것은 없이.</h2>
+      <p class="section-desc">속도와 명확함을 위해 설계되었습니다. Electron 없이 — Tauri 기반의 빠른 네이티브 앱.</p>
       <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">&#9998;</div>
-          <h3>WYSIWYG + Source Mode</h3>
-          <p>Switch between rich text editing and raw markdown source with a single shortcut. See your formatting live or work directly with syntax.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">&#128196;</div>
-          <h3>Multi-tab Editing</h3>
-          <p>Work on multiple documents side by side with a clean tab interface. Quickly switch context without losing your place.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">&#127912;</div>
-          <h3>4 Beautiful Themes</h3>
-          <p>Classic light, soft sepia, dark mode, and deep night. Pick the palette that matches your mood and environment.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">&#128374;</div>
-          <h3>Focus Mode</h3>
-          <p>Dim everything except the current paragraph. Eliminate distractions and stay in the flow of your writing.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">&#128269;</div>
-          <h3>Find &amp; Replace</h3>
-          <p>Powerful search with regex support. Find any text across your document and replace it instantly.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">&#127760;</div>
-          <h3>Multi-language</h3>
-          <p>Full UI support for English, Korean, and Japanese. Write in any language with proper CJK text rendering.</p>
-        </div>
+        <div class="feature-card"><div class="feature-icon">&#9998;</div><h3>위지윅 + 소스 모드</h3><p>리치 텍스트 편집과 마크다운 소스 간 단축키 하나로 전환. 서식을 실시간으로 보거나 구문을 직접 편집할 수 있습니다.</p></div>
+        <div class="feature-card"><div class="feature-icon">&#128196;</div><h3>멀티탭 편집</h3><p>깔끔한 탭 인터페이스로 여러 문서를 동시에 작업. 작업 위치를 잃지 않고 빠르게 컨텍스트 전환이 가능합니다.</p></div>
+        <div class="feature-card"><div class="feature-icon">&#127912;</div><h3>4가지 아름다운 테마</h3><p>클래식 라이트, 소프트 세피아, 다크 모드, 딥 나이트. 분위기와 환경에 맞는 팔레트를 선택하세요.</p></div>
+        <div class="feature-card"><div class="feature-icon">&#128374;</div><h3>집중 모드</h3><p>현재 단락을 제외한 모든 것을 흐리게 처리. 방해 요소를 제거하고 글쓰기 흐름에 집중하세요.</p></div>
+        <div class="feature-card"><div class="feature-icon">&#128269;</div><h3>찾기 &amp; 바꾸기</h3><p>정규식을 지원하는 강력한 검색. 문서 내 텍스트를 찾고 즉시 교체할 수 있습니다.</p></div>
+        <div class="feature-card"><div class="feature-icon">&#127760;</div><h3>다국어 지원</h3><p>영어, 한국어, 일본어 완벽 지원 UI. CJK 텍스트 렌더링으로 어떤 언어로든 작성 가능.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- ── Pricing ── -->
   <section class="pricing" id="pricing">
     <div class="container">
       <div class="pricing-header">
-        <span class="section-label">Pricing</span>
-        <h2 class="section-title">Start free, upgrade when ready.</h2>
-        <p class="section-desc">BluePad is free for everyday writing. Go Pro for the full toolkit — one payment, yours forever.</p>
+        <span class="section-label">가격</span>
+        <h2 class="section-title">무료로 시작하고, 준비되면 업그레이드.</h2>
+        <p class="section-desc">BluePad는 일상 글쓰기에 무료입니다. 전체 도구가 필요하면 Pro로 — 한 번 결제, 평생 소유.</p>
       </div>
-
       <div class="pricing-grid">
-        <!-- Free -->
         <div class="pricing-card">
-          <div class="pricing-tier">Free</div>
+          <div class="pricing-tier">무료</div>
           <div class="pricing-price"><span class="currency">$</span>0</div>
-          <div class="pricing-note">Free forever</div>
+          <div class="pricing-note">영원히 무료</div>
           <ul class="pricing-features">
-            <li>Up to 3 open tabs</li>
-            <li>Classic theme</li>
-            <li>WYSIWYG + Source mode</li>
-            <li>Find &amp; Replace</li>
-            <li>Multi-language UI</li>
-            <li class="disabled">All 4 themes</li>
-            <li class="disabled">Auto-save</li>
-            <li class="disabled">Focus mode</li>
-            <li class="disabled">HTML export</li>
-            <li class="disabled">Mermaid &amp; Math</li>
+            <li>최대 3개 탭</li><li>클래식 테마</li><li>위지윅 + 소스 모드</li><li>찾기 &amp; 바꾸기</li><li>다국어 UI</li>
+            <li class="disabled">4가지 테마 전체</li><li class="disabled">자동 저장</li><li class="disabled">집중 모드</li><li class="disabled">HTML 내보내기</li><li class="disabled">Mermaid &amp; 수식</li>
           </ul>
-          <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener" class="btn-pricing btn-pricing-outline">Download Free</a>
+          <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" class="btn-pricing btn-pricing-outline">무료 다운로드</a>
         </div>
-
-        <!-- Pro -->
         <div class="pricing-card featured">
           <div class="pricing-tier">Pro</div>
           <div class="pricing-price"><span class="currency">$</span>14<span style="font-size:28px;font-weight:700">.99</span></div>
-          <div class="pricing-note">One-time purchase &middot; Lifetime updates</div>
+          <div class="pricing-note">일회성 결제 &middot; 평생 업데이트</div>
           <ul class="pricing-features">
-            <li>Unlimited tabs</li>
-            <li>All 4 themes</li>
-            <li>WYSIWYG + Source mode</li>
-            <li>Find &amp; Replace</li>
-            <li>Multi-language UI</li>
-            <li>Auto-save</li>
-            <li>Focus mode</li>
-            <li>HTML export</li>
-            <li>Mermaid diagrams</li>
-            <li>Math (KaTeX) support</li>
+            <li>무제한 탭</li><li>4가지 테마 전체</li><li>위지윅 + 소스 모드</li><li>찾기 &amp; 바꾸기</li><li>다국어 UI</li>
+            <li>자동 저장</li><li>집중 모드</li><li>HTML 내보내기</li><li>Mermaid 다이어그램</li><li>수식 (KaTeX) 지원</li>
           </ul>
-          <a href="#" class="btn-pricing btn-pricing-fill">Get Pro License</a>
+          <a href="#" class="btn-pricing btn-pricing-fill">Pro 라이선스 구매</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── Footer ── -->
   <footer class="footer">
     <div class="container">
       <div class="footer-inner">
-        <div class="footer-left">&copy; 2026 <strong>BRP</strong>. Built with Tauri.</div>
+        <div class="footer-left">&copy; 2026 <strong>BRP</strong>. Tauri로 제작.</div>
         <ul class="footer-links">
-          <li><a href="/legal/privacy">Privacy Policy</a></li>
-          <li><a href="/legal/eula">EULA</a></li>
-          <li><a href="/legal/opensource">Open Source</a></li>
           <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://github.com/BlueDeveloper/BluePad/releases" target="_blank" rel="noopener">릴리스</a></li>
+          <li><a href="https://github.com/BlueDeveloper/BluePad/issues" target="_blank" rel="noopener">버그 신고</a></li>
         </ul>
       </div>
     </div>

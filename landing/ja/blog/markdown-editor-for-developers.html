@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>開発者に専用マークダウンエディターが必要な理由 | BluePadブログ</title>
+  <meta name="description" content="Why VS Code isn't ideal for pure markdown writing. How a dedicated markdown editor like BluePad improves your README, documentation, and blog workflow.">
+  <meta name="keywords" content="markdown editor for developers, developer markdown editor, best markdown editor coding, README editor, documentation writing tool">
+  <link rel="canonical" href="https://bluepad.bdarchive.site/ja/blog/markdown-editor-for-developers.html">
+  <link rel="alternate" hreflang="en" href="https://bluepad.bdarchive.site/blog/markdown-editor-for-developers.html">
+  <link rel="alternate" hreflang="ko" href="https://bluepad.bdarchive.site/ko/blog/markdown-editor-for-developers.html">
+  <link rel="alternate" hreflang="ja" href="https://bluepad.bdarchive.site/ja/blog/markdown-editor-for-developers.html">
+  <link rel="alternate" hreflang="x-default" href="https://bluepad.bdarchive.site/blog/markdown-editor-for-developers.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Why Every Developer Needs a Dedicated Markdown Editor">
+  <meta property="og:description" content="Why VS Code isn't ideal for pure markdown writing, and how a dedicated editor improves your documentation workflow.">
+  <meta property="og:url" content="https://bluepad.bdarchive.site/blog/markdown-editor-for-developers.html">
+  <meta property="og:site_name" content="BluePad">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Why Every Developer Needs a Dedicated Markdown Editor">
+  <meta name="twitter:description" content="Why VS Code isn't ideal for pure markdown writing.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "開発者に専用マークダウンエディターが必要な理由",
+    "datePublished": "2026-05-02",
+    "dateModified": "2026-05-02",
+    "author": { "@type": "Organization", "name": "BluePad Team" },
+    "publisher": { "@type": "Organization", "name": "BluePad" },
+    "description": "Why VS Code isn't ideal for pure markdown writing. How a dedicated markdown editor like BluePad improves your README, documentation, and blog workflow.",
+    "mainEntityOfPage": "https://bluepad.bdarchive.site/blog/markdown-editor-for-developers.html"
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --blue: #155dfc;
+      --blue-light: #3b7dff;
+      --bg-dark: #0b0f1a;
+      --bg-light: #f8f9fc;
+      --bg-white: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --text-on-dark: #e2e8f0;
+      --text-on-dark-muted: #94a3b8;
+      --border: #e2e8f0;
+      --border-dark: #1e293b;
+      --radius: 10px;
+      --radius-lg: 16px;
+    }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: var(--text-primary); line-height: 1.6; }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+    .nav-bar { background: var(--bg-dark); border-bottom: 1px solid var(--border-dark); }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+    .nav-logo-icon { width: 32px; height: 32px; background: var(--blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #fff; font-weight: 800; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { color: var(--text-on-dark-muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: #fff; }
+    .nav-cta { background: var(--blue) !important; color: #fff !important; padding: 8px 18px; border-radius: 8px; font-size: 14px; transition: background 0.2s !important; }
+    .nav-cta:hover { background: var(--blue-light) !important; }
+
+    .article-header { background: var(--bg-dark); padding: 60px 0 80px; text-align: center; }
+    .article-header h1 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; color: #fff; letter-spacing: -0.03em; margin-bottom: 16px; max-width: 720px; margin-left: auto; margin-right: auto; line-height: 1.2; }
+    .article-meta { font-size: 14px; color: var(--text-on-dark-muted); }
+
+    .article-body {
+      max-width: 720px; margin: -40px auto 0; background: var(--bg-white);
+      border-radius: var(--radius-lg); border: 1px solid var(--border);
+      padding: 48px 40px 56px; position: relative; z-index: 2;
+      line-height: 1.8; font-size: 16px;
+    }
+
+    .article-body h2 { font-size: 24px; font-weight: 700; margin: 40px 0 16px; letter-spacing: -0.02em; }
+    .article-body h3 { font-size: 20px; font-weight: 600; margin: 32px 0 12px; }
+    .article-body p { margin-bottom: 16px; color: var(--text-secondary); }
+    .article-body strong { color: var(--text-primary); }
+    .article-body ul, .article-body ol { margin: 0 0 16px 24px; color: var(--text-secondary); }
+    .article-body li { margin-bottom: 8px; }
+
+    .comparison-table { width: 100%; border-collapse: collapse; margin: 24px 0 32px; font-size: 14px; }
+    .comparison-table th, .comparison-table td { padding: 12px 14px; border: 1px solid var(--border); text-align: left; }
+    .comparison-table th { background: var(--bg-light); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; }
+
+    .cta-banner { margin-top: 48px; background: linear-gradient(135deg, var(--blue), var(--blue-light)); border-radius: var(--radius-lg); padding: 40px 32px; text-align: center; }
+    .cta-banner h3 { color: #fff; font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+    .cta-banner p { color: rgba(255,255,255,0.85); margin-bottom: 20px; font-size: 15px; }
+    .cta-btn { display: inline-block; background: #fff; color: var(--blue); padding: 14px 32px; border-radius: 10px; font-size: 15px; font-weight: 600; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+    .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+
+    .footer { background: var(--bg-dark); padding: 40px 0; border-top: 1px solid var(--border-dark); margin-top: 80px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; }
+    .footer-left { font-size: 14px; color: var(--text-on-dark-muted); }
+    .footer-left strong { color: var(--text-on-dark); }
+    .footer-links { display: flex; gap: 24px; list-style: none; }
+    .footer-links a { color: var(--text-on-dark-muted); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    .footer-links a:hover { color: #fff; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .article-body { padding: 32px 20px 40px; margin-top: -24px; }
+      .comparison-table { font-size: 12px; }
+      .comparison-table th, .comparison-table td { padding: 8px 6px; }
+      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+    }
+  
+    .lang-switch { display: inline-flex; gap: 8px; font-size: 13px; }
+    .lang-switch a { color: var(--text-on-dark-muted); text-decoration: none; transition: color 0.2s; }
+    .lang-switch a:hover, .lang-switch a.active { color: #fff; }
+    .lang-switch span { color: var(--text-on-dark-muted); opacity: 0.4; }
+  </style>
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wknut8xl14");</script>
+</head>
+<body>
+
+  <header class="nav-bar">
+    <div class="container">
+      <nav class="nav">
+        <a href="/ja/" class="nav-logo"><div class="nav-logo-icon">B</div> BluePad</a>
+        <ul class="nav-links">
+          <li><a href="/ja/#features">機能</a></li>
+          <li><a href="/ja/#pricing">価格</a></li>
+          <li><a href="/ja/blog/">ブログ</a></li>
+          <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener" class="nav-cta">ダウンロード</a></li>
+          <li style="font-size:12px;color:var(--text-on-dark-muted)"><a href="/blog/markdown-editor-for-developers.html" style="color:#fff;text-decoration:none">EN</a> | <a href="/ko/blog/markdown-editor-for-developers.html" style="color:var(--text-on-dark-muted);text-decoration:none">KO</a> | <a href="/ja/blog/markdown-editor-for-developers.html" style="color:var(--text-on-dark-muted);text-decoration:none">JA</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="article-header">
+    <div class="container">
+      <h1>開発者に専用マークダウンエディターが必要な理由</h1>
+      <p class="article-meta">2026年5月2日 &middot; BluePadチーム &middot; 5分で読める</p>
+    </div>
+  </section>
+
+  <article class="article-body">
+    <p>As a developer, you write markdown every single day. README files, documentation, pull request descriptions, blog posts, changelogs, wiki pages — markdown is the lingua franca of developer communication. Yet most developers write all of this inside their code editor, which was designed for an entirely different task.</p>
+
+    <p>Here's why a dedicated markdown editor makes you a better technical writer, and why VS Code — as great as it is for code — isn't the best tool for writing prose.</p>
+
+    <h2>Where Developers Write Markdown</h2>
+
+    <p>Consider how much markdown you produce in a typical week:</p>
+
+    <ul>
+      <li><strong>README.md:</strong> Project documentation, setup guides, API references</li>
+      <li><strong>CHANGELOG.md:</strong> Release notes and version history</li>
+      <li><strong>Pull requests:</strong> Descriptions, review comments, design docs</li>
+      <li><strong>Technical blogs:</strong> Tutorials, architecture decisions, post-mortems</li>
+      <li><strong>Wiki pages:</strong> Team knowledge bases, onboarding guides</li>
+      <li><strong>Personal notes:</strong> Meeting notes, learning journals, TODO lists</li>
+    </ul>
+
+    <p>That's a lot of writing. And writing prose is fundamentally different from writing code.</p>
+
+    <h2>Why VS Code Isn't Ideal for Writing</h2>
+
+    <p>VS Code is an exceptional code editor. But when you're writing a 2,000-word technical blog post or crafting an important README, several things work against you:</p>
+
+    <h3>1. No True WYSIWYG</h3>
+    <p>VS Code shows you raw markdown syntax with a separate preview pane. This split-view approach forces constant eye movement between source and output. You never see the final result as you type — you see <code>**bold**</code> instead of <strong>bold</strong>.</p>
+
+    <h3>2. Code Editor UI Is Wrong for Prose</h3>
+    <p>Line numbers, minimap, bracket matching, file explorer, terminal panel — all essential for coding, all distracting for writing. When you're trying to compose a thoughtful paragraph, these elements create cognitive noise.</p>
+
+    <h3>3. No Writing-Specific Features</h3>
+    <p>VS Code lacks focus mode, typewriter scrolling, word count goals, and reading time estimates. These aren't coding features, but they're essential for anyone writing more than a few paragraphs.</p>
+
+    <h3>4. Resource Overhead</h3>
+    <p>VS Code uses 350+ MB of RAM and takes several seconds to start. If you just need to edit a README, that's a lot of overhead. Extensions make it worse — each markdown plugin adds memory and startup time.</p>
+
+    <h2>What Developers Need in a Markdown Editor</h2>
+
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>VS Code</th>
+          <th>BluePad</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>WYSIWYG editing</strong></td>
+          <td>No (preview pane)</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td><strong>Code block rendering</strong></td>
+          <td>Syntax highlighting</td>
+          <td>Syntax highlighting + preview</td>
+        </tr>
+        <tr>
+          <td><strong>Mermaid diagrams</strong></td>
+          <td>Extension required</td>
+          <td>Built-in (Pro)</td>
+        </tr>
+        <tr>
+          <td><strong>Math (KaTeX)</strong></td>
+          <td>Extension required</td>
+          <td>Built-in (Pro)</td>
+        </tr>
+        <tr>
+          <td><strong>Focus mode</strong></td>
+          <td>Zen Mode (no paragraph focus)</td>
+          <td>Paragraph-level focus</td>
+        </tr>
+        <tr>
+          <td><strong>Startup time</strong></td>
+          <td>~4 seconds</td>
+          <td>&lt;1 second</td>
+        </tr>
+        <tr>
+          <td><strong>RAM usage</strong></td>
+          <td>350+ MB</td>
+          <td>50-80 MB</td>
+        </tr>
+        <tr>
+          <td><strong>App size</strong></td>
+          <td>~350 MB</td>
+          <td>~8 MB</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>BluePad Features for Developers</h2>
+
+    <h3>Mermaid Diagrams</h3>
+    <p>Document your architecture with Mermaid flowcharts, sequence diagrams, and class diagrams directly in markdown. BluePad renders them inline so you can verify your diagrams look correct before pushing to GitHub.</p>
+
+    <h3>Code Blocks with Syntax Highlighting</h3>
+    <p>Fenced code blocks render with proper syntax highlighting for dozens of languages. Write your README code examples and see exactly how they'll appear to readers — without switching to a preview tab.</p>
+
+    <h3>Math Support (KaTeX)</h3>
+    <p>Writing documentation for algorithms or scientific computing? BluePad renders LaTeX math inline and in display mode. No extensions to install, no configuration needed.</p>
+
+    <h3>Source Mode Toggle</h3>
+    <p>Sometimes you need to see the raw markdown — for complex table editing or debugging formatting issues. Toggle between WYSIWYG and source mode with a single shortcut. No restart, no mode switch delay.</p>
+
+    <h3>Instant Startup</h3>
+    <p>When you need to quickly edit a README before committing, every second counts. BluePad launches in under a second. Open, edit, save, done. No waiting for extensions to load or workspace to initialize.</p>
+
+    <h2>The Two-Editor Workflow</h2>
+
+    <p>The most productive developers don't use one tool for everything. They use the right tool for each task:</p>
+
+    <ul>
+      <li><strong>VS Code / IDE:</strong> For writing and debugging code</li>
+      <li><strong>BluePad:</strong> For writing documentation, blogs, and prose</li>
+    </ul>
+
+    <p>This separation isn't about having more tools — it's about entering the right mental mode. When you open BluePad, your brain knows it's time to write. When you open VS Code, it's time to code. This context switch boundary actually helps you focus.</p>
+
+    <h2>Getting Started</h2>
+
+    <p>BluePad is free for core features: WYSIWYG editing, source mode, find and replace, multi-tab editing, and multi-language UI. The Pro tier ($14.99, one-time) adds Mermaid, math, focus mode, all themes, and HTML export.</p>
+
+    <p>For developers who write significant amounts of markdown — and that's most of us — a dedicated editor pays for itself in the first week through improved writing speed and quality.</p>
+
+    <div class="cta-banner">
+      <h3>より良いドキュメントを、より速く</h3>
+      <p>BluePad: ドキュメントを大切にする開発者のためのマークダウンエディター。</p>
+      <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener" class="cta-btn">Windows版ダウンロード</a>
+    </div>
+  </article>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-left">&copy; 2026 <strong>BRP</strong>. Tauriで構築。</div>
+        <ul class="footer-links">
+          <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener">リリース</a></li>
+          <li><a href="https://github.com/BlueDeveloper/BluePad/issues" target="_blank" rel="noopener">バグ報告</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

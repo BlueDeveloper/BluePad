@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open Source Licenses — BluePad</title>
+  <meta name="description" content="Open source libraries used by BluePad and their license information.">
+  <link rel="canonical" href="https://bluepad.bdarchive.site/legal/opensource">
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --blue: #155dfc;
+      --blue-light: #3b7dff;
+      --bg-dark: #0b0f1a;
+      --bg-light: #f8f9fc;
+      --bg-white: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --text-on-dark: #e2e8f0;
+      --text-on-dark-muted: #94a3b8;
+      --border: #e2e8f0;
+      --border-dark: #1e293b;
+      --radius: 10px;
+    }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .hero-header {
+      background: var(--bg-dark);
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--blue);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-on-dark-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: #fff; }
+
+    .nav-cta {
+      background: var(--blue) !important;
+      color: #fff !important;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover { background: var(--blue-light) !important; }
+
+    .legal-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+    }
+
+    .legal-content h1 {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+
+    .legal-content .last-updated {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+    }
+
+    .legal-content h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-top: 40px;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .legal-content h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-top: 28px;
+      margin-bottom: 8px;
+    }
+
+    .legal-content p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+
+    .legal-content a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .legal-content a:hover { text-decoration: underline; }
+
+    .lib-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0 40px;
+      font-size: 14px;
+    }
+
+    .lib-table th {
+      text-align: left;
+      padding: 12px 16px;
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .lib-table td {
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .lib-table td a {
+      word-break: break-all;
+    }
+
+    .license-text {
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+
+    .footer {
+      background: var(--bg-dark);
+      padding: 40px 0;
+      border-top: 1px solid var(--border-dark);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-left {
+      font-size: 14px;
+      color: var(--text-on-dark-muted);
+    }
+
+    .footer-left strong { color: var(--text-on-dark); }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--text-on-dark-muted);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: #fff; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .legal-content { padding: 40px 20px 60px; }
+      .legal-content h1 { font-size: 28px; }
+      .lib-table { font-size: 12px; }
+      .lib-table th, .lib-table td { padding: 8px 10px; }
+      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+    }
+  </style>
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wknut8xl14");</script>
+</head>
+<body>
+
+  <header class="hero-header">
+    <div class="container">
+      <nav class="nav">
+        <a href="/" class="nav-logo">
+          <div class="nav-logo-icon">B</div>
+          BluePad
+        </a>
+        <ul class="nav-links">
+          <li><a href="/#features">Features</a></li>
+          <li><a href="/#pricing">Pricing</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.0.0_x64.msi" target="_blank" rel="noopener" class="nav-cta">Download</a></li>
+          <li style="font-size:12px;color:var(--text-on-dark-muted)"><a href="/" style="color:#fff;text-decoration:none">EN</a> | <a href="/ko/" style="color:var(--text-on-dark-muted);text-decoration:none">KO</a> | <a href="/ja/" style="color:var(--text-on-dark-muted);text-decoration:none">JA</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="legal-content">
+    <h1>Open Source Licenses</h1>
+    <p class="last-updated">Last updated: May 2, 2026</p>
+
+    <p>BluePad is built with the help of the following open source libraries. We are grateful to the developers and communities who make these projects available.</p>
+
+    <h2>Libraries Used</h2>
+
+    <table class="lib-table">
+      <thead>
+        <tr>
+          <th>Library</th>
+          <th>License</th>
+          <th>Repository</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Tauri</strong></td>
+          <td>MIT / Apache 2.0</td>
+          <td><a href="https://github.com/tauri-apps/tauri" target="_blank" rel="noopener">github.com/tauri-apps/tauri</a></td>
+        </tr>
+        <tr>
+          <td><strong>Milkdown</strong></td>
+          <td>MIT</td>
+          <td><a href="https://github.com/Milkdown/milkdown" target="_blank" rel="noopener">github.com/Milkdown/milkdown</a></td>
+        </tr>
+        <tr>
+          <td><strong>ProseMirror</strong></td>
+          <td>MIT</td>
+          <td><a href="https://github.com/ProseMirror" target="_blank" rel="noopener">github.com/ProseMirror</a></td>
+        </tr>
+        <tr>
+          <td><strong>KaTeX</strong></td>
+          <td>MIT</td>
+          <td><a href="https://github.com/KaTeX/KaTeX" target="_blank" rel="noopener">github.com/KaTeX/KaTeX</a></td>
+        </tr>
+        <tr>
+          <td><strong>Mermaid.js</strong></td>
+          <td>MIT</td>
+          <td><a href="https://github.com/mermaid-js/mermaid" target="_blank" rel="noopener">github.com/mermaid-js/mermaid</a></td>
+        </tr>
+        <tr>
+          <td><strong>Prism.js</strong></td>
+          <td>MIT</td>
+          <td><a href="https://github.com/PrismJS/prism" target="_blank" rel="noopener">github.com/PrismJS/prism</a></td>
+        </tr>
+        <tr>
+          <td><strong>Refractor</strong></td>
+          <td>MIT</td>
+          <td><a href="https://github.com/wooorm/refractor" target="_blank" rel="noopener">github.com/wooorm/refractor</a></td>
+        </tr>
+        <tr>
+          <td><strong>React</strong></td>
+          <td>MIT</td>
+          <td><a href="https://github.com/facebook/react" target="_blank" rel="noopener">github.com/facebook/react</a></td>
+        </tr>
+        <tr>
+          <td><strong>Vite</strong></td>
+          <td>MIT</td>
+          <td><a href="https://github.com/vitejs/vite" target="_blank" rel="noopener">github.com/vitejs/vite</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>MIT License (Full Text)</h2>
+    <p>The following license text applies to all MIT-licensed components listed above:</p>
+
+    <div class="license-text">MIT License
+
+Copyright (c) [year] [copyright holders]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</div>
+
+    <h2>Apache License 2.0 (Summary)</h2>
+    <p>Tauri is additionally available under the Apache License 2.0. The Apache 2.0 license grants similar permissions to the MIT license, with the addition of an express grant of patent rights from contributors. The full text of the Apache 2.0 license is available at <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener">apache.org/licenses/LICENSE-2.0</a>.</p>
+
+    <h2>Individual Library Notices</h2>
+
+    <h3>Tauri</h3>
+    <p>Copyright (c) 2019-2026 Tauri Programme within The Commons Conservancy<br>Licensed under MIT OR Apache-2.0</p>
+
+    <h3>Milkdown</h3>
+    <p>Copyright (c) 2021-2026 Mirone<br>Licensed under MIT</p>
+
+    <h3>ProseMirror</h3>
+    <p>Copyright (c) 2015-2026 Marijn Haverbeke<br>Licensed under MIT</p>
+
+    <h3>KaTeX</h3>
+    <p>Copyright (c) 2013-2026 Khan Academy and other contributors<br>Licensed under MIT</p>
+
+    <h3>Mermaid.js</h3>
+    <p>Copyright (c) 2014-2026 Knut Sveidqvist<br>Licensed under MIT</p>
+
+    <h3>Prism.js</h3>
+    <p>Copyright (c) 2012-2026 Lea Verou<br>Licensed under MIT</p>
+
+    <h3>Refractor</h3>
+    <p>Copyright (c) 2017-2026 Titus Wormer<br>Licensed under MIT</p>
+
+    <h3>React</h3>
+    <p>Copyright (c) Meta Platforms, Inc. and affiliates<br>Licensed under MIT</p>
+
+    <h3>Vite</h3>
+    <p>Copyright (c) 2019-2026 Evan You and Vite contributors<br>Licensed under MIT</p>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-left">&copy; 2026 <strong>BRP</strong>. Built with Tauri.</div>
+        <ul class="footer-links">
+          <li><a href="/legal/privacy">Privacy Policy</a></li>
+          <li><a href="/legal/eula">EULA</a></li>
+          <li><a href="/legal/opensource">Open Source</a></li>
+          <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
