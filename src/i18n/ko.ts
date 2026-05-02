@@ -55,6 +55,7 @@ export const ko = {
   "status.chars": "자",
   "status.free": "Free",
   "status.pro": "Pro",
+  "status.trial": "체험 D-{days}",
   "status.wordTarget": "목표",
 
   // Sidebar
@@ -115,4 +116,8 @@ export const ko = {
   "dialog.dontSave": "저장 안 함",
   "dialog.cancel": "취소",
   "dialog.close": "닫기",
+
+  // Trial
+  "trial.expired": "Pro 체험 기간이 만료되었습니다. 계속 Pro 기능을 사용하려면 라이선스를 구매해주세요.",
+  "trial.expiringSoon": "Pro 체험 기간이 {days}일 후 만료됩니다.",
 };

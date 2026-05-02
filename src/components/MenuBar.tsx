@@ -123,7 +123,7 @@ export function MenuBar({
               { label: "", action: () => {}, divider: true },
             ]
           : []),
-        { label: t("menu.autoSave"), action: proAction(onToggleAutoSave), checked: autoSaveEnabled && isPro },
+        { label: t("menu.autoSave"), action: onToggleAutoSave, checked: autoSaveEnabled },
         { label: "", action: () => {}, divider: true },
         { label: t("menu.exportHtml"), action: proAction(onExportHtml) },
         { label: t("menu.exportPdf"), action: onExportPdf },

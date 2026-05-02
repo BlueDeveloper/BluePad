@@ -9,10 +9,12 @@ interface StatusBarProps {
   autoSave: boolean;
   fontSize: number;
   isPro: boolean;
+  isTrial: boolean;
+  trialDaysLeft: number;
   wordTarget: number | null;
 }
 
-export function StatusBar({ chars, words, lines, filePath, sourceMode, autoSave, fontSize, isPro, wordTarget }: StatusBarProps) {
+export function StatusBar({ chars, words, lines, filePath, sourceMode, autoSave, fontSize, isPro, isTrial, trialDaysLeft, wordTarget }: StatusBarProps) {
   const { t } = useI18n();
   const progress = wordTarget ? Math.min(100, Math.round((words / wordTarget) * 100)) : 0;
   return (
@@ -24,6 +26,11 @@ export function StatusBar({ chars, words, lines, filePath, sourceMode, autoSave,
         <span className={`statusbar-badge ${isPro ? "statusbar-badge-pro" : "statusbar-badge-free"}`}>
           {isPro ? t("status.pro") : t("status.free")}
         </span>
+        {isTrial && (
+          <span className="statusbar-badge statusbar-badge-trial">
+            {t("status.trial").replace("{days}", String(trialDaysLeft))}
+          </span>
+        )}
         {sourceMode && <span className="statusbar-badge">{t("status.source")}</span>}
         {autoSave && <span className="statusbar-badge statusbar-badge-auto">{t("status.autoSave")}</span>}
         {wordTarget && (

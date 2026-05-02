@@ -121,14 +121,28 @@ function App() {
     }
   }, [fileManager.filePath, addRecentFile]);
 
-  // Auto save (all modified tabs, Pro only)
+  // Auto save (all modified tabs, available for all users)
   useEffect(() => {
-    if (!autoSaveEnabled || !license.isPro) return;
+    if (!autoSaveEnabled) return;
     const timer = setInterval(() => {
       fileManager.saveAllModified();
     }, AUTO_SAVE_INTERVAL);
     return () => clearInterval(timer);
-  }, [autoSaveEnabled, license.isPro, fileManager]);
+  }, [autoSaveEnabled, fileManager]);
+
+  // Trial expiry alert
+  useEffect(() => {
+    if (!license.isTrial && !license.isPro && localStorage.getItem("bluepad_trial_start")) {
+      // Trial has expired and no license - show alert once per session
+      const shownKey = "bluepad_trial_expired_shown_session";
+      if (!sessionStorage.getItem(shownKey)) {
+        sessionStorage.setItem(shownKey, "1");
+        setTimeout(() => {
+          alert(i18n.t("trial.expired"));
+        }, 500);
+      }
+    }
+  }, [license.isTrial, license.isPro, i18n]);
 
   useEffect(() => {
     try { localStorage.setItem(FONT_SIZE_KEY, String(fontSize)); } catch { /* ignore */ }
@@ -459,6 +473,8 @@ ${editorEl.innerHTML}
             autoSave={autoSaveEnabled}
             fontSize={fontSize}
             isPro={license.isPro}
+            isTrial={license.isTrial}
+            trialDaysLeft={license.trialDaysLeft}
             wordTarget={wordTarget}
           />
         )}

@@ -5,12 +5,15 @@ const LICENSE_KEY = "bluepad_license_key";
 const LICENSE_STATUS_KEY = "bluepad_license_status";
 const DEVICE_ID_KEY = "bluepad_device_id";
 const LICENSE_VALIDATED_AT_KEY = "bluepad_license_validated_at";
+const TRIAL_START_KEY = "bluepad_trial_start";
 const API_URL = "https://bluepad-license-api.blueehdwp.workers.dev";
 
 const OFFLINE_GRACE_DAYS = 30;
 const OFFLINE_GRACE_MS = OFFLINE_GRACE_DAYS * 24 * 60 * 60 * 1000;
+const TRIAL_DAYS = 14;
+const TRIAL_MS = TRIAL_DAYS * 24 * 60 * 60 * 1000;
 
-export type ProFeature = "unlimitedTabs" | "allThemes" | "exportHtml" | "autoSave" | "focusMode" | "mermaid" | "math";
+export type ProFeature = "unlimitedTabs" | "allThemes" | "exportHtml" | "focusMode";
 
 /** Check if the last online validation timestamp is within the offline grace window */
 function isOfflineGracePeriodValid(): boolean {
@@ -18,6 +21,24 @@ function isOfflineGracePeriodValid(): boolean {
   if (!ts) return false;
   const elapsed = Date.now() - Number(ts);
   return elapsed >= 0 && elapsed < OFFLINE_GRACE_MS;
+}
+
+/** Get trial state */
+function getTrialState(): { isTrial: boolean; trialDaysLeft: number } {
+  let trialStart = localStorage.getItem(TRIAL_START_KEY);
+  if (!trialStart) {
+    // First launch: start trial
+    trialStart = String(Date.now());
+    try { localStorage.setItem(TRIAL_START_KEY, trialStart); } catch { /* ignore */ }
+  }
+
+  const elapsed = Date.now() - Number(trialStart);
+  if (elapsed < 0 || elapsed >= TRIAL_MS) {
+    return { isTrial: false, trialDaysLeft: 0 };
+  }
+
+  const daysLeft = Math.ceil((TRIAL_MS - elapsed) / (24 * 60 * 60 * 1000));
+  return { isTrial: true, trialDaysLeft: daysLeft };
 }
 
 /** Device ID cache – resolved once per session */
@@ -72,15 +93,19 @@ async function getDeviceName(): Promise<string> {
 }
 
 export function useLicense() {
-  const [isPro, setIsPro] = useState(() => {
+  const [hasLicense, setHasLicense] = useState(() => {
     if (localStorage.getItem(LICENSE_STATUS_KEY) !== "pro") return false;
-    // Offline grace period check on init
     return isOfflineGracePeriodValid();
   });
+  const [trialState, setTrialState] = useState(getTrialState);
   const [licenseKey, setLicenseKey] = useState(() => {
     return localStorage.getItem(LICENSE_KEY) || "";
   });
   const validating = useRef(false);
+
+  const isTrial = !hasLicense && trialState.isTrial;
+  const isPro = hasLicense || isTrial;
+  const trialDaysLeft = trialState.trialDaysLeft;
 
   const activate = useCallback(async (key: string): Promise<boolean> => {
     const trimmed = key.trim().toUpperCase();
@@ -109,7 +134,7 @@ export function useLicense() {
         try { localStorage.setItem(LICENSE_STATUS_KEY, "pro"); } catch { /* ignore */ }
         try { localStorage.setItem(LICENSE_VALIDATED_AT_KEY, String(Date.now())); } catch { /* ignore */ }
         setLicenseKey(trimmed);
-        setIsPro(true);
+        setHasLicense(true);
         return true;
       }
 
@@ -147,7 +172,7 @@ export function useLicense() {
     localStorage.removeItem(LICENSE_STATUS_KEY);
     localStorage.removeItem(LICENSE_VALIDATED_AT_KEY);
     setLicenseKey("");
-    setIsPro(false);
+    setHasLicense(false);
   }, []);
 
   const canUse = useCallback(
@@ -170,8 +195,18 @@ export function useLicense() {
     }
   }, [activate]);
 
+  // Refresh trial state periodically (every minute)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTrialState(getTrialState());
+    }, 60000);
+    return () => clearInterval(timer);
+  }, []);
+
   return {
     isPro,
+    isTrial,
+    trialDaysLeft,
     licenseKey,
     maxTabs,
     activate,

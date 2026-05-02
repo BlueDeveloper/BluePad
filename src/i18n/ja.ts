@@ -55,6 +55,7 @@ export const ja = {
   "status.chars": "文字",
   "status.free": "Free",
   "status.pro": "Pro",
+  "status.trial": "体験 D-{days}",
   "status.wordTarget": "目標",
 
   // Sidebar
@@ -115,4 +116,8 @@ export const ja = {
   "dialog.dontSave": "保存しない",
   "dialog.cancel": "キャンセル",
   "dialog.close": "閉じる",
+
+  // Trial
+  "trial.expired": "Pro体験期間が終了しました。Pro機能を引き続き使用するにはライセンスを購入してください。",
+  "trial.expiringSoon": "Pro体験期間が{days}日後に終了します。",
 };

@@ -55,6 +55,7 @@ export const en = {
   "status.chars": "chars",
   "status.free": "Free",
   "status.pro": "Pro",
+  "status.trial": "Trial D-{days}",
   "status.wordTarget": "Target",
 
   // Sidebar
@@ -115,4 +116,8 @@ export const en = {
   "dialog.dontSave": "Don't Save",
   "dialog.cancel": "Cancel",
   "dialog.close": "Close",
+
+  // Trial
+  "trial.expired": "Your Pro trial has expired. Purchase a license to continue using Pro features.",
+  "trial.expiringSoon": "Your Pro trial expires in {days} days.",
 };
