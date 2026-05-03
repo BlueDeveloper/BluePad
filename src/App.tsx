@@ -519,6 +519,7 @@ ${editorEl.innerHTML}
           visible={licenseDialogVisible}
           isPro={license.isPro}
           isTrial={license.isTrial}
+          licenseKey={license.licenseKey}
           onActivate={license.activate}
           onDeactivate={license.deactivate}
           onClose={() => setLicenseDialogVisible(false)}
