@@ -281,7 +281,7 @@ async function loadTickets() {
       <td><span class="badge ${t.type === 'refund' ? 'badge-inactive' : 'badge-active'}">${typeMap[t.type] || t.type}</span></td>
       <td>${esc(t.email)}</td>
       <td style="font-family:monospace;font-size:.8rem">${esc(t.license_key || '-')}</td>
-      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer" onclick="alert(this.getAttribute('data-msg'))" data-msg="${esc(t.message)}">${esc(t.message)}</td>
+      <td class="ticket-msg" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer" data-msg="${esc(t.message)}">${esc(t.message)}</td>
       <td>${formatDate(t.created_at)}</td>
       <td><span class="badge ${t.status === 'open' ? 'badge-active' : 'badge-inactive'}">${t.status === 'open' ? '접수' : '처리 완료'}</span></td>
     </tr>`).join('');
@@ -297,10 +297,64 @@ function formatDate(d) {
 
 function esc(s) {
   if (!s) return '';
-  const el = document.createElement('span');
-  el.textContent = s;
-  return el.innerHTML;
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
+
+// Event delegation for ticket messages (avoids inline onclick with unsanitized data)
+document.addEventListener('click', function(e) {
+  const el = e.target.closest('.ticket-msg');
+  if (el) alert(el.getAttribute('data-msg'));
+});
+
+// Brute force protection
+let loginAttempts = 0;
+let lockoutUntil = 0;
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_MS = 30000;
+
+(function patchLogin() {
+  const origDoLogin = doLogin;
+  window.doLogin = function() {
+    if (Date.now() < lockoutUntil) {
+      const secs = Math.ceil((lockoutUntil - Date.now()) / 1000);
+      document.getElementById('login-error').textContent = secs + '초 후 다시 시도해주세요';
+      document.getElementById('login-error').classList.remove('hidden');
+      return;
+    }
+    origDoLogin();
+  };
+
+  const origCheckAuth = checkAuth;
+  window.checkAuth = async function() {
+    const token = getToken();
+    if (!token) return;
+    try {
+      const res = await fetch(LICENSE_API + '/api/admin/licenses', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (res.status === 401) {
+        loginAttempts++;
+        if (loginAttempts >= MAX_ATTEMPTS) {
+          lockoutUntil = Date.now() + LOCKOUT_MS;
+          loginAttempts = 0;
+          document.getElementById('login-error').textContent = '로그인 시도 횟수 초과. 30초 후 다시 시도해주세요';
+        } else {
+          document.getElementById('login-error').textContent = '비밀번호가 올바르지 않습니다 (' + loginAttempts + '/' + MAX_ATTEMPTS + ')';
+        }
+        document.getElementById('login-error').classList.remove('hidden');
+        sessionStorage.removeItem('bp_admin_token');
+        return;
+      }
+      loginAttempts = 0;
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      loadDashboard();
+    } catch (e) {
+      document.getElementById('login-error').textContent = '연결 오류';
+      document.getElementById('login-error').classList.remove('hidden');
+    }
+  };
+})();
 
 // 저장된 토큰으로 자동 로그인
 checkAuth();

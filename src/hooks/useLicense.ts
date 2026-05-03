@@ -6,6 +6,7 @@ const LICENSE_STATUS_KEY = "bluepad_license_status";
 const DEVICE_ID_KEY = "bluepad_device_id";
 const LICENSE_VALIDATED_AT_KEY = "bluepad_license_validated_at";
 const TRIAL_START_KEY = "bluepad_trial_start";
+const VALIDATION_HASH_KEY = "bluepad_vh";
 const API_URL = "https://bluepad-license-api.blueehdwp.workers.dev";
 
 const OFFLINE_GRACE_DAYS = 30;
@@ -14,6 +15,14 @@ const TRIAL_DAYS = 14;
 const TRIAL_MS = TRIAL_DAYS * 24 * 60 * 60 * 1000;
 
 export type ProFeature = "unlimitedTabs" | "allThemes" | "exportHtml" | "focusMode";
+
+/** Compute a validation hash to prevent trivial localStorage manipulation */
+async function computeValidationHash(licenseKey: string, deviceId: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(licenseKey + ":" + deviceId + ":bluepad-integrity-2026");
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 16);
+}
 
 /** Check if the last online validation timestamp is within the offline grace window */
 function isOfflineGracePeriodValid(): boolean {
@@ -54,10 +63,30 @@ async function getDeviceId(): Promise<string> {
 
   // Get or create a random seed stored alongside the hostname
   const SEED_KEY = "bluepad_device_seed";
-  let seed = localStorage.getItem(SEED_KEY);
-  if (!seed) {
-    seed = crypto.randomUUID();
+  let seed: string | null = null;
+
+  // Try to read seed from persistent file (survives localStorage clear)
+  const SEED_FILE = "bluepad_device_seed.dat";
+  try {
+    const { readTextFile, writeTextFile, BaseDirectory } = await import("@tauri-apps/plugin-fs");
+    try {
+      seed = await readTextFile(SEED_FILE, { baseDir: BaseDirectory.AppData });
+    } catch {
+      // File doesn't exist, check localStorage or create new
+      seed = localStorage.getItem(SEED_KEY);
+      if (!seed) {
+        seed = crypto.randomUUID();
+      }
+      await writeTextFile(SEED_FILE, seed, { baseDir: BaseDirectory.AppData });
+    }
     try { localStorage.setItem(SEED_KEY, seed); } catch { /* ignore */ }
+  } catch {
+    // Not in Tauri (browser), use localStorage only
+    seed = localStorage.getItem(SEED_KEY);
+    if (!seed) {
+      seed = crypto.randomUUID();
+      try { localStorage.setItem(SEED_KEY, seed); } catch { /* ignore */ }
+    }
   }
 
   let hostname = "unknown";
@@ -122,6 +151,7 @@ async function syncTrialWithServer(deviceId: string): Promise<{ isTrial: boolean
 export function useLicense() {
   const [hasLicense, setHasLicense] = useState(() => {
     if (localStorage.getItem(LICENSE_STATUS_KEY) !== "pro") return false;
+    if (!localStorage.getItem(LICENSE_KEY)) return false; // no key = can't be pro
     return isOfflineGracePeriodValid();
   });
   const [trialState, setTrialState] = useState(getLocalTrialState);
@@ -161,6 +191,8 @@ export function useLicense() {
         try { localStorage.setItem(LICENSE_KEY, trimmed); } catch { /* ignore */ }
         try { localStorage.setItem(LICENSE_STATUS_KEY, "pro"); } catch { /* ignore */ }
         try { localStorage.setItem(LICENSE_VALIDATED_AT_KEY, String(Date.now())); } catch { /* ignore */ }
+        const vh = await computeValidationHash(trimmed, deviceId);
+        try { localStorage.setItem(VALIDATION_HASH_KEY, vh); } catch { /* ignore */ }
         setLicenseKey(trimmed);
         setHasLicense(true);
         return true;
@@ -170,6 +202,7 @@ export function useLicense() {
       localStorage.removeItem(LICENSE_KEY);
       localStorage.removeItem(LICENSE_STATUS_KEY);
       localStorage.removeItem(LICENSE_VALIDATED_AT_KEY);
+      localStorage.removeItem(VALIDATION_HASH_KEY);
       setLicenseKey("");
       setHasLicense(false);
       return false;
@@ -205,6 +238,7 @@ export function useLicense() {
     localStorage.removeItem(LICENSE_KEY);
     localStorage.removeItem(LICENSE_STATUS_KEY);
     localStorage.removeItem(LICENSE_VALIDATED_AT_KEY);
+    localStorage.removeItem(VALIDATION_HASH_KEY);
     setLicenseKey("");
     setHasLicense(false);
   }, []);
@@ -230,14 +264,35 @@ export function useLicense() {
     }
   }, [hasLicense]);
 
-  // Re-validate license on app startup
+  // Re-validate license on app startup (with hash integrity check)
   useEffect(() => {
     const storedKey = localStorage.getItem(LICENSE_KEY);
     if (storedKey && !validating.current) {
       validating.current = true;
-      activate(storedKey).finally(() => {
-        validating.current = false;
+      // Verify validation hash before attempting re-validation
+      getDeviceId().then(async (deviceId) => {
+        const storedHash = localStorage.getItem(VALIDATION_HASH_KEY);
+        const expectedHash = await computeValidationHash(storedKey, deviceId);
+        if (storedHash && storedHash !== expectedHash) {
+          // Hash mismatch — localStorage was tampered with
+          localStorage.removeItem(LICENSE_KEY);
+          localStorage.removeItem(LICENSE_STATUS_KEY);
+          localStorage.removeItem(LICENSE_VALIDATED_AT_KEY);
+          localStorage.removeItem(VALIDATION_HASH_KEY);
+          setLicenseKey("");
+          setHasLicense(false);
+          validating.current = false;
+          return;
+        }
+        activate(storedKey).finally(() => {
+          validating.current = false;
+        });
       });
+    } else if (!storedKey && localStorage.getItem(LICENSE_STATUS_KEY) === "pro") {
+      // Someone set status=pro without a key — clear it
+      localStorage.removeItem(LICENSE_STATUS_KEY);
+      localStorage.removeItem(VALIDATION_HASH_KEY);
+      setHasLicense(false);
     }
   }, [activate]);
 
