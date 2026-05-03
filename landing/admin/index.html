@@ -100,6 +100,7 @@ tr:last-child td{border-bottom:none}
     <table>
       <thead>
         <tr>
+          <th>Device Name</th>
           <th>Device ID</th>
           <th>Trial Start</th>
           <th>Days Left</th>
@@ -230,6 +231,7 @@ async function loadTrials() {
       const daysLeft = Math.max(0, Math.ceil((14*24*60*60*1000 - elapsed) / (24*60*60*1000)));
       const expired = daysLeft <= 0;
       return `<tr>
+        <td>${esc(t.device_name || 'Unknown')}</td>
         <td style="font-family:monospace;font-size:.8rem">${esc(t.device_id)}</td>
         <td>${formatDate(t.trial_start)}</td>
         <td>${expired ? '0' : daysLeft}</td>
@@ -237,7 +239,7 @@ async function loadTrials() {
       </tr>`;
     }).join('');
   } catch (e) {
-    document.getElementById('trial-table').innerHTML = '<tr><td colspan="4">Failed to load</td></tr>';
+    document.getElementById('trial-table').innerHTML = '<tr><td colspan="5">Failed to load</td></tr>';
   }
 }
 

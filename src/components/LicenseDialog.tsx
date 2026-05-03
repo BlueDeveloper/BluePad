@@ -45,19 +45,24 @@ export function LicenseDialog({ visible, isPro, isTrial, onActivate, onDeactivat
             </span>
           </div>
           {(!isPro || isTrial) && (
-            <div className="license-input-group">
-              <input
-                type="text"
-                className="license-input"
-                placeholder={t("license.inputPlaceholder")}
-                value={key}
-                onChange={(e) => { setKey(e.target.value); setError(false); setSuccess(false); }}
-                onKeyDown={(e) => e.key === "Enter" && handleActivate()}
-              />
-              <button className="license-activate-btn" onClick={handleActivate}>
-                {t("license.activate")}
+            <>
+              <button className="license-activate-btn" style={{ width: "100%", marginBottom: "12px" }} onClick={() => window.open(import.meta.env.DEV ? "https://bluepad-checkout-sandbox.blueehdwp.workers.dev/" : "https://bluepad-checkout.blueehdwp.workers.dev/", "_blank")}>
+                {t("trial.buyNow")}
               </button>
-            </div>
+              <div className="license-input-group">
+                <input
+                  type="text"
+                  className="license-input"
+                  placeholder={t("license.inputPlaceholder")}
+                  value={key}
+                  onChange={(e) => { setKey(e.target.value); setError(false); setSuccess(false); }}
+                  onKeyDown={(e) => e.key === "Enter" && handleActivate()}
+                />
+                <button className="license-activate-btn" onClick={handleActivate}>
+                  {t("license.activate")}
+                </button>
+              </div>
+            </>
           )}
           {error && <div className="license-error">{t("license.invalid")}</div>}
           {success && <div className="license-success">{t("license.activated")}</div>}

@@ -93,10 +93,11 @@ async function getDeviceName(): Promise<string> {
 /** Fetch trial state from server, falls back to localStorage */
 async function syncTrialWithServer(deviceId: string): Promise<{ isTrial: boolean; trialDaysLeft: number }> {
   try {
+    const deviceName = await getDeviceName();
     const res = await fetch(`${API_URL}/api/trial`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ device_id: deviceId }),
+      body: JSON.stringify({ device_id: deviceId, device_name: deviceName }),
     });
     const data = await res.json();
 
