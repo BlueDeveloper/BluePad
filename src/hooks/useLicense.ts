@@ -166,6 +166,12 @@ export function useLicense() {
         return true;
       }
 
+      // Server explicitly rejected — clear cached Pro status
+      localStorage.removeItem(LICENSE_KEY);
+      localStorage.removeItem(LICENSE_STATUS_KEY);
+      localStorage.removeItem(LICENSE_VALIDATED_AT_KEY);
+      setLicenseKey("");
+      setHasLicense(false);
       return false;
     } catch {
       // Offline fallback: if previously validated within grace period, keep pro status
