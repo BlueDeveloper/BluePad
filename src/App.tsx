@@ -19,6 +19,11 @@ import { I18nCtx, t as translate } from "./i18n";
 import type { Lang } from "./i18n";
 import type { EditorHandle } from "./types";
 
+/** Open external URL in system browser (Tauri) or new tab (web) */
+function openExternal(url: string) {
+  import("@tauri-apps/plugin-shell").then(m => m.open(url)).catch(() => window.open(url, "_blank"));
+}
+
 const RECENT_KEY = "bluepad_recent_files";
 const FONT_SIZE_KEY = "bluepad_font_size";
 const THEME_KEY = "bluepad_theme";
@@ -548,7 +553,7 @@ ${editorEl.innerHTML}
           title={i18n.t("license.upgradeTitle")}
           message={license.trialDaysLeft > 0 ? i18n.t("trial.expiringSoon").replace("{days}", String(license.trialDaysLeft)) : i18n.t("trial.expired")}
           actionLabel={i18n.t("trial.buyNow")}
-          onAction={() => window.open(import.meta.env.DEV ? "https://bluepad-checkout-sandbox.blueehdwp.workers.dev/" : "https://bluepad-checkout.blueehdwp.workers.dev/", "_blank")}
+          onAction={() => openExternal(import.meta.env.DEV ? "https://bluepad-checkout-sandbox.blueehdwp.workers.dev/" : "https://bluepad-checkout.blueehdwp.workers.dev/")}
           onClose={() => setTrialExpiredVisible(false)}
         />
       </div>

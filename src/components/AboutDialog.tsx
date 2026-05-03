@@ -25,7 +25,7 @@ export function AboutDialog({ visible, isPro, isTrial, onClose }: AboutDialogPro
   if (!visible) return null;
 
   const openExternal = (url: string) => {
-    window.open(url, "_blank", "noopener,noreferrer");
+    import("@tauri-apps/plugin-shell").then(m => m.open(url)).catch(() => window.open(url, "_blank"));
   };
 
   return (
