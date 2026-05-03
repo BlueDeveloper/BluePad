@@ -47,6 +47,7 @@ interface MenuItem {
   action: () => void;
   checked?: boolean;
   divider?: boolean;
+  pro?: boolean;
 }
 
 interface MenuDef {
@@ -125,7 +126,7 @@ export function MenuBar({
           : []),
         { label: t("menu.autoSave"), action: onToggleAutoSave, checked: autoSaveEnabled },
         { label: "", action: () => {}, divider: true },
-        { label: t("menu.exportHtml"), action: proAction(onExportHtml) },
+        { label: t("menu.exportHtml"), action: proAction(onExportHtml), pro: !isPro },
         { label: t("menu.exportPdf"), action: onExportPdf },
       ],
     },
@@ -142,7 +143,7 @@ export function MenuBar({
         { label: t("menu.sourceMode"), shortcut: "Ctrl+/", action: onToggleSource, checked: sourceMode },
         { label: t("menu.outlineSidebar"), shortcut: "Ctrl+Shift+L", action: onToggleSidebar, checked: sidebarVisible },
         { label: t("menu.fileTree"), action: onToggleFileTree, checked: fileTreeVisible },
-        { label: t("menu.focusMode"), shortcut: "F11", action: proAction(onToggleFocus), checked: focusMode },
+        { label: t("menu.focusMode"), shortcut: "F11", action: proAction(onToggleFocus), checked: focusMode, pro: !isPro },
         { label: "", action: () => {}, divider: true },
         { label: t("menu.wordTarget"), action: onSetWordTarget },
         { label: "", action: () => {}, divider: true },
@@ -154,6 +155,7 @@ export function MenuBar({
           label: `${t("menu.theme")}: ${th.label}`,
           action: th.id === "classic" || isPro ? () => onThemeChange(th.id) : onProGate,
           checked: theme === th.id,
+          pro: th.id !== "classic" && !isPro,
         })),
       ],
     },
@@ -224,7 +226,7 @@ export function MenuBar({
                       }}
                     >
                       <span className="menu-item-check">{item.checked ? "✓" : ""}</span>
-                      <span className="menu-item-label">{item.label}</span>
+                      <span className="menu-item-label">{item.label}{item.pro && <span className="menu-pro-badge">PRO</span>}</span>
                       {item.shortcut && <span className="menu-item-shortcut">{item.shortcut}</span>}
                     </button>
                   )

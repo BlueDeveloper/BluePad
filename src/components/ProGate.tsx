@@ -21,7 +21,10 @@ export function ProGate({ visible, onClose, onOpenLicense }: ProGateProps) {
         <div className="dialog-body">
           <p className="pro-gate-msg">{t("license.proFeature")}</p>
           <div className="pro-gate-actions">
-            <button className="license-activate-btn" onClick={() => { onClose(); onOpenLicense(); }}>
+            <button className="license-activate-btn" onClick={() => window.open("${import.meta.env.DEV ? 'https://bluepad-checkout-sandbox.blueehdwp.workers.dev/' : 'https://bluepad-checkout.blueehdwp.workers.dev/'}", "_blank")}>
+              {t("trial.buyNow")}
+            </button>
+            <button className="license-activate-btn" style={{ background: "var(--text-muted)" }} onClick={() => { onClose(); onOpenLicense(); }}>
               {t("menu.license")}
             </button>
             <button className="license-deactivate-btn" onClick={onClose}>

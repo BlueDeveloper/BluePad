@@ -23,12 +23,13 @@ export function StatusBar({ chars, words, lines, filePath, sourceMode, autoSave,
         {filePath ?? t("status.newFile")}
       </span>
       <div className="statusbar-right">
-        <span className={`statusbar-badge ${isPro ? "statusbar-badge-pro" : "statusbar-badge-free"}`}>
-          {isPro ? t("status.pro") : t("status.free")}
-        </span>
-        {isTrial && (
+        {isTrial ? (
           <span className="statusbar-badge statusbar-badge-trial">
             {t("status.trial").replace("{days}", String(trialDaysLeft))}
+          </span>
+        ) : (
+          <span className={`statusbar-badge ${isPro ? "statusbar-badge-pro" : "statusbar-badge-free"}`}>
+            {isPro ? t("status.pro") : t("status.free")}
           </span>
         )}
         {sourceMode && <span className="statusbar-badge">{t("status.source")}</span>}

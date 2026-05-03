@@ -248,6 +248,20 @@ body {
   margin-left: 24px;
 }
 
+.menu-pro-badge {
+  display: inline-block;
+  margin-left: 5px;
+  padding: 0px 3px;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #fff;
+  background: #155dfc;
+  border-radius: 2px;
+  vertical-align: middle;
+  line-height: 12px;
+}
+
 .menu-divider {
   height: 1px;
   background: var(--border-light);
@@ -1261,6 +1275,11 @@ body {
 
 .license-badge.pro {
   background: var(--accent);
+  color: #fff;
+}
+
+.license-badge.trial {
+  background: #f59e0b;
   color: #fff;
 }
 

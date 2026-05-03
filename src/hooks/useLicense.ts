@@ -23,13 +23,11 @@ function isOfflineGracePeriodValid(): boolean {
   return elapsed >= 0 && elapsed < OFFLINE_GRACE_MS;
 }
 
-/** Get trial state */
-function getTrialState(): { isTrial: boolean; trialDaysLeft: number } {
-  let trialStart = localStorage.getItem(TRIAL_START_KEY);
+/** Get trial state from localStorage (offline fallback) */
+function getLocalTrialState(): { isTrial: boolean; trialDaysLeft: number } {
+  const trialStart = localStorage.getItem(TRIAL_START_KEY);
   if (!trialStart) {
-    // First launch: start trial
-    trialStart = String(Date.now());
-    try { localStorage.setItem(TRIAL_START_KEY, trialStart); } catch { /* ignore */ }
+    return { isTrial: false, trialDaysLeft: 0 };
   }
 
   const elapsed = Date.now() - Number(trialStart);
@@ -92,16 +90,45 @@ async function getDeviceName(): Promise<string> {
   }
 }
 
+/** Fetch trial state from server, falls back to localStorage */
+async function syncTrialWithServer(deviceId: string): Promise<{ isTrial: boolean; trialDaysLeft: number }> {
+  try {
+    const res = await fetch(`${API_URL}/api/trial`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ device_id: deviceId }),
+    });
+    const data = await res.json();
+
+    // Save server trial_start to localStorage for offline fallback
+    if (data.trial_start) {
+      const startMs = typeof data.trial_start === "string" && data.trial_start.includes("T")
+        ? new Date(data.trial_start).getTime()
+        : new Date(data.trial_start + "Z").getTime();
+      try { localStorage.setItem(TRIAL_START_KEY, String(startMs)); } catch { /* ignore */ }
+    }
+
+    if (data.expired) {
+      return { isTrial: false, trialDaysLeft: 0 };
+    }
+    return { isTrial: true, trialDaysLeft: data.days_left };
+  } catch {
+    // Offline: use localStorage fallback
+    return getLocalTrialState();
+  }
+}
+
 export function useLicense() {
   const [hasLicense, setHasLicense] = useState(() => {
     if (localStorage.getItem(LICENSE_STATUS_KEY) !== "pro") return false;
     return isOfflineGracePeriodValid();
   });
-  const [trialState, setTrialState] = useState(getTrialState);
+  const [trialState, setTrialState] = useState(getLocalTrialState);
   const [licenseKey, setLicenseKey] = useState(() => {
     return localStorage.getItem(LICENSE_KEY) || "";
   });
   const validating = useRef(false);
+  const trialSynced = useRef(false);
 
   const isTrial = !hasLicense && trialState.isTrial;
   const isPro = hasLicense || isTrial;
@@ -184,7 +211,19 @@ export function useLicense() {
 
   const maxTabs = isPro ? Infinity : 3;
 
-  // Re-validate on app startup
+  // Sync trial with server on startup
+  useEffect(() => {
+    if (!hasLicense && !trialSynced.current) {
+      trialSynced.current = true;
+      getDeviceId().then((deviceId) => {
+        syncTrialWithServer(deviceId).then((serverTrial) => {
+          setTrialState(serverTrial);
+        });
+      });
+    }
+  }, [hasLicense]);
+
+  // Re-validate license on app startup
   useEffect(() => {
     const storedKey = localStorage.getItem(LICENSE_KEY);
     if (storedKey && !validating.current) {
@@ -198,7 +237,7 @@ export function useLicense() {
   // Refresh trial state periodically (every minute)
   useEffect(() => {
     const timer = setInterval(() => {
-      setTrialState(getTrialState());
+      setTrialState(getLocalTrialState());
     }, 60000);
     return () => clearInterval(timer);
   }, []);

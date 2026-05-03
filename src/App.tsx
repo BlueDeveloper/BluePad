@@ -92,19 +92,35 @@ function App() {
   const fileManager = useFileManager();
   const license = useLicense();
 
-  // 14일 체험 환영/만료 다이얼로그
+  // 14일 체험 환영/만료 다이얼로그 (debounce로 서버 동기화 대기)
+  const trialDialogShown = useRef(false);
   useEffect(() => {
-    const welcomed = localStorage.getItem("bluepad_trial_welcomed");
-    if (license.isTrial && !welcomed) {
-      setTrialWelcomeVisible(true);
-      try { localStorage.setItem("bluepad_trial_welcomed", "1"); } catch { /* ignore */ }
-    } else if (!license.isPro && !license.isTrial && license.trialDaysLeft <= 0) {
-      const expiredShown = sessionStorage.getItem("bluepad_trial_expired_shown");
-      if (!expiredShown) {
-        setTrialExpiredVisible(true);
-        sessionStorage.setItem("bluepad_trial_expired_shown", "1");
+    if (trialDialogShown.current) return;
+    const timer = setTimeout(() => {
+      if (trialDialogShown.current) return;
+      trialDialogShown.current = true;
+
+      if (!license.isPro && !license.isTrial && license.trialDaysLeft <= 0) {
+        const expiredShown = sessionStorage.getItem("bluepad_trial_expired_shown");
+        if (!expiredShown) {
+          setTrialExpiredVisible(true);
+          sessionStorage.setItem("bluepad_trial_expired_shown", "1");
+        }
+      } else if (license.isTrial && license.trialDaysLeft <= 3 && license.trialDaysLeft > 0) {
+        const soonShown = sessionStorage.getItem("bluepad_trial_expiring_shown");
+        if (!soonShown) {
+          setTrialExpiredVisible(true);
+          sessionStorage.setItem("bluepad_trial_expiring_shown", "1");
+        }
+      } else if (license.isTrial && license.trialDaysLeft > 3) {
+        const welcomed = localStorage.getItem("bluepad_trial_welcomed");
+        if (!welcomed) {
+          setTrialWelcomeVisible(true);
+          try { localStorage.setItem("bluepad_trial_welcomed", "1"); } catch { /* ignore */ }
+        }
       }
-    }
+    }, 500);
+    return () => clearTimeout(timer);
   }, [license.isPro, license.isTrial, license.trialDaysLeft]);
 
   // Sync i18n dialog labels to useFileManager
@@ -497,6 +513,7 @@ ${editorEl.innerHTML}
         <LicenseDialog
           visible={licenseDialogVisible}
           isPro={license.isPro}
+          isTrial={license.isTrial}
           onActivate={license.activate}
           onDeactivate={license.deactivate}
           onClose={() => setLicenseDialogVisible(false)}
@@ -528,9 +545,9 @@ ${editorEl.innerHTML}
         <AlertDialog
           visible={trialExpiredVisible}
           title={i18n.t("license.upgradeTitle")}
-          message={i18n.t("trial.expired")}
+          message={license.trialDaysLeft > 0 ? i18n.t("trial.expiringSoon").replace("{days}", String(license.trialDaysLeft)) : i18n.t("trial.expired")}
           actionLabel={i18n.t("trial.buyNow")}
-          onAction={() => setLicenseDialogVisible(true)}
+          onAction={() => window.open(import.meta.env.DEV ? "https://bluepad-checkout-sandbox.blueehdwp.workers.dev/" : "https://bluepad-checkout.blueehdwp.workers.dev/", "_blank")}
           onClose={() => setTrialExpiredVisible(false)}
         />
       </div>

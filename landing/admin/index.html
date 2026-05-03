@@ -72,8 +72,13 @@ tr:last-child td{border-bottom:none}
       <div class="card-label">Active Licenses</div>
       <div class="card-value" id="stat-active">--</div>
     </div>
+    <div class="card">
+      <div class="card-label">Trial Users</div>
+      <div class="card-value" id="stat-trials">--</div>
+    </div>
   </div>
 
+  <h2 style="font-size:1.1rem;margin-bottom:1rem">Licenses</h2>
   <div class="table-wrap">
     <table>
       <thead>
@@ -87,6 +92,21 @@ tr:last-child td{border-bottom:none}
         </tr>
       </thead>
       <tbody id="license-table"></tbody>
+    </table>
+  </div>
+
+  <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">Trials</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Device ID</th>
+          <th>Trial Start</th>
+          <th>Days Left</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="trial-table"></tbody>
     </table>
   </div>
 </div>
@@ -135,6 +155,7 @@ async function checkAuth() {
 async function loadDashboard() {
   loadStats();
   loadLicenses();
+  loadTrials();
 }
 
 async function loadStats() {
@@ -190,6 +211,33 @@ async function deactivate(key) {
     }
   } catch (e) {
     alert('Connection error');
+  }
+}
+
+async function loadTrials() {
+  const token = getToken();
+  try {
+    const res = await fetch(LICENSE_API + '/api/admin/trials', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const data = await res.json();
+    const trials = data.trials || [];
+    document.getElementById('stat-trials').textContent = trials.length;
+    const tbody = document.getElementById('trial-table');
+    tbody.innerHTML = trials.map(t => {
+      const startMs = new Date(t.trial_start + 'Z').getTime();
+      const elapsed = Date.now() - startMs;
+      const daysLeft = Math.max(0, Math.ceil((14*24*60*60*1000 - elapsed) / (24*60*60*1000)));
+      const expired = daysLeft <= 0;
+      return `<tr>
+        <td style="font-family:monospace;font-size:.8rem">${esc(t.device_id)}</td>
+        <td>${formatDate(t.trial_start)}</td>
+        <td>${expired ? '0' : daysLeft}</td>
+        <td><span class="badge ${expired ? 'badge-inactive' : 'badge-active'}">${expired ? 'Expired' : 'Active'}</span></td>
+      </tr>`;
+    }).join('');
+  } catch (e) {
+    document.getElementById('trial-table').innerHTML = '<tr><td colspan="4">Failed to load</td></tr>';
   }
 }
 

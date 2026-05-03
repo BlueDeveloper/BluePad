@@ -101,6 +101,7 @@ export const en = {
   "license.status": "License Status",
   "license.free": "Free Version",
   "license.pro": "Pro Version",
+  "license.trial": "14-Day Trial",
   "license.proFeature": "This feature is available in Pro version.",
   "license.upgradeTitle": "Upgrade to Pro",
 
@@ -119,7 +120,7 @@ export const en = {
 
   // Trial
   "trial.expired": "Your Pro trial has expired.\nPurchase a license to continue using Pro features.",
-  "trial.expiringSoon": "Your Pro trial expires in {days} days.",
+  "trial.expiringSoon": "Your Pro trial expires in {days} days.\n\nAfter expiration, these features will be limited:\n• Max 3 tabs\n• Only 1 theme available\n• No Focus mode\n• No HTML export",
   "trial.welcome": "Welcome to BluePad!\n\nEnjoy all Pro features free for 14 days.\n\n• Unlimited tabs\n• All 4 themes\n• Focus mode\n• HTML/PDF export",
   "trial.welcomeTitle": "14-Day Free Trial",
   "trial.buyNow": "Buy Pro",

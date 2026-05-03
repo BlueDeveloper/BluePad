@@ -101,6 +101,7 @@ export const ko = {
   "license.status": "라이선스 상태",
   "license.free": "무료 버전",
   "license.pro": "Pro 버전",
+  "license.trial": "14일 체험 중",
   "license.proFeature": "이 기능은 Pro 버전에서 사용할 수 있습니다.",
   "license.upgradeTitle": "Pro 업그레이드",
 
@@ -119,7 +120,7 @@ export const ko = {
 
   // Trial
   "trial.expired": "Pro 체험 기간이 만료되었습니다.\n계속 Pro 기능을 사용하려면 라이선스를 구매해주세요.",
-  "trial.expiringSoon": "Pro 체험 기간이 {days}일 후 만료됩니다.",
+  "trial.expiringSoon": "Pro 체험 기간이 {days}일 후 만료됩니다.\n\n만료 시 다음 기능이 제한됩니다:\n• 탭 3개 제한\n• 테마 1종만 사용 가능\n• 집중 모드 사용 불가\n• HTML 내보내기 사용 불가",
   "trial.welcome": "BluePad에 오신 것을 환영합니다!\n\n14일간 모든 Pro 기능을 무료로 체험할 수 있습니다.\n\n• 무제한 탭\n• 4가지 테마\n• 집중 모드\n• HTML/PDF 내보내기",
   "trial.welcomeTitle": "14일 무료 체험",
   "trial.buyNow": "Pro 구매",

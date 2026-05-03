@@ -4,12 +4,13 @@ import { useI18n } from "../i18n";
 interface LicenseDialogProps {
   visible: boolean;
   isPro: boolean;
+  isTrial: boolean;
   onActivate: (key: string) => Promise<boolean>;
   onDeactivate: () => void;
   onClose: () => void;
 }
 
-export function LicenseDialog({ visible, isPro, onActivate, onDeactivate, onClose }: LicenseDialogProps) {
+export function LicenseDialog({ visible, isPro, isTrial, onActivate, onDeactivate, onClose }: LicenseDialogProps) {
   const { t } = useI18n();
   const [key, setKey] = useState("");
   const [error, setError] = useState(false);
@@ -39,11 +40,11 @@ export function LicenseDialog({ visible, isPro, onActivate, onDeactivate, onClos
         <div className="dialog-body">
           <div className="license-status">
             <span className="license-status-label">{t("license.status")}:</span>
-            <span className={`license-badge ${isPro ? "pro" : "free"}`}>
-              {isPro ? t("license.pro") : t("license.free")}
+            <span className={`license-badge ${isPro && !isTrial ? "pro" : isTrial ? "trial" : "free"}`}>
+              {isPro && !isTrial ? t("license.pro") : isTrial ? t("license.trial") : t("license.free")}
             </span>
           </div>
-          {!isPro && (
+          {(!isPro || isTrial) && (
             <div className="license-input-group">
               <input
                 type="text"
@@ -60,7 +61,7 @@ export function LicenseDialog({ visible, isPro, onActivate, onDeactivate, onClos
           )}
           {error && <div className="license-error">{t("license.invalid")}</div>}
           {success && <div className="license-success">{t("license.activated")}</div>}
-          {isPro && (
+          {isPro && !isTrial && (
             <button className="license-deactivate-btn" onClick={onDeactivate}>
               {t("license.deactivate")}
             </button>
