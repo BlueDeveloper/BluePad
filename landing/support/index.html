@@ -6,7 +6,7 @@
 <title>BluePad Support</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#09090b;color:#fafafa;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+body{font-family:'Pretendard Variable',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#09090b;color:#fafafa;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
 .card{background:#18181b;border:1px solid #27272a;border-radius:16px;padding:48px 40px;max-width:480px;width:100%}
 h1{font-size:24px;font-weight:700;margin-bottom:8px}
 .sub{color:#a1a1aa;font-size:14px;margin-bottom:32px}
@@ -24,51 +24,160 @@ textarea{resize:vertical;min-height:120px}
 .success p{color:#a1a1aa;font-size:14px}
 .back{display:inline-block;margin-top:24px;color:#155dfc;text-decoration:none;font-size:14px;font-weight:600}
 .error-msg{color:#ef4444;font-size:13px;margin-bottom:12px;display:none}
+.lang-switch{position:absolute;top:16px;right:20px;display:flex;gap:8px}
+.lang-switch a{color:#52525b;text-decoration:none;font-size:13px;font-weight:600;transition:color .15s}
+.lang-switch a:hover,.lang-switch a.on{color:#fafafa}
 </style>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 </head>
 <body>
 
+<div class="lang-switch">
+  <a href="#" onclick="setLang('ko');return false" id="lang-ko">KO</a>
+  <a href="#" onclick="setLang('en');return false" id="lang-en">EN</a>
+  <a href="#" onclick="setLang('ja');return false" id="lang-ja">JA</a>
+</div>
+
 <div class="card">
   <div id="form-view">
-    <h1>Support & Refund</h1>
-    <div class="sub">We'll respond within 1-2 business days.</div>
+    <h1 id="t-title"></h1>
+    <div class="sub" id="t-sub"></div>
 
     <form id="support-form" onsubmit="submitForm(event)">
-      <label for="type">Type</label>
+      <label for="type" id="t-type-label"></label>
       <select id="type" required>
-        <option value="">Select...</option>
-        <option value="refund">Refund Request</option>
-        <option value="bug">Bug Report</option>
-        <option value="feature">Feature Request</option>
-        <option value="other">Other</option>
+        <option value="" id="t-select"></option>
+        <option value="refund" id="t-refund"></option>
+        <option value="bug" id="t-bug"></option>
+        <option value="feature" id="t-feature"></option>
+        <option value="other" id="t-other"></option>
       </select>
 
-      <label for="email">Email</label>
-      <input type="email" id="email" required placeholder="your@email.com">
+      <label for="email" id="t-email-label"></label>
+      <input type="email" id="email" required>
 
       <div id="license-field" style="display:none">
-        <label for="license">License Key <span style="color:#52525b;font-weight:400">(optional — we can look it up by email)</span></label>
+        <label for="license" id="t-license-label"></label>
         <input type="text" id="license" placeholder="BP-XXXX-XXXX-XXXX-XXXX">
       </div>
 
-      <label for="message">Message</label>
-      <textarea id="message" required placeholder="Describe your issue..."></textarea>
+      <label for="message" id="t-message-label"></label>
+      <textarea id="message" required></textarea>
 
       <div id="error" class="error-msg"></div>
-      <button type="submit" class="btn" id="submit-btn">Send</button>
+      <button type="submit" class="btn" id="submit-btn"></button>
     </form>
   </div>
 
   <div id="success-view" class="success">
     <div class="check">&#9989;</div>
-    <h2>Request Received</h2>
-    <p>We'll get back to you at your email address.</p>
-    <a href="https://bluepad.work" class="back">&larr; Back to BluePad</a>
+    <h2 id="t-success-title"></h2>
+    <p id="t-success-msg"></p>
+    <a href="https://bluepad.work" class="back" id="t-back"></a>
   </div>
 </div>
 
 <script>
 const WORKER_URL = 'https://bluepad-license-api.blueehdwp.workers.dev';
+
+const i18n = {
+  ko: {
+    title: '문의하기',
+    sub: '1~2 영업일 내에 답변드리겠습니다.',
+    typeLabel: '문의 유형',
+    select: '선택하세요...',
+    refund: '환불 요청',
+    bug: '버그 신고',
+    feature: '기능 요청',
+    other: '기타',
+    emailLabel: '이메일',
+    emailPh: 'your@email.com',
+    licenseLabel: '라이선스 키 (선택 — 이메일로 조회 가능)',
+    messageLabel: '내용',
+    messagePh: '문의 내용을 입력해주세요...',
+    send: '보내기',
+    sending: '전송 중...',
+    successTitle: '접수 완료',
+    successMsg: '입력하신 이메일로 답변드리겠습니다.',
+    back: '← BluePad로 돌아가기'
+  },
+  en: {
+    title: 'Support & Refund',
+    sub: "We'll respond within 1-2 business days.",
+    typeLabel: 'Type',
+    select: 'Select...',
+    refund: 'Refund Request',
+    bug: 'Bug Report',
+    feature: 'Feature Request',
+    other: 'Other',
+    emailLabel: 'Email',
+    emailPh: 'your@email.com',
+    licenseLabel: 'License Key (optional — we can look it up by email)',
+    messageLabel: 'Message',
+    messagePh: 'Describe your issue...',
+    send: 'Send',
+    sending: 'Sending...',
+    successTitle: 'Request Received',
+    successMsg: "We'll get back to you at your email address.",
+    back: '← Back to BluePad'
+  },
+  ja: {
+    title: 'お問い合わせ',
+    sub: '1〜2営業日以内にご返信いたします。',
+    typeLabel: '種類',
+    select: '選択してください...',
+    refund: '返金リクエスト',
+    bug: 'バグ報告',
+    feature: '機能リクエスト',
+    other: 'その他',
+    emailLabel: 'メール',
+    emailPh: 'your@email.com',
+    licenseLabel: 'ライセンスキー（任意 — メールで検索可能）',
+    messageLabel: '内容',
+    messagePh: 'お問い合わせ内容を入力してください...',
+    send: '送信',
+    sending: '送信中...',
+    successTitle: '受付完了',
+    successMsg: 'ご入力いただいたメールアドレスにご返信いたします。',
+    back: '← BluePadに戻る'
+  }
+};
+
+let currentLang = 'en';
+
+function detectLang() {
+  const nav = (navigator.language || '').toLowerCase();
+  if (nav.startsWith('ko')) return 'ko';
+  if (nav.startsWith('ja')) return 'ja';
+  return 'en';
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = i18n[lang];
+  document.getElementById('t-title').textContent = t.title;
+  document.getElementById('t-sub').textContent = t.sub;
+  document.getElementById('t-type-label').textContent = t.typeLabel;
+  document.getElementById('t-select').textContent = t.select;
+  document.getElementById('t-refund').textContent = t.refund;
+  document.getElementById('t-bug').textContent = t.bug;
+  document.getElementById('t-feature').textContent = t.feature;
+  document.getElementById('t-other').textContent = t.other;
+  document.getElementById('t-email-label').textContent = t.emailLabel;
+  document.getElementById('email').placeholder = t.emailPh;
+  document.getElementById('t-license-label').textContent = t.licenseLabel;
+  document.getElementById('t-message-label').textContent = t.messageLabel;
+  document.getElementById('message').placeholder = t.messagePh;
+  document.getElementById('submit-btn').textContent = t.send;
+  document.getElementById('t-success-title').textContent = t.successTitle;
+  document.getElementById('t-success-msg').textContent = t.successMsg;
+  document.getElementById('t-back').textContent = t.back;
+  document.querySelectorAll('.lang-switch a').forEach(a => a.classList.remove('on'));
+  document.getElementById('lang-' + lang).classList.add('on');
+  document.documentElement.lang = lang;
+}
+
+setLang(detectLang());
 
 document.getElementById('type').addEventListener('change', function() {
   document.getElementById('license-field').style.display = this.value === 'refund' ? 'block' : 'none';
@@ -78,8 +187,9 @@ async function submitForm(e) {
   e.preventDefault();
   const btn = document.getElementById('submit-btn');
   const err = document.getElementById('error');
+  const t = i18n[currentLang];
   btn.disabled = true;
-  btn.textContent = 'Sending...';
+  btn.textContent = t.sending;
   err.style.display = 'none';
 
   const data = {
@@ -102,13 +212,12 @@ async function submitForm(e) {
       throw new Error('Server error');
     }
   } catch (e) {
-    // Fallback: open mailto
     const subject = encodeURIComponent('BluePad ' + data.type + ' request');
     const body = encodeURIComponent('Type: ' + data.type + '\nLicense: ' + (data.license_key || 'N/A') + '\n\n' + data.message);
     window.location.href = 'mailto:blueehdwp@gmail.com?subject=' + subject + '&body=' + body;
   }
   btn.disabled = false;
-  btn.textContent = 'Send';
+  btn.textContent = t.send;
 }
 </script>
 </body>

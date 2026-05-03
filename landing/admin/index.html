@@ -281,7 +281,7 @@ async function loadTickets() {
       <td><span class="badge ${t.type === 'refund' ? 'badge-inactive' : 'badge-active'}">${typeMap[t.type] || t.type}</span></td>
       <td>${esc(t.email)}</td>
       <td style="font-family:monospace;font-size:.8rem">${esc(t.license_key || '-')}</td>
-      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(t.message)}">${esc(t.message)}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer" onclick="alert(this.getAttribute('data-msg'))" data-msg="${esc(t.message)}">${esc(t.message)}</td>
       <td>${formatDate(t.created_at)}</td>
       <td><span class="badge ${t.status === 'open' ? 'badge-active' : 'badge-inactive'}">${t.status === 'open' ? '접수' : '처리 완료'}</span></td>
     </tr>`).join('');
