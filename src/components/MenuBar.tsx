@@ -169,6 +169,7 @@ export function MenuBar({
         })),
         { label: "", action: () => {}, divider: true },
         { label: t("menu.license"), action: onOpenLicense },
+        { label: t("menu.support"), action: () => window.open("https://bluepad.work/support/", "_blank") },
         { label: "", action: () => {}, divider: true },
         { label: t("menu.about"), action: onOpenAbout },
       ],

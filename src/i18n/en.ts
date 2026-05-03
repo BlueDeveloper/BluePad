@@ -24,6 +24,7 @@ export const en = {
   "menu.theme": "Theme",
   "menu.language": "Language",
   "menu.license": "Activate License",
+  "menu.support": "Refund/Support",
   "menu.about": "About BluePad",
 
   // Toolbar

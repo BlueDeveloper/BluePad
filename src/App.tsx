@@ -521,6 +521,7 @@ ${editorEl.innerHTML}
         <AboutDialog
           visible={aboutDialogVisible}
           isPro={license.isPro}
+          isTrial={license.isTrial}
           onClose={() => setAboutDialogVisible(false)}
         />
         <ProGate

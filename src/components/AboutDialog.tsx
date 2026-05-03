@@ -3,6 +3,7 @@ import { useI18n } from "../i18n";
 interface AboutDialogProps {
   visible: boolean;
   isPro: boolean;
+  isTrial: boolean;
   onClose: () => void;
 }
 
@@ -18,7 +19,7 @@ const OSS_LIBRARIES = [
   { name: "Vite", license: "MIT", url: "https://github.com/vitejs/vite" },
 ];
 
-export function AboutDialog({ visible, isPro, onClose }: AboutDialogProps) {
+export function AboutDialog({ visible, isPro, isTrial, onClose }: AboutDialogProps) {
   const { t } = useI18n();
 
   if (!visible) return null;
@@ -39,8 +40,8 @@ export function AboutDialog({ visible, isPro, onClose }: AboutDialogProps) {
             <h2 className="about-app-name">BluePad</h2>
             <div className="about-version">{t("about.version")} 1.0.0</div>
             <div className="about-tagline">{t("about.tagline")}</div>
-            <span className={`license-badge ${isPro ? "pro" : "free"}`}>
-              {isPro ? "Pro" : "Free"}
+            <span className={`license-badge ${isPro && !isTrial ? "pro" : isTrial ? "trial" : "free"}`}>
+              {isPro && !isTrial ? "Pro" : isTrial ? "Trial" : "Free"}
             </span>
           </div>
 
@@ -50,9 +51,9 @@ export function AboutDialog({ visible, isPro, onClose }: AboutDialogProps) {
               <span>{t("about.website")}: </span>
               <a
                 href="#"
-                onClick={(e) => { e.preventDefault(); openExternal("https://bdarchive.site/bluepad"); }}
+                onClick={(e) => { e.preventDefault(); openExternal("https://bluepad.work"); }}
               >
-                bdarchive.site/bluepad
+                bluepad.work
               </a>
             </div>
           </div>

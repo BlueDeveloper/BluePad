@@ -24,6 +24,7 @@ export const ko = {
   "menu.theme": "테마",
   "menu.language": "언어",
   "menu.license": "라이선스 등록",
+  "menu.support": "환불/문의",
   "menu.about": "BluePad 정보",
 
   // Toolbar

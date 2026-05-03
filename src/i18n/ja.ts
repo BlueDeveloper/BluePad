@@ -24,6 +24,7 @@ export const ja = {
   "menu.theme": "テーマ",
   "menu.language": "言語",
   "menu.license": "ライセンス登録",
+  "menu.support": "返金/お問い合わせ",
   "menu.about": "BluePadについて",
 
   // Toolbar

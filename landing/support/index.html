@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BluePad Support</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#09090b;color:#fafafa;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.card{background:#18181b;border:1px solid #27272a;border-radius:16px;padding:48px 40px;max-width:480px;width:100%}
+h1{font-size:24px;font-weight:700;margin-bottom:8px}
+.sub{color:#a1a1aa;font-size:14px;margin-bottom:32px}
+label{display:block;font-size:13px;color:#a1a1aa;margin-bottom:6px;font-weight:500}
+input,select,textarea{width:100%;padding:10px 14px;border:1px solid #27272a;border-radius:8px;background:#09090b;color:#fafafa;font-size:14px;font-family:inherit;margin-bottom:16px;outline:none;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{border-color:#155dfc}
+select{appearance:none;cursor:pointer}
+textarea{resize:vertical;min-height:120px}
+.btn{width:100%;padding:14px;background:#155dfc;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.success{display:none;text-align:center;padding:24px 0}
+.success .check{font-size:48px;margin-bottom:16px}
+.success h2{font-size:20px;margin-bottom:8px}
+.success p{color:#a1a1aa;font-size:14px}
+.back{display:inline-block;margin-top:24px;color:#155dfc;text-decoration:none;font-size:14px;font-weight:600}
+.error-msg{color:#ef4444;font-size:13px;margin-bottom:12px;display:none}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div id="form-view">
+    <h1>Support & Refund</h1>
+    <div class="sub">We'll respond within 1-2 business days.</div>
+
+    <form id="support-form" onsubmit="submitForm(event)">
+      <label for="type">Type</label>
+      <select id="type" required>
+        <option value="">Select...</option>
+        <option value="refund">Refund Request</option>
+        <option value="bug">Bug Report</option>
+        <option value="feature">Feature Request</option>
+        <option value="other">Other</option>
+      </select>
+
+      <div id="license-field" style="display:none">
+        <label for="license">License Key</label>
+        <input type="text" id="license" placeholder="BP-XXXX-XXXX-XXXX-XXXX">
+      </div>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" required placeholder="your@email.com">
+
+      <label for="message">Message</label>
+      <textarea id="message" required placeholder="Describe your issue..."></textarea>
+
+      <div id="error" class="error-msg"></div>
+      <button type="submit" class="btn" id="submit-btn">Send</button>
+    </form>
+  </div>
+
+  <div id="success-view" class="success">
+    <div class="check">&#9989;</div>
+    <h2>Request Received</h2>
+    <p>We'll get back to you at your email address.</p>
+    <a href="https://bluepad.work" class="back">&larr; Back to BluePad</a>
+  </div>
+</div>
+
+<script>
+const WORKER_URL = 'https://bluepad-license-api.blueehdwp.workers.dev';
+
+document.getElementById('type').addEventListener('change', function() {
+  document.getElementById('license-field').style.display = this.value === 'refund' ? 'block' : 'none';
+});
+
+async function submitForm(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+  const err = document.getElementById('error');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  err.style.display = 'none';
+
+  const data = {
+    type: document.getElementById('type').value,
+    email: document.getElementById('email').value,
+    message: document.getElementById('message').value,
+    license_key: document.getElementById('license').value || null,
+  };
+
+  try {
+    const res = await fetch(WORKER_URL + '/api/support', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (res.ok) {
+      document.getElementById('form-view').style.display = 'none';
+      document.getElementById('success-view').style.display = 'block';
+    } else {
+      throw new Error('Server error');
+    }
+  } catch (e) {
+    // Fallback: open mailto
+    const subject = encodeURIComponent('BluePad ' + data.type + ' request');
+    const body = encodeURIComponent('Type: ' + data.type + '\nLicense: ' + (data.license_key || 'N/A') + '\n\n' + data.message);
+    window.location.href = 'mailto:blueehdwp@gmail.com?subject=' + subject + '&body=' + body;
+  }
+  btn.disabled = false;
+  btn.textContent = 'Send';
+}
+</script>
+</body>
+</html>
