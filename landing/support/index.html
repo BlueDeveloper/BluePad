@@ -43,13 +43,13 @@ textarea{resize:vertical;min-height:120px}
         <option value="other">Other</option>
       </select>
 
-      <div id="license-field" style="display:none">
-        <label for="license">License Key</label>
-        <input type="text" id="license" placeholder="BP-XXXX-XXXX-XXXX-XXXX">
-      </div>
-
       <label for="email">Email</label>
       <input type="email" id="email" required placeholder="your@email.com">
+
+      <div id="license-field" style="display:none">
+        <label for="license">License Key <span style="color:#52525b;font-weight:400">(optional — we can look it up by email)</span></label>
+        <input type="text" id="license" placeholder="BP-XXXX-XXXX-XXXX-XXXX">
+      </div>
 
       <label for="message">Message</label>
       <textarea id="message" required placeholder="Describe your issue..."></textarea>

@@ -76,6 +76,10 @@ tr:last-child td{border-bottom:none}
       <div class="card-label">Trial Users</div>
       <div class="card-value" id="stat-trials">--</div>
     </div>
+    <div class="card">
+      <div class="card-label">Support Tickets</div>
+      <div class="card-value" id="stat-tickets">--</div>
+    </div>
   </div>
 
   <h2 style="font-size:1.1rem;margin-bottom:1rem">Licenses</h2>
@@ -108,6 +112,23 @@ tr:last-child td{border-bottom:none}
         </tr>
       </thead>
       <tbody id="trial-table"></tbody>
+    </table>
+  </div>
+
+  <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">Support Tickets</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Email</th>
+          <th>License Key</th>
+          <th>Message</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="ticket-table"></tbody>
     </table>
   </div>
 </div>
@@ -157,6 +178,7 @@ async function loadDashboard() {
   loadStats();
   loadLicenses();
   loadTrials();
+  loadTickets();
 }
 
 async function loadStats() {
@@ -240,6 +262,29 @@ async function loadTrials() {
     }).join('');
   } catch (e) {
     document.getElementById('trial-table').innerHTML = '<tr><td colspan="5">Failed to load</td></tr>';
+  }
+}
+
+async function loadTickets() {
+  const token = getToken();
+  try {
+    const res = await fetch(LICENSE_API + '/api/admin/tickets', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const data = await res.json();
+    const tickets = data.tickets || [];
+    document.getElementById('stat-tickets').textContent = tickets.length;
+    const tbody = document.getElementById('ticket-table');
+    tbody.innerHTML = tickets.map(t => `<tr>
+      <td><span class="badge ${t.type === 'refund' ? 'badge-inactive' : 'badge-active'}">${esc(t.type)}</span></td>
+      <td>${esc(t.email)}</td>
+      <td style="font-family:monospace;font-size:.8rem">${esc(t.license_key || '-')}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.message)}</td>
+      <td>${formatDate(t.created_at)}</td>
+      <td><span class="badge ${t.status === 'open' ? 'badge-active' : 'badge-inactive'}">${esc(t.status)}</span></td>
+    </tr>`).join('');
+  } catch (e) {
+    document.getElementById('ticket-table').innerHTML = '<tr><td colspan="6">Failed to load</td></tr>';
   }
 }
 
