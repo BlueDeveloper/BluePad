@@ -140,4 +140,6 @@ export const ko = {
   "update.later": "나중에",
   "update.error": "업데이트 확인 중 오류가 발생했습니다.",
   "menu.checkUpdate": "업데이트 확인",
+  "update.whatsNewTitle": "v{version} 업데이트 완료",
+  "update.whatsNewMessage": "BluePad가 v{version}으로 업데이트되었습니다.\n새로운 기능과 개선사항을 확인해보세요!",
 };

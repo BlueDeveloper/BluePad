@@ -140,4 +140,6 @@ export const en = {
   "update.later": "Later",
   "update.error": "An error occurred while checking for updates.",
   "menu.checkUpdate": "Check for Updates",
+  "update.whatsNewTitle": "Updated to v{version}",
+  "update.whatsNewMessage": "BluePad has been updated to v{version}.\nCheck out the new features and improvements!",
 };

@@ -31,7 +31,9 @@ const FONT_SIZE_KEY = "bluepad_font_size";
 const THEME_KEY = "bluepad_theme";
 const LANG_KEY = "bluepad_lang";
 const WORD_TARGET_KEY = "bluepad_word_target";
+const LAST_VERSION_KEY = "bluepad_last_version";
 const AUTO_SAVE_INTERVAL = 30000;
+const APP_VERSION = __APP_VERSION__;
 
 const THEMES = [
   { id: "classic", label: "Classic" },
@@ -96,10 +98,24 @@ function App() {
   }, [lang]);
 
   const [updateDialogVisible, setUpdateDialogVisible] = useState(false);
+  const [whatsNewVisible, setWhatsNewVisible] = useState(false);
+  const [whatsNewVersion, setWhatsNewVersion] = useState("");
   const editorRef = useRef<EditorHandle>(null);
   const fileManager = useFileManager();
   const license = useLicense();
   const updater = useUpdater();
+
+  // 업데이트 후 "새 소식" 알림
+  useEffect(() => {
+    try {
+      const lastVersion = localStorage.getItem(LAST_VERSION_KEY);
+      if (lastVersion && lastVersion !== APP_VERSION) {
+        setWhatsNewVersion(APP_VERSION);
+        setWhatsNewVisible(true);
+      }
+      localStorage.setItem(LAST_VERSION_KEY, APP_VERSION);
+    } catch { /* ignore */ }
+  }, []);
 
   // 14일 체험 환영/만료 다이얼로그 (debounce로 서버 동기화 대기)
   const trialDialogShown = useRef(false);
@@ -553,6 +569,12 @@ ${editorEl.innerHTML}
           title={i18n.t("trial.welcomeTitle")}
           message={i18n.t("trial.welcome")}
           onClose={() => setTrialWelcomeVisible(false)}
+        />
+        <AlertDialog
+          visible={whatsNewVisible}
+          title={i18n.t("update.whatsNewTitle").replace("{version}", whatsNewVersion)}
+          message={i18n.t("update.whatsNewMessage").replace("{version}", whatsNewVersion)}
+          onClose={() => setWhatsNewVisible(false)}
         />
         <UpdateDialog
           open={updateDialogVisible}

@@ -38,7 +38,7 @@ export function AboutDialog({ visible, isPro, isTrial, onClose }: AboutDialogPro
         <div className="dialog-body">
           <div className="about-hero">
             <h2 className="about-app-name">BluePad</h2>
-            <div className="about-version">{t("about.version")} 1.0.0</div>
+            <div className="about-version">{t("about.version")} {__APP_VERSION__}</div>
             <div className="about-tagline">{t("about.tagline")}</div>
             <span className={`license-badge ${isPro && !isTrial ? "pro" : isTrial ? "trial" : "free"}`}>
               {isPro && !isTrial ? "Pro" : isTrial ? "Trial" : "Free"}

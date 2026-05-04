@@ -27,8 +27,14 @@ export function useUpdater() {
         setStatus("latest");
       }
     } catch (e) {
-      setError(String(e));
-      setStatus("error");
+      const msg = String(e);
+      // No update available (empty response or fetch error)
+      if (msg.includes("Could not fetch") || msg.includes("204") || msg.includes("No update")) {
+        setStatus("latest");
+      } else {
+        setError(msg);
+        setStatus("error");
+      }
     }
   }, []);
 

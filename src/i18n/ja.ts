@@ -140,4 +140,6 @@ export const ja = {
   "update.later": "後で",
   "update.error": "アップデートの確認中にエラーが発生しました。",
   "menu.checkUpdate": "アップデート確認",
+  "update.whatsNewTitle": "v{version} にアップデート完了",
+  "update.whatsNewMessage": "BluePadがv{version}にアップデートされました。\n新機能と改善点をご確認ください！",
 };

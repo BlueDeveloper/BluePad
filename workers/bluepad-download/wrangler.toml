@@ -1,0 +1,12 @@
+name = "bluepad-download"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "bluepad-downloads"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "bluepad-licenses"
+database_id = "6e9776a9-f68a-45b9-b3f7-00cbd6bda70c"
