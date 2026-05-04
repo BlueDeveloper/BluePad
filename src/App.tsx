@@ -13,8 +13,10 @@ import { AboutDialog } from "./components/AboutDialog";
 import { ProGate } from "./components/ProGate";
 import { InputDialog } from "./components/InputDialog";
 import { AlertDialog } from "./components/AlertDialog";
+import { UpdateDialog } from "./components/UpdateDialog";
 import { useFileManager } from "./hooks/useFileManager";
 import { useLicense } from "./hooks/useLicense";
+import { useUpdater } from "./hooks/useUpdater";
 import { I18nCtx, t as translate } from "./i18n";
 import type { Lang } from "./i18n";
 import type { EditorHandle } from "./types";
@@ -93,9 +95,11 @@ function App() {
     try { localStorage.setItem(LANG_KEY, lang); } catch { /* ignore */ }
   }, [lang]);
 
+  const [updateDialogVisible, setUpdateDialogVisible] = useState(false);
   const editorRef = useRef<EditorHandle>(null);
   const fileManager = useFileManager();
   const license = useLicense();
+  const updater = useUpdater();
 
   // 14일 체험 환영/만료 다이얼로그 (debounce로 서버 동기화 대기)
   const trialDialogShown = useRef(false);
@@ -464,6 +468,7 @@ ${editorEl.innerHTML}
             onOpenLicense={() => setLicenseDialogVisible(true)}
             onOpenAbout={() => setAboutDialogVisible(true)}
             onProGate={() => setProGateVisible(true)}
+            onCheckUpdate={() => setUpdateDialogVisible(true)}
           />
         )}
         {!focusMode && <Toolbar editorRef={editorRef} sourceMode={sourceMode} />}
@@ -548,6 +553,18 @@ ${editorEl.innerHTML}
           title={i18n.t("trial.welcomeTitle")}
           message={i18n.t("trial.welcome")}
           onClose={() => setTrialWelcomeVisible(false)}
+        />
+        <UpdateDialog
+          open={updateDialogVisible}
+          status={updater.status}
+          progress={updater.progress}
+          newVersion={updater.newVersion}
+          releaseNotes={updater.releaseNotes}
+          error={updater.error}
+          onCheck={updater.checkForUpdate}
+          onDownload={updater.downloadAndInstall}
+          onRestart={updater.restartApp}
+          onClose={() => setUpdateDialogVisible(false)}
         />
         <AlertDialog
           visible={trialExpiredVisible}

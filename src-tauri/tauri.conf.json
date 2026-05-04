@@ -22,10 +22,11 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://bluepad-license-api.blueehdwp.workers.dev"
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://bluepad-license-api.blueehdwp.workers.dev https://bluepad-download.blueehdwp.workers.dev"
     }
   },
   "bundle": {
+    "createUpdaterArtifacts": true,
     "icon": [
       "icons/icon.ico",
       "icons/icon.png"
@@ -51,5 +52,12 @@
       }
     ]
   },
-  "plugins": {}
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU2NDFDNTEwMTNEQjAyRApSV1F0c0QwQlVSeGtEai9iMU1DZmR1KzFSenB3cTdPVkFFU0VNeUpFZXBmVW9yYlF4anBBc3hqego=",
+      "endpoints": [
+        "https://bluepad-download.blueehdwp.workers.dev/update.json"
+      ]
+    }
+  }
 }

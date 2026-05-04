@@ -125,4 +125,19 @@ export const ko = {
   "trial.welcome": "BluePad에 오신 것을 환영합니다!\n\n14일간 모든 Pro 기능을 무료로 체험할 수 있습니다.\n\n• 무제한 탭\n• 4가지 테마\n• 집중 모드\n• HTML/PDF 내보내기",
   "trial.welcomeTitle": "14일 무료 체험",
   "trial.buyNow": "Pro 구매",
+
+  // Update
+  "update.title": "업데이트 확인",
+  "update.checkDescription": "새로운 버전이 있는지 확인합니다.",
+  "update.checkNow": "확인",
+  "update.checking": "업데이트 확인 중...",
+  "update.latest": "현재 최신 버전입니다.",
+  "update.available": "새 버전 {version}이(가) 있습니다.",
+  "update.downloadInstall": "다운로드 및 설치",
+  "update.downloading": "다운로드 중...",
+  "update.done": "업데이트가 준비되었습니다. 재시작하면 적용됩니다.",
+  "update.restart": "재시작",
+  "update.later": "나중에",
+  "update.error": "업데이트 확인 중 오류가 발생했습니다.",
+  "menu.checkUpdate": "업데이트 확인",
 };

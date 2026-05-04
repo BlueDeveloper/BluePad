@@ -1603,3 +1603,36 @@ body {
   padding: 2px 6px;
   border-radius: 3px;
 }
+
+/* ========================================
+   Update Dialog
+   ======================================== */
+
+.update-notes {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  max-height: 120px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  color: var(--text-secondary);
+}
+
+.update-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-secondary, #f0f0f0);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.update-progress-fill {
+  height: 100%;
+  background: var(--accent-color, #155dfc);
+  border-radius: 3px;
+  transition: width 0.2s ease;
+}

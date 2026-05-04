@@ -125,4 +125,19 @@ export const en = {
   "trial.welcome": "Welcome to BluePad!\n\nEnjoy all Pro features free for 14 days.\n\n• Unlimited tabs\n• All 4 themes\n• Focus mode\n• HTML/PDF export",
   "trial.welcomeTitle": "14-Day Free Trial",
   "trial.buyNow": "Buy Pro",
+
+  // Update
+  "update.title": "Check for Updates",
+  "update.checkDescription": "Check if a newer version is available.",
+  "update.checkNow": "Check Now",
+  "update.checking": "Checking for updates...",
+  "update.latest": "You are using the latest version.",
+  "update.available": "Version {version} is available.",
+  "update.downloadInstall": "Download & Install",
+  "update.downloading": "Downloading...",
+  "update.done": "Update is ready. Restart to apply.",
+  "update.restart": "Restart",
+  "update.later": "Later",
+  "update.error": "An error occurred while checking for updates.",
+  "menu.checkUpdate": "Check for Updates",
 };

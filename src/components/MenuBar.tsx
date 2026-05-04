@@ -39,6 +39,7 @@ interface MenuBarProps {
   onOpenLicense: () => void;
   onOpenAbout: () => void;
   onProGate: () => void;
+  onCheckUpdate: () => void;
 }
 
 interface MenuItem {
@@ -92,6 +93,7 @@ export function MenuBar({
   onOpenLicense,
   onOpenAbout,
   onProGate,
+  onCheckUpdate,
 }: MenuBarProps) {
   const { t } = useI18n();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
@@ -170,6 +172,7 @@ export function MenuBar({
         { label: "", action: () => {}, divider: true },
         { label: t("menu.license"), action: onOpenLicense },
         { label: t("menu.support"), action: () => { import("@tauri-apps/plugin-shell").then(m => m.open("https://bluepad.work/support/")).catch(() => window.open("https://bluepad.work/support/", "_blank")); } },
+        { label: t("menu.checkUpdate"), action: onCheckUpdate },
         { label: "", action: () => {}, divider: true },
         { label: t("menu.about"), action: onOpenAbout },
       ],

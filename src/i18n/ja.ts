@@ -125,4 +125,19 @@ export const ja = {
   "trial.welcome": "BluePadへようこそ！\n\n14日間、すべてのPro機能を無料でお試しいただけます。\n\n• 無制限タブ\n• 4つのテーマ\n• 集中モード\n• HTML/PDFエクスポート",
   "trial.welcomeTitle": "14日間無料体験",
   "trial.buyNow": "Proを購入",
+
+  // Update
+  "update.title": "アップデート確認",
+  "update.checkDescription": "新しいバージョンがあるか確認します。",
+  "update.checkNow": "確認",
+  "update.checking": "アップデートを確認中...",
+  "update.latest": "最新バージョンです。",
+  "update.available": "新しいバージョン {version} があります。",
+  "update.downloadInstall": "ダウンロードしてインストール",
+  "update.downloading": "ダウンロード中...",
+  "update.done": "アップデートの準備ができました。再起動すると適用されます。",
+  "update.restart": "再起動",
+  "update.later": "後で",
+  "update.error": "アップデートの確認中にエラーが発生しました。",
+  "menu.checkUpdate": "アップデート確認",
 };
