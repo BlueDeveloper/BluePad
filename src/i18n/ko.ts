@@ -14,6 +14,7 @@ export const ko = {
   "menu.wordTarget": "단어 목표 설정",
   "menu.find": "찾기",
   "menu.replace": "바꾸기",
+  "menu.format": "자동 정렬",
   "menu.sourceMode": "소스 모드",
   "menu.outlineSidebar": "개요 사이드바",
   "menu.fileTree": "파일 트리",

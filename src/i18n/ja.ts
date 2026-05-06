@@ -14,6 +14,7 @@ export const ja = {
   "menu.wordTarget": "単語目標設定",
   "menu.find": "検索",
   "menu.replace": "置換",
+  "menu.format": "整形",
   "menu.sourceMode": "ソースモード",
   "menu.outlineSidebar": "アウトライン",
   "menu.fileTree": "ファイルツリー",

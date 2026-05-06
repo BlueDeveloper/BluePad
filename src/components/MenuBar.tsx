@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useI18n, LANGUAGES } from "../i18n";
 import type { Lang } from "../i18n";
+import type { FileType } from "../hooks/useFileManager";
 
 interface MenuBarProps {
   fileName: string;
@@ -13,12 +14,14 @@ interface MenuBarProps {
   recentFiles: string[];
   fontSize: number;
   isPro: boolean;
+  fileType: FileType;
   onNew: () => void;
   onOpen: () => Promise<void>;
   onSave: () => Promise<void>;
   onSaveAs: () => Promise<void>;
   onExportHtml: () => void;
   onExportPdf: () => void;
+  onFormat: () => void;
   onSetWordTarget: () => void;
   onToggleSource: () => void;
   onToggleSidebar: () => void;
@@ -67,12 +70,14 @@ export function MenuBar({
   recentFiles,
   fontSize,
   isPro,
+  fileType,
   onNew,
   onOpen,
   onSave,
   onSaveAs,
   onExportHtml,
   onExportPdf,
+  onFormat,
   onSetWordTarget,
   onToggleSource,
   onToggleSidebar,
@@ -137,6 +142,10 @@ export function MenuBar({
       items: [
         { label: t("menu.find"), shortcut: "Ctrl+F", action: onFind },
         { label: t("menu.replace"), shortcut: "Ctrl+H", action: onReplace },
+        ...((fileType === "json" || fileType === "yaml") ? [
+          { label: "", action: () => {}, divider: true },
+          { label: t("menu.format"), shortcut: "Ctrl+Shift+F", action: onFormat },
+        ] as MenuItem[] : []),
       ],
     },
     {
@@ -184,6 +193,7 @@ export function MenuBar({
       if (e.ctrlKey && e.key === "n") { e.preventDefault(); onNew(); }
       else if (e.ctrlKey && e.key === "o") { e.preventDefault(); onOpen(); }
       else if (e.ctrlKey && e.shiftKey && e.key === "S") { e.preventDefault(); onSaveAs(); }
+      else if (e.ctrlKey && e.shiftKey && e.key === "F") { e.preventDefault(); onFormat(); }
       else if (e.ctrlKey && e.key === "s") { e.preventDefault(); onSave(); }
       else if (e.ctrlKey && e.key === "/") { e.preventDefault(); onToggleSource(); }
       else if (e.ctrlKey && e.shiftKey && e.key === "L") { e.preventDefault(); onToggleSidebar(); }
@@ -191,7 +201,7 @@ export function MenuBar({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onNew, onOpen, onSave, onSaveAs, onToggleSource, onToggleSidebar, onToggleFocus]);
+  }, [onNew, onOpen, onSave, onSaveAs, onFormat, onToggleSource, onToggleSidebar, onToggleFocus]);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {

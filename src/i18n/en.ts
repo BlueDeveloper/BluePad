@@ -14,6 +14,7 @@ export const en = {
   "menu.wordTarget": "Set Word Target",
   "menu.find": "Find",
   "menu.replace": "Replace",
+  "menu.format": "Format",
   "menu.sourceMode": "Source Mode",
   "menu.outlineSidebar": "Outline Sidebar",
   "menu.fileTree": "File Tree",

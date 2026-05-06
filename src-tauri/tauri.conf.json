@@ -45,9 +45,21 @@
         "role": "Editor"
       },
       {
-        "ext": ["txt"],
+        "ext": ["txt", "log"],
         "mimeType": "text/plain",
         "description": "Text Document",
+        "role": "Editor"
+      },
+      {
+        "ext": ["json", "jsonc"],
+        "mimeType": "application/json",
+        "description": "JSON Document",
+        "role": "Editor"
+      },
+      {
+        "ext": ["yaml", "yml"],
+        "mimeType": "application/x-yaml",
+        "description": "YAML Document",
         "role": "Editor"
       }
     ]

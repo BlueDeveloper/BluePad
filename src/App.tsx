@@ -4,6 +4,7 @@ import { TabBar } from "./components/TabBar";
 import { Toolbar } from "./components/Toolbar";
 import { Editor } from "./components/Editor";
 import { SourceEditor } from "./components/SourceEditor";
+import { CodeEditor, formatCode } from "./components/CodeEditor";
 import { Sidebar } from "./components/Sidebar";
 import { FileTree } from "./components/FileTree";
 import { StatusBar } from "./components/StatusBar";
@@ -326,6 +327,14 @@ ${editorEl.innerHTML}
     }
   }, []);
 
+  const handleFormat = useCallback(() => {
+    const ft = fileManager.activeTab.fileType;
+    if (ft !== "json" && ft !== "yaml") return;
+    const { formatted, error } = formatCode(fileManager.content, ft);
+    if (error) return; // invalid syntax, do nothing
+    fileManager.setContent(formatted);
+  }, [fileManager]);
+
   const handlePrint = useCallback(() => {
     window.print();
   }, []);
@@ -457,12 +466,14 @@ ${editorEl.innerHTML}
             autoSaveEnabled={autoSaveEnabled}
             recentFiles={recentFiles}
             isPro={license.isPro}
+            fileType={fileManager.activeTab.fileType}
             onNew={handleNewTab}
             onOpen={fileManager.openFile}
             onSave={fileManager.saveFile}
             onSaveAs={fileManager.saveFileAs}
             onExportHtml={handleExportHtml}
             onExportPdf={handleExportPdf}
+            onFormat={handleFormat}
             onSetWordTarget={handleSetWordTarget}
             onToggleSource={() => setSourceMode((s) => !s)}
             onToggleSidebar={() => setSidebarVisible((s) => !s)}
@@ -507,7 +518,16 @@ ${editorEl.innerHTML}
               replaceMode={findReplaceMode}
               onClose={() => setFindVisible(false)}
             />
-            {sourceMode ? (
+            {fileManager.activeTab.fileType === "json" || fileManager.activeTab.fileType === "yaml" ? (
+              <CodeEditor
+                key={fileManager.activeTabId}
+                content={fileManager.content}
+                fileType={fileManager.activeTab.fileType}
+                onChange={handleContentChange}
+              />
+            ) : fileManager.activeTab.fileType === "text" ? (
+              <SourceEditor key={fileManager.activeTabId} content={fileManager.content} onChange={handleContentChange} />
+            ) : sourceMode ? (
               <SourceEditor key={fileManager.activeTabId} content={fileManager.content} onChange={handleContentChange} />
             ) : (
               <Editor

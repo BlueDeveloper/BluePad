@@ -817,6 +817,21 @@ body {
 }
 
 /* ========================================
+   Code Editor (CodeMirror — JSON/YAML)
+   ======================================== */
+
+.code-editor-container {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.code-editor-container .cm-editor {
+  flex: 1;
+  height: 100%;
+}
+
+/* ========================================
    Status Bar
    ======================================== */
 

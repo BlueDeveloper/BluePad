@@ -1,6 +1,6 @@
 # BluePad — 프로젝트 컨텍스트 가이드
 
-> **최종 업데이트**: 2026-05-03
+> **최종 업데이트**: 2026-05-04
 > **글로벌 인프라 참조**: [INFRASTRUCTURE_GLOBAL_REFERENCE.md](C:\Users\bluee\.claude\INFRASTRUCTURE_GLOBAL_REFERENCE.md)
 
 ---
@@ -55,18 +55,20 @@ src/
 ├── App.tsx              — 메인 상태 관리, 다이얼로그 제어
 ├── hooks/
 │   ├── useFileManager.ts — 멀티탭 관리 (ref 기반 stale closure 방지)
-│   └── useLicense.ts     — 라이선스 + 14일 트라이얼 시스템
+│   ├── useLicense.ts     — 라이선스 + 14일 트라이얼 시스템
+│   └── useUpdater.ts     — 자동 업데이트 체크/다운로드/설치
 ├── components/
 │   ├── TabBar.tsx        — 드래그앤드롭 탭 리오더
-│   ├── MenuBar.tsx       — 전체 메뉴 (i18n, Pro 게이팅)
+│   ├── MenuBar.tsx       — 전체 메뉴 (i18n, Pro 게이팅, 업데이트 확인)
 │   ├── StatusBar.tsx     — Free/Pro 뱃지, 트라이얼 카운트다운
 │   ├── LicenseDialog.tsx — 라이선스 입력/활성화
-│   ├── AboutDialog.tsx   — 앱 정보 + OSS 목록
+│   ├── UpdateDialog.tsx  — 업데이트 확인/다운로드/설치 다이얼로그
+│   ├── AboutDialog.tsx   — 앱 정보 + OSS 목록 (동적 버전 표시)
 │   ├── ProGate.tsx       — Pro 업그레이드 프롬프트
 │   ├── InputDialog.tsx   — 커스텀 input (prompt 대체)
 │   └── AlertDialog.tsx   — 커스텀 alert 대체
 ├── i18n/
-│   ├── ko.ts, en.ts, ja.ts — ~125개 번역 키
+│   ├── ko.ts, en.ts, ja.ts — ~140개 번역 키
 │   └── index.ts          — React Context 기반 i18n
 └── styles/global.css     — 전체 스타일 (다크 테마 4종)
 ```
@@ -165,21 +167,49 @@ landing/
 ### MSI 빌드
 - WiX 기반 (Tauri 내장)
 - 커스텀 이미지: `src-tauri/wix-banner.bmp`, `src-tauri/wix-dialog.bmp`
-- 빌드: `npm run tauri build`
-- 산출물: `src-tauri/target/release/bundle/msi/BluePad_*.msi`
+- 산출물: `src-tauri/target/release/bundle/msi/BluePad_*.msi` + `.msi.sig`
 - R2 업로드: `wrangler r2 object put bluepad-downloads/BluePad-latest.msi --file=<path>`
 
-### 코드 서명
-- **서비스**: SignPath Foundation (무료, OSS/개인 개발자용)
-- **상태**: 신청 완료, 승인 대기 (1~2주)
-- **승인 후 작업**:
-  1. GitHub Actions 워크플로우 구축 (빌드 → SignPath 서명 → R2 업로드)
-  2. 다운로드 잠금 해제 (DOWNLOAD_KEY 제거)
-  3. SmartScreen 경고 해소
+```bash
+# 프로덕션 빌드 (서명 포함, MSI + .sig 생성)
+TAURI_SIGNING_PRIVATE_KEY="<key content>" TAURI_SIGNING_PRIVATE_KEY_PASSWORD='!blue@129323#' npm run tauri build -- --bundles msi
+```
+
+- **서명 키 위치**: `C:\Users\bluee\.tauri\bluepad.key` (private), `.key.pub` (public)
+- **주의**: `--bundles msi` 플래그 필수 (없으면 incremental 빌드 시 .sig 생략됨)
+
+### 자동 업데이트 시스템
+- **Tauri v2 updater plugin** 사용 (Tauri 자체 서명 — Windows Authenticode와 별개)
+- **엔드포인트**: `https://bluepad-download.blueehdwp.workers.dev/update.json`
+- **흐름**: 앱 설정 > 업데이트 확인 → Worker에서 update.json 조회 → R2에서 MSI 다운로드 → 설치 → 재시작
+- **업데이트 후 알림**: localStorage 버전 비교로 "What's New" 다이얼로그 표시
+- **버전 주입**: `vite.config.ts`에서 `tauri.conf.json`의 version을 `__APP_VERSION__`으로 주입
+- **update.json 형식**:
+  ```json
+  {
+    "version": "1.x.x",
+    "notes": "릴리스 노트",
+    "pub_date": "2026-05-04T00:00:00Z",
+    "platforms": {
+      "windows-x86_64": {
+        "signature": "<.sig 파일 내용>",
+        "url": "https://bluepad-download.blueehdwp.workers.dev/update/download/"
+      }
+    }
+  }
+  ```
+
+### Windows 코드 서명 (Authenticode)
+- **현재 결정**: 코드 서명 없이 출시 (Typora도 3.5년간 미서명 운영)
+- **SmartScreen 대응**: 랜딩 페이지에 설치 안내 추가 예정
+- **SignPath Foundation**: 신청 완료 (2026-05-03), 승인 대기 — 상용 SW 적격 여부 불확실
+- **향후 옵션**: Sectigo OV (~$215/년), Microsoft Store ($19), Azure Trusted Signing (한국 지원 시)
+- **승인 후 작업**: GitHub Actions 빌드 → 서명 → R2 업로드 파이프라인 구축
 
 ### 다운로드 보안
 - 현재 잠금: `?key=<DOWNLOAD_KEY>` 없으면 403
-- 코드 서명 완료 후 잠금 해제 예정
+- `/update/download/` 경로는 DOWNLOAD_KEY 불필요 (업데이트용)
+- 코드 서명 완료 후 다운로드 잠금 해제 예정
 
 ---
 
@@ -202,16 +232,25 @@ GET  /admin/licenses   — 전체 라이선스 목록
 
 ---
 
-## 8. 대기 중 항목 (2026-05-03 기준)
+## 8. 대기 중 항목 (2026-05-04 기준)
 
-| 항목 | 담당 | 예상 시점 |
-|------|------|-----------|
-| SignPath 코드 서명 승인 | 외부 | 1~2주 |
-| PayPal 은행 인증 (소액 입금 확인) | 사용자 | 수일 내 |
-| ~~통신판매업 신고~~ | 완료 | 2026-05-04 |
-| GitHub Actions 서명 파이프라인 | Claude | SignPath 승인 후 |
-| 다운로드 잠금 해제 | Claude | 서명 완료 후 |
-| 실결제 테스트 | 사용자 | PayPal 인증 후 |
+### 외부 대기
+| 항목 | 상태 | 비고 |
+|------|------|------|
+| SignPath 코드 서명 승인 | 대기 중 | 신청 2026-05-03, 예상 1~2주 |
+| PayPal 소액입금 계좌 인증 | 대기 중 | 사업자 계좌 발급 + PayPal 등록 완료, 소액입금 확인 대기 |
+| 통신판매업 신고 승인 | 대기 중 | 2026-05-04 신고 완료, 승인 대기 |
+
+### 승인 후 Claude 작업
+- GitHub Actions 워크플로우: 빌드 → SignPath 서명 → R2 업로드
+- Download Worker에서 DOWNLOAD_KEY 검증 제거 (다운로드 잠금 해제)
+- 랜딩 "다운로드" 버튼 활성화
+- 실결제 E2E 테스트 (PayPal 인증 완료 후)
+
+### 선택적 개선
+- 블로그 추가 작성 (SEO 강화)
+- 앱 기능 추가 (TODO.md 참조)
+- Google Ads / 마케팅 캠페인
 
 ---
 
@@ -224,15 +263,22 @@ npm run dev
 # Tauri 개발 (앱 실행)
 npm run tauri dev
 
-# 프로덕션 빌드 (MSI 생성)
-npm run tauri build
+# 프로덕션 빌드 (MSI + .sig 생성)
+TAURI_SIGNING_PRIVATE_KEY="$(cat C:/Users/bluee/.tauri/bluepad.key)" TAURI_SIGNING_PRIVATE_KEY_PASSWORD='!blue@129323#' npm run tauri build -- --bundles msi
 
 # R2 업로드
-wrangler r2 object put bluepad-downloads/BluePad-latest.msi --file=src-tauri/target/release/bundle/msi/BluePad_0.1.0_x64_en-US.msi
+wrangler r2 object put bluepad-downloads/BluePad-latest.msi --file=src-tauri/target/release/bundle/msi/BluePad_1.0.0_x64_en-US.msi
 
 # Worker 배포 (각 Worker 디렉토리에서)
 wrangler deploy
 ```
+
+### 버전 업데이트 배포 절차
+1. `src-tauri/tauri.conf.json`의 `version` 변경
+2. 프로덕션 빌드 (위 명령어)
+3. MSI를 R2에 업로드
+4. `update.json` 생성 (version, notes, .sig 내용 포함) → R2에 업로드
+5. Worker가 자동으로 `/update.json` 및 `/update/download/` 서빙
 
 ---
 

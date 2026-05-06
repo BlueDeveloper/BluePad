@@ -9,6 +9,8 @@ interface DialogLabels {
   cancel: string;
 }
 
+export type FileType = "markdown" | "json" | "yaml" | "text";
+
 export interface Tab {
   id: string;
   filePath: string | null;
@@ -17,6 +19,16 @@ export interface Tab {
   savedContent: string;
   isModified: boolean;
   fileVersion: number;
+  fileType: FileType;
+}
+
+function detectFileType(filePath: string | null): FileType {
+  if (!filePath) return "markdown";
+  const ext = filePath.replace(/\\/g, "/").split("/").pop()?.split(".").pop()?.toLowerCase() || "";
+  if (["json", "jsonc"].includes(ext)) return "json";
+  if (["yaml", "yml"].includes(ext)) return "yaml";
+  if (["txt", "log", "env", "ini", "conf", "cfg", "properties"].includes(ext)) return "text";
+  return "markdown";
 }
 
 let tabIdCounter = 0;
@@ -25,14 +37,16 @@ function nextTabId() {
 }
 
 function createTab(overrides?: Partial<Tab>): Tab {
+  const filePath = overrides?.filePath ?? null;
   return {
     id: nextTabId(),
-    filePath: null,
+    filePath,
     fileName: "Untitled",
     content: "",
     savedContent: "",
     isModified: false,
     fileVersion: 0,
+    fileType: overrides?.fileType ?? detectFileType(filePath),
     ...overrides,
   };
 }
@@ -74,13 +88,14 @@ export function useFileManager() {
         try {
           const text = await readTextFile(path);
           const name = extractName(path);
+          const fType = detectFileType(path);
           // Replace the initial empty tab
           setTabs((prev) => {
             const first = prev[0];
             if (prev.length === 1 && !first.filePath && !first.isModified && first.content === "") {
-              return [{ ...first, filePath: path, fileName: name, content: text, savedContent: text, fileVersion: first.fileVersion + 1 }];
+              return [{ ...first, filePath: path, fileName: name, content: text, savedContent: text, fileType: fType, fileVersion: first.fileVersion + 1 }];
             }
-            const newTab = createTab({ filePath: path, fileName: name, content: text, savedContent: text, fileVersion: 1 });
+            const newTab = createTab({ filePath: path, fileName: name, content: text, savedContent: text, fileType: fType, fileVersion: 1 });
             return [...prev, newTab];
           });
         } catch {
@@ -114,6 +129,7 @@ export function useFileManager() {
     async (path: string) => {
       const text = await readTextFile(path);
       const name = extractName(path);
+      const fType = detectFileType(path);
 
       setTabs((prev) => {
         // Check if file is already open in a tab
@@ -130,12 +146,12 @@ export function useFileManager() {
           // Reuse current empty tab
           return prev.map((t) =>
             t.id === active.id
-              ? { ...t, filePath: path, fileName: name, content: text, savedContent: text, isModified: false, fileVersion: t.fileVersion + 1 }
+              ? { ...t, filePath: path, fileName: name, content: text, savedContent: text, fileType: fType, isModified: false, fileVersion: t.fileVersion + 1 }
               : t
           );
         } else {
           // Create new tab
-          const tab = createTab({ filePath: path, fileName: name, content: text, savedContent: text, fileVersion: 1 });
+          const tab = createTab({ filePath: path, fileName: name, content: text, savedContent: text, fileType: fType, fileVersion: 1 });
           setActiveTabId(tab.id);
           return [...prev, tab];
         }
@@ -149,7 +165,9 @@ export function useFileManager() {
       multiple: true,
       filters: [
         { name: "Markdown", extensions: ["md", "markdown", "mdx"] },
-        { name: "Text", extensions: ["txt"] },
+        { name: "JSON", extensions: ["json", "jsonc"] },
+        { name: "YAML", extensions: ["yaml", "yml"] },
+        { name: "Text", extensions: ["txt", "log"] },
         { name: "All Files", extensions: ["*"] },
       ],
     });
@@ -175,6 +193,8 @@ export function useFileManager() {
       const selected = await save({
         filters: [
           { name: "Markdown", extensions: ["md"] },
+          { name: "JSON", extensions: ["json"] },
+          { name: "YAML", extensions: ["yaml", "yml"] },
           { name: "Text", extensions: ["txt"] },
         ],
       });
@@ -185,6 +205,7 @@ export function useFileManager() {
           fileName: extractName(selected),
           savedContent: tab.content,
           isModified: false,
+          fileType: detectFileType(selected),
         });
       }
     }
@@ -197,6 +218,8 @@ export function useFileManager() {
     const selected = await save({
       filters: [
         { name: "Markdown", extensions: ["md"] },
+        { name: "JSON", extensions: ["json"] },
+        { name: "YAML", extensions: ["yaml", "yml"] },
         { name: "Text", extensions: ["txt"] },
       ],
     });
@@ -207,6 +230,7 @@ export function useFileManager() {
         fileName: extractName(selected),
         savedContent: tab.content,
         isModified: false,
+        fileType: detectFileType(selected),
       });
     }
   }, [updateTab]);
