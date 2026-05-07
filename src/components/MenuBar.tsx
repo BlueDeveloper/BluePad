@@ -181,6 +181,7 @@ export function MenuBar({
         { label: "", action: () => {}, divider: true },
         { label: t("menu.license"), action: onOpenLicense },
         { label: t("menu.support"), action: () => { import("@tauri-apps/plugin-shell").then(m => m.open("https://bluepad.work/support/")).catch(() => window.open("https://bluepad.work/support/", "_blank")); } },
+        { label: t("menu.feedback"), action: () => { import("@tauri-apps/plugin-shell").then(m => m.open("https://bluepad.work/feedback/")).catch(() => window.open("https://bluepad.work/feedback/", "_blank")); } },
         { label: t("menu.checkUpdate"), action: onCheckUpdate },
         { label: "", action: () => {}, divider: true },
         { label: t("menu.about"), action: onOpenAbout },

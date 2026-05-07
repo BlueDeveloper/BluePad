@@ -15,6 +15,7 @@ export const ko = {
   "menu.find": "찾기",
   "menu.replace": "바꾸기",
   "menu.format": "자동 정렬",
+  "menu.feedback": "피드백 보내기",
   "menu.sourceMode": "소스 모드",
   "menu.outlineSidebar": "개요 사이드바",
   "menu.fileTree": "파일 트리",

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BluePad Feedback</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Pretendard Variable',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#09090b;color:#fafafa;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.card{background:#18181b;border:1px solid #27272a;border-radius:16px;padding:48px 40px;max-width:520px;width:100%}
+h1{font-size:24px;font-weight:700;margin-bottom:8px}
+.sub{color:#a1a1aa;font-size:14px;margin-bottom:32px;line-height:1.6}
+label{display:block;font-size:13px;color:#a1a1aa;margin-bottom:6px;font-weight:500}
+select,textarea{width:100%;padding:10px 14px;border:1px solid #27272a;border-radius:8px;background:#09090b;color:#fafafa;font-size:14px;font-family:inherit;margin-bottom:16px;outline:none;transition:border-color .15s}
+select:focus,textarea:focus{border-color:#155dfc}
+select{appearance:none;cursor:pointer}
+textarea{resize:vertical;min-height:140px}
+.rating{display:flex;gap:8px;margin-bottom:16px}
+.rating label{display:flex;align-items:center;gap:4px;cursor:pointer;padding:6px 14px;border:1px solid #27272a;border-radius:8px;font-size:14px;color:#a1a1aa;transition:all .15s}
+.rating input{display:none}
+.rating input:checked + span{color:#155dfc}
+.rating label:has(input:checked){border-color:#155dfc;background:rgba(21,93,252,.1);color:#fafafa}
+.btn{width:100%;padding:14px;background:#155dfc;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.success{display:none;text-align:center;padding:24px 0}
+.success .icon{font-size:48px;margin-bottom:16px}
+.success h2{font-size:20px;margin-bottom:8px}
+.success p{color:#a1a1aa;font-size:14px}
+.back{display:inline-block;margin-top:24px;color:#155dfc;text-decoration:none;font-size:14px;font-weight:600}
+.error-msg{color:#ef4444;font-size:13px;margin-bottom:12px;display:none}
+.lang-switch{position:absolute;top:16px;right:20px;display:flex;gap:8px}
+.lang-switch a{color:#52525b;text-decoration:none;font-size:13px;font-weight:600;transition:color .15s}
+.lang-switch a:hover,.lang-switch a.on{color:#fafafa}
+</style>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+</head>
+<body>
+
+<div class="lang-switch">
+  <a href="#" onclick="setLang('ko');return false" id="lang-ko">KO</a>
+  <a href="#" onclick="setLang('en');return false" id="lang-en">EN</a>
+  <a href="#" onclick="setLang('ja');return false" id="lang-ja">JA</a>
+</div>
+
+<div class="card">
+  <div id="form-view">
+    <h1 id="t-title"></h1>
+    <div class="sub" id="t-sub"></div>
+
+    <form id="feedback-form" onsubmit="submitFeedback(event)">
+      <label id="t-category-label"></label>
+      <select id="category" required>
+        <option value="" id="t-select"></option>
+        <option value="feature" id="t-feature"></option>
+        <option value="improvement" id="t-improve"></option>
+        <option value="ui" id="t-ui"></option>
+        <option value="performance" id="t-perf"></option>
+        <option value="other" id="t-other"></option>
+      </select>
+
+      <label id="t-rating-label"></label>
+      <div class="rating">
+        <label><input type="radio" name="rating" value="5"><span>5</span></label>
+        <label><input type="radio" name="rating" value="4"><span>4</span></label>
+        <label><input type="radio" name="rating" value="3" checked><span>3</span></label>
+        <label><input type="radio" name="rating" value="2"><span>2</span></label>
+        <label><input type="radio" name="rating" value="1"><span>1</span></label>
+      </div>
+
+      <label for="feedback" id="t-feedback-label"></label>
+      <textarea id="feedback" required></textarea>
+
+      <div id="error" class="error-msg"></div>
+      <button type="submit" class="btn" id="submit-btn"></button>
+    </form>
+  </div>
+
+  <div id="success-view" class="success">
+    <div class="icon">&#128588;</div>
+    <h2 id="t-success-title"></h2>
+    <p id="t-success-msg"></p>
+    <a href="https://bluepad.work" class="back" id="t-back"></a>
+  </div>
+</div>
+
+<script>
+const WORKER_URL = 'https://bluepad-license-api.blueehdwp.workers.dev';
+
+const i18n = {
+  ko: {
+    title: '개발자에게 피드백',
+    sub: 'BluePad를 더 좋게 만들기 위한 의견을 보내주세요.\n버그 신고나 환불은 문의하기를 이용해주세요.',
+    categoryLabel: '카테고리',
+    select: '선택하세요...',
+    feature: '새 기능 제안',
+    improve: '기존 기능 개선',
+    ui: 'UI / 디자인',
+    perf: '성능 / 속도',
+    other: '기타',
+    ratingLabel: '만족도',
+    feedbackLabel: '의견',
+    feedbackPh: '어떤 부분이 좋았고, 어떤 부분을 개선하면 좋을까요?',
+    send: '피드백 보내기',
+    sending: '전송 중...',
+    successTitle: '감사합니다!',
+    successMsg: '소중한 의견은 개발에 반영하겠습니다.',
+    back: '← BluePad로 돌아가기'
+  },
+  en: {
+    title: 'Send Feedback',
+    sub: 'Help us make BluePad better.\nFor bugs or refunds, please use the Support page.',
+    categoryLabel: 'Category',
+    select: 'Select...',
+    feature: 'New Feature',
+    improve: 'Improvement',
+    ui: 'UI / Design',
+    perf: 'Performance',
+    other: 'Other',
+    ratingLabel: 'Satisfaction',
+    feedbackLabel: 'Your Feedback',
+    feedbackPh: 'What did you like? What could be better?',
+    send: 'Send Feedback',
+    sending: 'Sending...',
+    successTitle: 'Thank you!',
+    successMsg: 'Your feedback will help shape the future of BluePad.',
+    back: '← Back to BluePad'
+  },
+  ja: {
+    title: '開発者へフィードバック',
+    sub: 'BluePadをより良くするためのご意見をお聞かせください。\nバグ報告や返金はサポートページをご利用ください。',
+    categoryLabel: 'カテゴリ',
+    select: '選択してください...',
+    feature: '新機能の提案',
+    improve: '既存機能の改善',
+    ui: 'UI / デザイン',
+    perf: 'パフォーマンス',
+    other: 'その他',
+    ratingLabel: '満足度',
+    feedbackLabel: 'ご意見',
+    feedbackPh: '良かった点、改善してほしい点を教えてください',
+    send: 'フィードバックを送信',
+    sending: '送信中...',
+    successTitle: 'ありがとうございます！',
+    successMsg: '貴重なご意見は開発に反映いたします。',
+    back: '← BluePadに戻る'
+  }
+};
+
+let currentLang = 'en';
+
+function detectLang() {
+  const nav = (navigator.language || '').toLowerCase();
+  if (nav.startsWith('ko')) return 'ko';
+  if (nav.startsWith('ja')) return 'ja';
+  return 'en';
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = i18n[lang];
+  document.getElementById('t-title').textContent = t.title;
+  document.getElementById('t-sub').textContent = t.sub;
+  document.getElementById('t-category-label').textContent = t.categoryLabel;
+  document.getElementById('t-select').textContent = t.select;
+  document.getElementById('t-feature').textContent = t.feature;
+  document.getElementById('t-improve').textContent = t.improve;
+  document.getElementById('t-ui').textContent = t.ui;
+  document.getElementById('t-perf').textContent = t.perf;
+  document.getElementById('t-other').textContent = t.other;
+  document.getElementById('t-rating-label').textContent = t.ratingLabel;
+  document.getElementById('t-feedback-label').textContent = t.feedbackLabel;
+  document.getElementById('feedback').placeholder = t.feedbackPh;
+  document.getElementById('submit-btn').textContent = t.send;
+  document.getElementById('t-success-title').textContent = t.successTitle;
+  document.getElementById('t-success-msg').textContent = t.successMsg;
+  document.getElementById('t-back').textContent = t.back;
+  document.querySelectorAll('.lang-switch a').forEach(a => a.classList.remove('on'));
+  document.getElementById('lang-' + lang).classList.add('on');
+  document.documentElement.lang = lang;
+}
+
+setLang(detectLang());
+
+async function submitFeedback(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+  const err = document.getElementById('error');
+  const t = i18n[currentLang];
+  btn.disabled = true;
+  btn.textContent = t.sending;
+  err.style.display = 'none';
+
+  const rating = document.querySelector('input[name="rating"]:checked');
+  const data = {
+    type: 'feedback',
+    email: 'feedback@bluepad.work',
+    message: '[Feedback] Category: ' + document.getElementById('category').value +
+      ' | Rating: ' + (rating ? rating.value : '3') + '/5' +
+      '\n\n' + document.getElementById('feedback').value,
+  };
+
+  try {
+    const res = await fetch(WORKER_URL + '/api/support', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (res.ok) {
+      document.getElementById('form-view').style.display = 'none';
+      document.getElementById('success-view').style.display = 'block';
+    } else {
+      throw new Error('Server error');
+    }
+  } catch (e) {
+    const subject = encodeURIComponent('BluePad Feedback: ' + document.getElementById('category').value);
+    const body = encodeURIComponent('Rating: ' + (rating ? rating.value : '3') + '/5\n\n' + document.getElementById('feedback').value);
+    window.location.href = 'mailto:blueehdwp@gmail.com?subject=' + subject + '&body=' + body;
+  }
+  btn.disabled = false;
+  btn.textContent = t.send;
+}
+</script>
+</body>
+</html>

@@ -15,6 +15,7 @@ export const en = {
   "menu.find": "Find",
   "menu.replace": "Replace",
   "menu.format": "Format",
+  "menu.feedback": "Send Feedback",
   "menu.sourceMode": "Source Mode",
   "menu.outlineSidebar": "Outline Sidebar",
   "menu.fileTree": "File Tree",

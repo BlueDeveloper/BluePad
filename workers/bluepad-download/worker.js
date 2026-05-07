@@ -69,15 +69,8 @@ export default {
       });
     }
 
-    // File download
+    // File download (public)
     if (url.pathname.startsWith("/download/")) {
-      const dlKey = url.searchParams.get("key");
-      if (dlKey !== env.DOWNLOAD_KEY) {
-        return new Response("Downloads are temporarily unavailable. Coming soon.", {
-          status: 403,
-          headers: corsHeaders,
-        });
-      }
       const fileName = url.pathname.replace("/download/", "");
       if (!fileName) {
         return new Response("Not Found", { status: 404, headers: corsHeaders });

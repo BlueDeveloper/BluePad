@@ -15,6 +15,7 @@ export const ja = {
   "menu.find": "検索",
   "menu.replace": "置換",
   "menu.format": "整形",
+  "menu.feedback": "フィードバックを送信",
   "menu.sourceMode": "ソースモード",
   "menu.outlineSidebar": "アウトライン",
   "menu.fileTree": "ファイルツリー",
