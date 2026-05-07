@@ -2,7 +2,18 @@ name = "bluepad-checkout"
 main = "worker.js"
 compatibility_date = "2026-05-03"
 
+[vars]
+PAYPAL_API = "https://api-m.paypal.com"
+PRODUCT_PRICE = "10.99"
+PRODUCT_NAME = "BluePad Pro License"
+LICENSE_API = "https://bluepad-license-api.blueehdwp.workers.dev"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "bluepad-licenses"
 database_id = "6e9776a9-f68a-45b9-b3f7-00cbd6bda70c"
+
+# Secrets (set via wrangler secret put):
+# PAYPAL_CLIENT_ID
+# PAYPAL_SECRET
+# LICENSE_ADMIN_SECRET
