@@ -9,8 +9,17 @@
       "yaml": true,
       "plainText": true
     },
-    "themes": ["Classic", "BRP Blue", "BRP Red", "BRP Polarity"],
-    "languages": ["ko", "en", "ja"],
+    "themes": [
+      "Classic",
+      "BRP Blue",
+      "BRP Red",
+      "BRP Polarity"
+    ],
+    "languages": [
+      "ko",
+      "en",
+      "ja"
+    ],
     "maxTabs": {
       "free": 3,
       "pro": null
@@ -40,7 +49,13 @@
       "level2": {
         "level3": {
           "deep": "value",
-          "array": [1, 2, 3, 4, 5],
+          "array": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
           "boolean": true,
           "null_value": null
         }

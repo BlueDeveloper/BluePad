@@ -18,9 +18,13 @@ interface FileEntry {
 
 const SUPPORTED_EXTENSIONS = [".md", ".markdown", ".mdx", ".txt", ".log", ".json", ".jsonc", ".yaml", ".yml"];
 
+const FILETREE_ROOT_KEY = "bluepad_filetree_root";
+
 export function FileTree({ visible, onOpenFile }: FileTreeProps) {
   const { t } = useI18n();
-  const [rootPath, setRootPath] = useState<string | null>(null);
+  const [rootPath, setRootPath] = useState<string | null>(() => {
+    try { return localStorage.getItem(FILETREE_ROOT_KEY); } catch { return null; }
+  });
   const [entries, setEntries] = useState<FileEntry[]>([]);
 
   const loadDir = useCallback(async (dirPath: string): Promise<FileEntry[]> => {
@@ -58,13 +62,19 @@ export function FileTree({ visible, onOpenFile }: FileTreeProps) {
     const selected = await open({ directory: true });
     if (selected) {
       setRootPath(selected);
+      try { localStorage.setItem(FILETREE_ROOT_KEY, selected); } catch { /* ignore */ }
       const items = await loadDir(selected);
       setEntries(items);
     }
   }, [loadDir]);
 
   useEffect(() => {
-    if (rootPath) loadDir(rootPath).then(setEntries);
+    if (rootPath) loadDir(rootPath).then(setEntries).catch(() => {
+      // 저장된 폴더가 더 이상 없으면 초기화
+      setRootPath(null);
+      setEntries([]);
+      try { localStorage.removeItem(FILETREE_ROOT_KEY); } catch { /* ignore */ }
+    });
   }, [rootPath, loadDir]);
 
   const toggleDir = useCallback(
