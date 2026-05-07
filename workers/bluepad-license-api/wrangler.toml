@@ -1,0 +1,8 @@
+name = "bluepad-license-api"
+main = "worker.js"
+compatibility_date = "2026-05-03"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "bluepad-licenses"
+database_id = "6e9776a9-f68a-45b9-b3f7-00cbd6bda70c"
