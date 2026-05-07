@@ -33,6 +33,10 @@ const THEME_KEY = "bluepad_theme";
 const LANG_KEY = "bluepad_lang";
 const WORD_TARGET_KEY = "bluepad_word_target";
 const LAST_VERSION_KEY = "bluepad_last_version";
+const SOURCE_MODE_KEY = "bluepad_source_mode";
+const SIDEBAR_KEY = "bluepad_sidebar";
+const FILETREE_KEY = "bluepad_filetree";
+const AUTOSAVE_KEY = "bluepad_autosave";
 const AUTO_SAVE_INTERVAL = 30000;
 const APP_VERSION = __APP_VERSION__;
 
@@ -45,9 +49,15 @@ const THEMES = [
 
 function App() {
   const [wordCount, setWordCount] = useState({ chars: 0, words: 0, lines: 0 });
-  const [sourceMode, setSourceMode] = useState(false);
-  const [sidebarVisible, setSidebarVisible] = useState(false);
-  const [fileTreeVisible, setFileTreeVisible] = useState(false);
+  const [sourceMode, setSourceMode] = useState(() => {
+    try { return localStorage.getItem(SOURCE_MODE_KEY) === "1"; } catch { return false; }
+  });
+  const [sidebarVisible, setSidebarVisible] = useState(() => {
+    try { return localStorage.getItem(SIDEBAR_KEY) === "1"; } catch { return false; }
+  });
+  const [fileTreeVisible, setFileTreeVisible] = useState(() => {
+    try { return localStorage.getItem(FILETREE_KEY) === "1"; } catch { return false; }
+  });
   const [focusMode, setFocusMode] = useState(false);
   const [findVisible, setFindVisible] = useState(false);
   const [findReplaceMode, setFindReplaceMode] = useState(false);
@@ -71,7 +81,9 @@ function App() {
       return [];
     }
   });
-  const [autoSaveEnabled, setAutoSaveEnabled] = useState(true);
+  const [autoSaveEnabled, setAutoSaveEnabled] = useState(() => {
+    try { const v = localStorage.getItem(AUTOSAVE_KEY); return v === null ? true : v === "1"; } catch { return true; }
+  });
   const [wordTarget, setWordTarget] = useState<number | null>(() => {
     try {
       const stored = localStorage.getItem(WORD_TARGET_KEY);
@@ -88,6 +100,19 @@ function App() {
     lang,
     t: (key: Parameters<typeof translate>[1]) => translate(lang, key),
   }), [lang]);
+
+  useEffect(() => {
+    try { localStorage.setItem(SOURCE_MODE_KEY, sourceMode ? "1" : "0"); } catch {}
+  }, [sourceMode]);
+  useEffect(() => {
+    try { localStorage.setItem(SIDEBAR_KEY, sidebarVisible ? "1" : "0"); } catch {}
+  }, [sidebarVisible]);
+  useEffect(() => {
+    try { localStorage.setItem(FILETREE_KEY, fileTreeVisible ? "1" : "0"); } catch {}
+  }, [fileTreeVisible]);
+  useEffect(() => {
+    try { localStorage.setItem(AUTOSAVE_KEY, autoSaveEnabled ? "1" : "0"); } catch {}
+  }, [autoSaveEnabled]);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
