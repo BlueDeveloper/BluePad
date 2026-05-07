@@ -752,62 +752,59 @@ body {
   margin: 0.2em 0;
 }
 
-/* Task list — hide bullet for checked/unchecked items */
-.editor-content .ProseMirror li[data-checked="true"],
-.editor-content .ProseMirror li[data-checked="false"] {
+/* List Item Block Component (milkdown listItemBlockComponent) */
+/* DOM: div.milkdown-list-item-block > li.list-item > div.label-wrapper + div.children > div.content-dom > p */
+
+.editor-content .milkdown-list-item-block {
   list-style: none;
 }
 
+.editor-content .milkdown-list-item-block .list-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: baseline;
+  list-style: none;
+}
+
+.editor-content .milkdown-list-item-block .label-wrapper {
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  margin-right: 4px;
+  display: inline-flex !important;
+  align-items: center;
+}
+
+.editor-content .milkdown-list-item-block .children {
+  flex: 1;
+  min-width: 0;
+}
+
+.editor-content .milkdown-list-item-block .children p {
+  margin: 0 !important;
+}
+
+.editor-content .milkdown-list-item-block .content-dom p {
+  margin: 0 !important;
+}
+
+/* Hide default ul bullet when listItemBlockComponent is used */
+.editor-content .ProseMirror ul > .milkdown-list-item-block,
+.editor-content .ProseMirror ol > .milkdown-list-item-block {
+  list-style: none;
+}
+
+/* Checkbox styling */
 .editor-content .ProseMirror input[type="checkbox"] {
   margin-right: 6px;
   accent-color: var(--accent);
   cursor: pointer;
 }
 
-/* List Item Block Component (milkdown) */
-.editor-content .milkdown-list-item-block {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: flex-start;
-  gap: 2px;
-}
-
-.editor-content .milkdown-list-item-block > * {
-  display: inline !important;
-}
-
-.editor-content .milkdown-list-item-block label {
-  display: inline-flex !important;
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.editor-content .milkdown-list-item-block label input[type="checkbox"] {
-  margin: 0;
-  accent-color: var(--accent);
-  cursor: pointer;
-}
-
-.editor-content .milkdown-list-item-block .content-dom {
-  display: inline !important;
-  flex: 1;
-  min-width: 0;
-}
-
-.editor-content .milkdown-list-item-block .content-dom p {
-  display: inline !important;
-  margin: 0 !important;
-}
-
-.editor-content .milkdown-list-item-block .content-dom > p:first-child {
-  margin-top: 0 !important;
-}
-
-.editor-content .milkdown-list-item-block .content-dom > p:last-child {
-  margin-bottom: 0 !important;
+/* Icon labels */
+.editor-content .milkdown-list-item-block .milkdown-icon.label {
+  font-size: 1em;
+  line-height: 1;
 }
 
 /* Horizontal Rule */

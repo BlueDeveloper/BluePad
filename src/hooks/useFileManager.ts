@@ -58,9 +58,48 @@ const extractName = (path: string) => {
   return parts[parts.length - 1] || "Untitled";
 };
 
+const TABS_STORAGE_KEY = "bluepad_open_tabs";
+const ACTIVE_TAB_KEY = "bluepad_active_tab";
+
+interface SavedTabInfo {
+  filePath: string;
+  fileName: string;
+  fileType: FileType;
+}
+
+function loadSavedTabs(): { tabs: Tab[]; activeId: string | null } {
+  try {
+    const raw = localStorage.getItem(TABS_STORAGE_KEY);
+    const activeId = localStorage.getItem(ACTIVE_TAB_KEY);
+    if (!raw) return { tabs: [], activeId: null };
+    const saved: SavedTabInfo[] = JSON.parse(raw);
+    if (!Array.isArray(saved) || saved.length === 0) return { tabs: [], activeId: null };
+    const tabs = saved.map((s) =>
+      createTab({ filePath: s.filePath, fileName: s.fileName, fileType: s.fileType })
+    );
+    return { tabs, activeId };
+  } catch {
+    return { tabs: [], activeId: null };
+  }
+}
+
 export function useFileManager() {
-  const [tabs, setTabs] = useState<Tab[]>(() => [createTab()]);
-  const [activeTabId, setActiveTabId] = useState<string>(tabs[0].id);
+  const [tabs, setTabs] = useState<Tab[]>(() => {
+    const { tabs: saved } = loadSavedTabs();
+    return saved.length > 0 ? saved : [createTab()];
+  });
+  const [activeTabId, setActiveTabId] = useState<string>(() => {
+    const { tabs: saved, activeId } = loadSavedTabs();
+    if (saved.length > 0) {
+      // activeId에 해당하는 filePath를 가진 탭 찾기
+      if (activeId) {
+        const match = saved.find((t) => t.filePath === activeId);
+        if (match) return match.id;
+      }
+      return saved[0].id;
+    }
+    return tabs[0]?.id || "";
+  });
   const contentRef = useRef("");
   const activeTabIdRef = useRef(activeTabId);
   activeTabIdRef.current = activeTabId;
@@ -313,6 +352,57 @@ export function useFileManager() {
       next.splice(toIdx, 0, moved);
       return next;
     });
+  }, []);
+
+  // 탭 상태 저장 (filePath가 있는 탭만)
+  useEffect(() => {
+    try {
+      const toSave: SavedTabInfo[] = tabs
+        .filter((t) => t.filePath)
+        .map((t) => ({ filePath: t.filePath!, fileName: t.fileName, fileType: t.fileType }));
+      localStorage.setItem(TABS_STORAGE_KEY, JSON.stringify(toSave));
+      const active = tabs.find((t) => t.id === activeTabId);
+      if (active?.filePath) {
+        localStorage.setItem(ACTIVE_TAB_KEY, active.filePath);
+      }
+    } catch { /* ignore */ }
+  }, [tabs, activeTabId]);
+
+  // 저장된 탭 파일 내용 로드 (최초 1회)
+  const tabsLoaded = useRef(false);
+  useEffect(() => {
+    if (tabsLoaded.current) return;
+    tabsLoaded.current = true;
+    const loadContents = async () => {
+      const savedActivePath = localStorage.getItem(ACTIVE_TAB_KEY);
+      let foundActiveId = "";
+      for (const tab of tabs) {
+        if (tab.filePath && !tab.content) {
+          try {
+            const text = await readTextFile(tab.filePath);
+            setTabs((prev) =>
+              prev.map((t) =>
+                t.id === tab.id
+                  ? { ...t, content: text, savedContent: text, fileVersion: t.fileVersion + 1 }
+                  : t
+              )
+            );
+            if (tab.filePath === savedActivePath) {
+              foundActiveId = tab.id;
+            }
+          } catch {
+            // 파일 없으면 탭 제거
+            setTabs((prev) => prev.filter((t) => t.id !== tab.id));
+          }
+        }
+      }
+      if (foundActiveId) {
+        setActiveTabId(foundActiveId);
+      }
+    };
+    if (tabs.some((t) => t.filePath && !t.content)) {
+      loadContents();
+    }
   }, []);
 
   return {
