@@ -143,4 +143,7 @@ export const ko = {
   "menu.checkUpdate": "업데이트 확인",
   "update.whatsNewTitle": "v{version} 업데이트 완료",
   "update.whatsNewMessage": "BluePad가 v{version}으로 업데이트되었습니다.\n새로운 기능과 개선사항을 확인해보세요!",
+  "menu.alwaysOnTop": "항상 위에",
+  "status.selected": "선택: {count}",
+  "status.readingTime": "~{min}분",
 };

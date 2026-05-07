@@ -37,11 +37,13 @@ const SOURCE_MODE_KEY = "bluepad_source_mode";
 const SIDEBAR_KEY = "bluepad_sidebar";
 const FILETREE_KEY = "bluepad_filetree";
 const AUTOSAVE_KEY = "bluepad_autosave";
+const ALWAYS_ON_TOP_KEY = "bluepad_always_on_top";
 const AUTO_SAVE_INTERVAL = 30000;
 const APP_VERSION = __APP_VERSION__;
 
 const THEMES = [
   { id: "classic", label: "Classic" },
+  { id: "dark", label: "Dark" },
   { id: "brp-blue", label: "BRP Blue" },
   { id: "brp-red", label: "BRP Red" },
   { id: "brp-polarity", label: "BRP Polarity" },
@@ -123,6 +125,10 @@ function App() {
     try { localStorage.setItem(LANG_KEY, lang); } catch { /* ignore */ }
   }, [lang]);
 
+  const [alwaysOnTop, setAlwaysOnTop] = useState(() => {
+    try { return localStorage.getItem(ALWAYS_ON_TOP_KEY) === "1"; } catch { return false; }
+  });
+  const [selectionCount, setSelectionCount] = useState(0);
   const [updateDialogVisible, setUpdateDialogVisible] = useState(false);
   const [whatsNewVisible, setWhatsNewVisible] = useState(false);
   const [whatsNewVersion, setWhatsNewVersion] = useState("");
@@ -360,6 +366,35 @@ ${editorEl.innerHTML}
     fileManager.setContent(formatted);
   }, [fileManager]);
 
+  const handleToggleAlwaysOnTop = useCallback(async () => {
+    const next = !alwaysOnTop;
+    setAlwaysOnTop(next);
+    try {
+      localStorage.setItem(ALWAYS_ON_TOP_KEY, next ? "1" : "0");
+      const { getCurrentWindow } = await import("@tauri-apps/api/window");
+      await getCurrentWindow().setAlwaysOnTop(next);
+    } catch { /* ignore in web */ }
+  }, [alwaysOnTop]);
+
+  // 항상 위에 복원
+  useEffect(() => {
+    if (alwaysOnTop) {
+      import("@tauri-apps/api/window").then(({ getCurrentWindow }) => {
+        getCurrentWindow().setAlwaysOnTop(true);
+      }).catch(() => {});
+    }
+  }, []);
+
+  // 선택 글자수 감지
+  useEffect(() => {
+    const handle = () => {
+      const sel = window.getSelection();
+      setSelectionCount(sel?.toString().length || 0);
+    };
+    document.addEventListener("selectionchange", handle);
+    return () => document.removeEventListener("selectionchange", handle);
+  }, []);
+
   const handlePrint = useCallback(() => {
     window.print();
   }, []);
@@ -521,6 +556,8 @@ ${editorEl.innerHTML}
             onOpenAbout={() => setAboutDialogVisible(true)}
             onProGate={() => setProGateVisible(true)}
             onCheckUpdate={() => setUpdateDialogVisible(true)}
+            alwaysOnTop={alwaysOnTop}
+            onToggleAlwaysOnTop={handleToggleAlwaysOnTop}
           />
         )}
         {!focusMode && <Toolbar editorRef={editorRef} sourceMode={sourceMode} />}
@@ -579,6 +616,7 @@ ${editorEl.innerHTML}
             isTrial={license.isTrial}
             trialDaysLeft={license.trialDaysLeft}
             wordTarget={wordTarget}
+            selectionCount={selectionCount}
           />
         )}
         <LicenseDialog

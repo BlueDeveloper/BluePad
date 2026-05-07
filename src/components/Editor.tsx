@@ -53,6 +53,71 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
       getMarkdown: () => contentRef.current,
     }));
 
+    // Front Matter rendering
+    const renderFrontMatter = useCallback(() => {
+      const el = editorRef.current;
+      if (!el) return;
+      el.querySelectorAll(".frontmatter-block").forEach((b) => b.remove());
+      const fm = contentRef.current.match(/^---\n([\s\S]*?)\n---/);
+      if (!fm) return;
+      const block = document.createElement("div");
+      block.className = "frontmatter-block";
+      block.setAttribute("contenteditable", "false");
+      const title = document.createElement("div");
+      title.className = "frontmatter-title";
+      title.textContent = "Front Matter";
+      block.appendChild(title);
+      const pre = document.createElement("pre");
+      pre.className = "frontmatter-content";
+      pre.textContent = fm[1];
+      block.appendChild(pre);
+      const pm = el.querySelector(".ProseMirror");
+      if (pm && pm.firstChild) pm.insertBefore(block, pm.firstChild);
+    }, []);
+
+    // TOC rendering ([toc] directive)
+    const renderTOC = useCallback(() => {
+      const el = editorRef.current;
+      if (!el) return;
+      el.querySelectorAll(".toc-generated").forEach((b) => b.remove());
+      const paragraphs = el.querySelectorAll(".ProseMirror p");
+      for (const p of paragraphs) {
+        if (p.textContent?.trim().toLowerCase() !== "[toc]") continue;
+        const headings = el.querySelectorAll(".ProseMirror h1, .ProseMirror h2, .ProseMirror h3, .ProseMirror h4, .ProseMirror h5, .ProseMirror h6");
+        if (headings.length === 0) continue;
+        const toc = document.createElement("div");
+        toc.className = "toc-generated";
+        toc.setAttribute("contenteditable", "false");
+        const tocTitle = document.createElement("div");
+        tocTitle.className = "toc-title";
+        tocTitle.textContent = "Table of Contents";
+        toc.appendChild(tocTitle);
+        const list = document.createElement("ul");
+        list.className = "toc-list";
+        for (const h of headings) {
+          const level = parseInt(h.tagName[1]);
+          const li = document.createElement("li");
+          li.className = `toc-item toc-level-${level}`;
+          const a = document.createElement("a");
+          a.textContent = h.textContent || "";
+          a.href = "#";
+          a.onclick = (e: Event) => { e.preventDefault(); h.scrollIntoView({ behavior: "smooth", block: "start" }); };
+          li.appendChild(a);
+          list.appendChild(li);
+        }
+        toc.appendChild(list);
+        (p as HTMLElement).style.display = "none";
+        p.insertAdjacentElement("afterend", toc);
+      }
+    }, []);
+
+    // Post-render enhancements
+    const postRender = useCallback(async () => {
+      await renderMermaid();
+      renderFrontMatter();
+      renderTOC();
+    }, []);
+
     // Mermaid rendering
     const renderMermaid = useCallback(async () => {
       const el = editorRef.current;
@@ -99,7 +164,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
           ctx.get(listenerCtx).markdownUpdated((_ctx, markdown) => {
             contentRef.current = markdown;
             onChange(markdown);
-            setTimeout(renderMermaid, 100);
+            setTimeout(postRender, 100);
           });
         })
         .use(commonmark)
@@ -115,7 +180,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
         .create()
         .then((editor) => {
           milkdownRef.current = editor;
-          setTimeout(renderMermaid, 200);
+          setTimeout(postRender, 200);
         });
 
       return () => {

@@ -59,6 +59,23 @@
   --selection: rgba(239, 51, 64, 0.18);
 }
 
+/* Dark */
+[data-theme="dark"] {
+  --bg: #1e1e1e;
+  --bg-secondary: #252526;
+  --bg-hover: #2a2d2e;
+  --bg-active: #37373d;
+  --text: #d4d4d4;
+  --text-secondary: #cccccc;
+  --text-muted: #858585;
+  --border: #404040;
+  --border-light: #333333;
+  --accent: #569cd6;
+  --accent-hover: #4e8cc2;
+  --code-bg: #2d2d2d;
+  --selection: rgba(86, 156, 214, 0.3);
+}
+
 /* BRP Polarity (Blue + Red gradient accents) */
 [data-theme="brp-polarity"] {
   --bg: #fafafa;
@@ -1752,4 +1769,112 @@ body {
   background: var(--accent-color, #155dfc);
   border-radius: 3px;
   transition: width 0.2s ease;
+}
+
+/* ========================================
+   Dark Theme Overrides
+   ======================================== */
+
+[data-theme="dark"] .editor-content .ProseMirror pre .keyword { color: #c586c0; }
+[data-theme="dark"] .editor-content .ProseMirror pre .string,
+[data-theme="dark"] .editor-content .ProseMirror pre .attr-value { color: #ce9178; }
+[data-theme="dark"] .editor-content .ProseMirror pre .number,
+[data-theme="dark"] .editor-content .ProseMirror pre .boolean { color: #b5cea8; }
+[data-theme="dark"] .editor-content .ProseMirror pre .function { color: #dcdcaa; }
+[data-theme="dark"] .editor-content .ProseMirror pre .comment,
+[data-theme="dark"] .editor-content .ProseMirror pre .prolog { color: #6a9955; font-style: italic; }
+[data-theme="dark"] .editor-content .ProseMirror pre .operator { color: #d4d4d4; }
+[data-theme="dark"] .editor-content .ProseMirror pre .punctuation { color: #808080; }
+[data-theme="dark"] .editor-content .ProseMirror pre .class-name,
+[data-theme="dark"] .editor-content .ProseMirror pre .builtin { color: #4ec9b0; }
+[data-theme="dark"] .editor-content .ProseMirror pre .tag { color: #569cd6; }
+[data-theme="dark"] .editor-content .ProseMirror pre .attr-name { color: #9cdcfe; }
+[data-theme="dark"] .editor-content .ProseMirror code { color: #d19a66; }
+[data-theme="dark"] .dialog-overlay { background: rgba(0, 0, 0, 0.6); }
+
+/* ========================================
+   Highlight ==text==
+   ======================================== */
+
+.editor-content .ProseMirror mark,
+.editor-content .ProseMirror .highlight {
+  background: rgba(255, 235, 59, 0.4);
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+[data-theme="dark"] .editor-content .ProseMirror mark {
+  background: rgba(255, 235, 59, 0.2);
+  color: #ffd54f;
+}
+
+/* ========================================
+   Front Matter Block
+   ======================================== */
+
+.frontmatter-block {
+  background: var(--code-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  user-select: none;
+}
+.frontmatter-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.frontmatter-content {
+  font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* ========================================
+   TOC (Table of Contents)
+   ======================================== */
+
+.toc-generated {
+  background: var(--code-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 1em 0;
+}
+.toc-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.toc-item { line-height: 1.8; }
+.toc-item a { color: var(--accent); text-decoration: none; font-size: 13px; }
+.toc-item a:hover { text-decoration: underline; }
+.toc-level-1 { padding-left: 0; }
+.toc-level-2 { padding-left: 16px; }
+.toc-level-3 { padding-left: 32px; }
+.toc-level-4 { padding-left: 48px; }
+.toc-level-5 { padding-left: 64px; }
+.toc-level-6 { padding-left: 80px; }
+
+/* ========================================
+   Selection count in status bar
+   ======================================== */
+
+.statusbar-selection {
+  color: var(--accent);
+  font-weight: 600;
 }

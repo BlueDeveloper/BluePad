@@ -12,11 +12,13 @@ interface StatusBarProps {
   isTrial: boolean;
   trialDaysLeft: number;
   wordTarget: number | null;
+  selectionCount: number;
 }
 
-export function StatusBar({ chars, words, lines, filePath, sourceMode, autoSave, fontSize, isPro, isTrial, trialDaysLeft, wordTarget }: StatusBarProps) {
+export function StatusBar({ chars, words, lines, filePath, sourceMode, autoSave, fontSize, isPro, isTrial, trialDaysLeft, wordTarget, selectionCount }: StatusBarProps) {
   const { t } = useI18n();
   const progress = wordTarget ? Math.min(100, Math.round((words / wordTarget) * 100)) : 0;
+  const readingMin = Math.max(1, Math.ceil(words / 200));
   return (
     <div className="statusbar">
       <span className="statusbar-item statusbar-path">
@@ -43,9 +45,13 @@ export function StatusBar({ chars, words, lines, filePath, sourceMode, autoSave,
           </span>
         )}
         <span className="statusbar-item">{fontSize}px</span>
+        <span className="statusbar-item">{t("status.readingTime").replace("{min}", String(readingMin))}</span>
         <span className="statusbar-item">{lines} {t("status.lines")}</span>
         <span className="statusbar-item">{words} {t("status.words")}</span>
         <span className="statusbar-item">{chars} {t("status.chars")}</span>
+        {selectionCount > 0 && (
+          <span className="statusbar-item statusbar-selection">{t("status.selected").replace("{count}", String(selectionCount))}</span>
+        )}
       </div>
     </div>
   );

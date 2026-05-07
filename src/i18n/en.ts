@@ -143,4 +143,7 @@ export const en = {
   "menu.checkUpdate": "Check for Updates",
   "update.whatsNewTitle": "Updated to v{version}",
   "update.whatsNewMessage": "BluePad has been updated to v{version}.\nCheck out the new features and improvements!",
+  "menu.alwaysOnTop": "Always on Top",
+  "status.selected": "Sel: {count}",
+  "status.readingTime": "~{min} min",
 };

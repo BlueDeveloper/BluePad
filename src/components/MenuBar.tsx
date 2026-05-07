@@ -43,6 +43,8 @@ interface MenuBarProps {
   onOpenAbout: () => void;
   onProGate: () => void;
   onCheckUpdate: () => void;
+  alwaysOnTop: boolean;
+  onToggleAlwaysOnTop: () => void;
 }
 
 interface MenuItem {
@@ -99,6 +101,8 @@ export function MenuBar({
   onOpenAbout,
   onProGate,
   onCheckUpdate,
+  alwaysOnTop,
+  onToggleAlwaysOnTop,
 }: MenuBarProps) {
   const { t } = useI18n();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
@@ -155,6 +159,7 @@ export function MenuBar({
         { label: t("menu.outlineSidebar"), shortcut: "Ctrl+Shift+L", action: onToggleSidebar, checked: sidebarVisible },
         { label: t("menu.fileTree"), action: onToggleFileTree, checked: fileTreeVisible },
         { label: t("menu.focusMode"), shortcut: "F11", action: proAction(onToggleFocus), checked: focusMode, pro: !isPro },
+        { label: t("menu.alwaysOnTop"), action: onToggleAlwaysOnTop, checked: alwaysOnTop },
         { label: "", action: () => {}, divider: true },
         { label: t("menu.wordTarget"), action: onSetWordTarget },
         { label: "", action: () => {}, divider: true },
@@ -164,9 +169,9 @@ export function MenuBar({
         { label: "", action: () => {}, divider: true },
         ...themes.map((th) => ({
           label: `${t("menu.theme")}: ${th.label}`,
-          action: th.id === "classic" || isPro ? () => onThemeChange(th.id) : onProGate,
+          action: th.id === "classic" || th.id === "dark" || isPro ? () => onThemeChange(th.id) : onProGate,
           checked: theme === th.id,
-          pro: th.id !== "classic" && !isPro,
+          pro: th.id !== "classic" && th.id !== "dark" && !isPro,
         })),
       ],
     },

@@ -218,7 +218,26 @@ export default {
       }
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      // 관리자: 결제 내역 조회 (NEW)
+      // 관리자: 트라이얼 일수 조작
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      if (path === "/api/admin/trial/adjust" && request.method === "POST") {
+        if (!await checkAdmin(request, env)) return json({ error: "unauthorized" }, 401, request);
+
+        const { device_id, days_left } = await request.json();
+        if (!device_id || days_left === undefined) return json({ error: "missing_fields" }, 400, request);
+
+        const trial = await env.DB.prepare("SELECT * FROM trials WHERE device_id = ?").bind(device_id).first();
+        if (!trial) return json({ error: "trial_not_found" }, 404, request);
+
+        // trial_start를 조작하여 남은 일수 변경
+        const newStart = new Date(Date.now() - (14 - days_left) * 24 * 60 * 60 * 1000).toISOString().replace("T", " ").split(".")[0];
+        await env.DB.prepare("UPDATE trials SET trial_start = ? WHERE device_id = ?").bind(newStart, device_id).run();
+
+        return json({ success: true, device_id, days_left, new_trial_start: newStart }, 200, request);
+      }
+
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // 관리자: 결제 내역 조회
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       if (path === "/api/admin/payments" && request.method === "GET") {
         if (!await checkAdmin(request, env)) return json({ error: "unauthorized" }, 401, request);

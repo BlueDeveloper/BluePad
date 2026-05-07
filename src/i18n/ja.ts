@@ -143,4 +143,7 @@ export const ja = {
   "menu.checkUpdate": "アップデート確認",
   "update.whatsNewTitle": "v{version} にアップデート完了",
   "update.whatsNewMessage": "BluePadがv{version}にアップデートされました。\n新機能と改善点をご確認ください！",
+  "menu.alwaysOnTop": "常に最前面",
+  "status.selected": "選択: {count}",
+  "status.readingTime": "~{min}分",
 };
