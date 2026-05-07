@@ -674,6 +674,11 @@ body {
   margin-bottom: 0.3em;
 }
 
+.editor-content .ProseMirror blockquote blockquote {
+  margin-left: 0;
+  border-left-color: var(--text-muted);
+}
+
 /* Code */
 .editor-content .ProseMirror code {
   background: var(--code-bg);
@@ -701,6 +706,26 @@ body {
   font-size: 14px;
 }
 
+/* Syntax highlighting (Prism / Refractor) */
+.editor-content .ProseMirror pre .keyword { color: #d73a49; }
+.editor-content .ProseMirror pre .string,
+.editor-content .ProseMirror pre .attr-value { color: #032f62; }
+.editor-content .ProseMirror pre .number,
+.editor-content .ProseMirror pre .boolean { color: #005cc5; }
+.editor-content .ProseMirror pre .function { color: #6f42c1; }
+.editor-content .ProseMirror pre .comment,
+.editor-content .ProseMirror pre .prolog { color: #6a737d; font-style: italic; }
+.editor-content .ProseMirror pre .operator { color: #d73a49; }
+.editor-content .ProseMirror pre .punctuation { color: var(--text-muted); }
+.editor-content .ProseMirror pre .class-name,
+.editor-content .ProseMirror pre .builtin { color: #e36209; }
+.editor-content .ProseMirror pre .tag { color: #22863a; }
+.editor-content .ProseMirror pre .attr-name { color: #6f42c1; }
+.editor-content .ProseMirror pre .regex { color: #032f62; }
+.editor-content .ProseMirror pre .property { color: #005cc5; }
+.editor-content .ProseMirror pre .selector { color: #22863a; }
+.editor-content .ProseMirror pre .variable { color: #e36209; }
+
 /* Lists */
 .editor-content .ProseMirror ul,
 .editor-content .ProseMirror ol {
@@ -715,6 +740,11 @@ body {
 
 .editor-content .ProseMirror li > p {
   margin-bottom: 0.2em;
+}
+
+.editor-content .ProseMirror li > ul,
+.editor-content .ProseMirror li > ol {
+  margin: 0.2em 0;
 }
 
 /* Task list */
@@ -759,7 +789,7 @@ body {
 /* Horizontal Rule */
 .editor-content .ProseMirror hr {
   border: none;
-  border-top: 1px solid var(--border);
+  border-top: 2px solid var(--border);
   margin: 1.5em 0;
 }
 
@@ -768,6 +798,7 @@ body {
   border-collapse: collapse;
   width: 100%;
   margin: 0.8em 0;
+  word-break: break-word;
 }
 
 .editor-content .ProseMirror th,
@@ -783,13 +814,22 @@ body {
   font-weight: 600;
 }
 
-.editor-content .ProseMirror tr:hover td {
-  background: rgba(0, 0, 0, 0.02);
+.editor-content .ProseMirror tbody tr:nth-child(even) td {
+  background: rgba(0, 0, 0, 0.015);
 }
+
+.editor-content .ProseMirror tr:hover td {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.editor-content .ProseMirror td[data-align="center"] { text-align: center; }
+.editor-content .ProseMirror td[data-align="right"] { text-align: right; }
 
 /* Images */
 .editor-content .ProseMirror img {
   max-width: 100%;
+  height: auto;
+  display: block;
   border-radius: 4px;
   margin: 0.5em 0;
 }
@@ -797,7 +837,9 @@ body {
 /* Strikethrough */
 .editor-content .ProseMirror del,
 .editor-content .ProseMirror s {
+  text-decoration: line-through;
   color: var(--text-muted);
+  opacity: 0.7;
 }
 
 /* Scrollbar */
@@ -1200,9 +1242,14 @@ body {
   font-size: 1.05em;
 }
 
+.editor-content .math-inline {
+  vertical-align: -0.125em;
+}
+
 .editor-content .math-block {
   text-align: center;
-  margin: 0.8em 0;
+  margin: 1em 0;
+  padding: 0.5em 0;
   overflow-x: auto;
 }
 
@@ -1216,6 +1263,14 @@ body {
   border-radius: 6px;
   padding: 16px;
   margin: 0.8em 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mermaid-rendered svg {
+  max-width: 100%;
+  height: auto;
 }
 
 /* ========================================
