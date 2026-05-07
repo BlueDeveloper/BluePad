@@ -171,11 +171,16 @@ landing/
 - R2 업로드: `wrangler r2 object put bluepad-downloads/BluePad-latest.msi --file=<path>`
 
 ```bash
-# 프로덕션 빌드 (서명 포함, MSI + .sig 생성)
-TAURI_SIGNING_PRIVATE_KEY="<key content>" TAURI_SIGNING_PRIVATE_KEY_PASSWORD='!blue@129323#' npm run tauri build -- --bundles msi
+# 프로덕션 빌드 — deploy.sh 사용 권장
+./scripts/deploy.sh <version> "<release notes>"
+
+# 수동 빌드 시 (~/.bluepad-deploy-env에서 환경변수 로드)
+source ~/.bluepad-deploy-env
+TAURI_SIGNING_PRIVATE_KEY="$(cat ~/.tauri/bluepad.key)" TAURI_SIGNING_PRIVATE_KEY_PASSWORD="$SIGNING_KEY_PASSWORD" npm run tauri build -- --bundles msi
 ```
 
-- **서명 키 위치**: `C:\Users\bluee\.tauri\bluepad.key` (private), `.key.pub` (public)
+- **서명 키 위치**: `~/.tauri/bluepad.key` (private), `.key.pub` (public)
+- **배포 환경변수**: `~/.bluepad-deploy-env` (CF 토큰, 서명 비밀번호 — 레포 외부)
 - **주의**: `--bundles msi` 플래그 필수 (없으면 incremental 빌드 시 .sig 생략됨)
 
 ### 자동 업데이트 시스템
@@ -263,8 +268,8 @@ npm run dev
 # Tauri 개발 (앱 실행)
 npm run tauri dev
 
-# 프로덕션 빌드 (MSI + .sig 생성)
-TAURI_SIGNING_PRIVATE_KEY="$(cat C:/Users/bluee/.tauri/bluepad.key)" TAURI_SIGNING_PRIVATE_KEY_PASSWORD='!blue@129323#' npm run tauri build -- --bundles msi
+# 프로덕션 배포 (버전업 + 빌드 + R2 업로드 + 커밋 자동화)
+./scripts/deploy.sh <version> "<release notes>"
 
 # R2 업로드
 wrangler r2 object put bluepad-downloads/BluePad-latest.msi --file=src-tauri/target/release/bundle/msi/BluePad_1.0.0_x64_en-US.msi
