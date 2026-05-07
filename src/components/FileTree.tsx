@@ -16,7 +16,7 @@ interface FileEntry {
   expanded?: boolean;
 }
 
-const MD_EXTENSIONS = [".md", ".markdown", ".mdx", ".txt"];
+const SUPPORTED_EXTENSIONS = [".md", ".markdown", ".mdx", ".txt", ".log", ".json", ".jsonc", ".yaml", ".yml"];
 
 export function FileTree({ visible, onOpenFile }: FileTreeProps) {
   const { t } = useI18n();
@@ -37,7 +37,7 @@ export function FileTree({ visible, onOpenFile }: FileTreeProps) {
           result.push({ name, path: fullPath, isDir: true, children: [], expanded: false });
         } else {
           const ext = "." + name.split(".").pop()?.toLowerCase();
-          if (MD_EXTENSIONS.includes(ext)) {
+          if (SUPPORTED_EXTENSIONS.includes(ext)) {
             result.push({ name, path: fullPath, isDir: false });
           }
         }
