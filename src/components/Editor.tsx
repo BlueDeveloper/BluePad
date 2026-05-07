@@ -7,6 +7,7 @@ import { listener, listenerCtx } from "@milkdown/kit/plugin/listener";
 import { clipboard } from "@milkdown/kit/plugin/clipboard";
 import { indent } from "@milkdown/kit/plugin/indent";
 import { trailing } from "@milkdown/kit/plugin/trailing";
+import { listItemBlockComponent } from "@milkdown/components/list-item-block";
 import { math } from "@milkdown/plugin-math";
 import { prism, prismConfig } from "@milkdown/plugin-prism";
 import { refractor } from "refractor";
@@ -103,6 +104,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
         })
         .use(commonmark)
         .use(gfm)
+        .use(listItemBlockComponent)
         .use(math)
         .use(prism)
         .use(history)

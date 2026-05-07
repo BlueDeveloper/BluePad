@@ -730,6 +730,32 @@ body {
   cursor: pointer;
 }
 
+/* List Item Block Component */
+.editor-content .milkdown-list-item-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.editor-content .milkdown-list-item-block label {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 2px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.editor-content .milkdown-list-item-block label input[type="checkbox"] {
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.editor-content .milkdown-list-item-block > div {
+  flex: 1;
+  min-width: 0;
+}
+
 /* Horizontal Rule */
 .editor-content .ProseMirror hr {
   border: none;
