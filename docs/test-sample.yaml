@@ -1,0 +1,84 @@
+# BluePad 설정 테스트 (YAML)
+product: BluePad
+version: "1.2.0"
+description: 마크다운 에디터
+
+# 기능 목록
+features:
+  editor:
+    markdown: true
+    json: true
+    yaml: true
+    plain_text: true
+  themes:
+    - Classic
+    - BRP Blue
+    - BRP Red
+    - BRP Polarity
+  languages:
+    - ko
+    - en
+    - ja
+  max_tabs:
+    free: 3
+    pro: unlimited
+
+# 가격 정보
+pricing:
+  free: 0
+  pro:
+    amount: 10.99
+    currency: USD
+    type: one-time
+
+# 서버 구성
+servers:
+  license_api:
+    url: https://bluepad-license-api.blueehdwp.workers.dev
+    endpoints:
+      - path: /api/validate
+        method: POST
+      - path: /api/deactivate
+        method: POST
+      - path: /api/trial
+        method: POST
+  download:
+    url: https://bluepad-download.blueehdwp.workers.dev
+    endpoints:
+      - path: /download/
+        method: GET
+      - path: /update.json
+        method: GET
+  checkout:
+    url: https://bluepad-checkout.blueehdwp.workers.dev
+    endpoints:
+      - path: /
+        method: GET
+      - path: /create-order
+        method: GET
+      - path: /success
+        method: GET
+
+# 중첩 데이터
+nested:
+  level1:
+    level2:
+      level3:
+        deep: value
+        array: [1, 2, 3, 4, 5]
+        multiline: |
+          이것은 여러 줄의
+          텍스트 블록입니다.
+          YAML에서 | 기호로 표현합니다.
+        folded: >
+          이것은 접힌 텍스트로
+          한 줄로 합쳐집니다.
+
+# 환경별 설정
+environments:
+  development:
+    debug: true
+    api_base: http://localhost:8787
+  production:
+    debug: false
+    api_base: https://bluepad-license-api.blueehdwp.workers.dev
