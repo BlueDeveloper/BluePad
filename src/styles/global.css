@@ -734,12 +734,17 @@ body {
 }
 
 .editor-content .ProseMirror li {
-  margin: 0.2em 0;
+  margin: 0;
+  padding: 1px 0;
   line-height: 1.7;
 }
 
 .editor-content .ProseMirror li > p {
-  margin-bottom: 0.2em;
+  margin-bottom: 0;
+}
+
+.editor-content .ProseMirror li > .milkdown-list-item-block p {
+  margin-bottom: 0;
 }
 
 .editor-content .ProseMirror li > ul,
@@ -763,16 +768,16 @@ body {
 /* List Item Block Component */
 .editor-content .milkdown-list-item-block {
   display: flex;
-  align-items: flex-start;
+  align-items: baseline;
   gap: 4px;
 }
 
 .editor-content .milkdown-list-item-block label {
   display: inline-flex;
   align-items: center;
-  margin-top: 2px;
   cursor: pointer;
   user-select: none;
+  flex-shrink: 0;
 }
 
 .editor-content .milkdown-list-item-block label input[type="checkbox"] {
@@ -784,6 +789,14 @@ body {
 .editor-content .milkdown-list-item-block > div {
   flex: 1;
   min-width: 0;
+}
+
+.editor-content .milkdown-list-item-block > div > p:first-child {
+  margin-top: 0;
+}
+
+.editor-content .milkdown-list-item-block > div > p:last-child {
+  margin-bottom: 0;
 }
 
 /* Horizontal Rule */
