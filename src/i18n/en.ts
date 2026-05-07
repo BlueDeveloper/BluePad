@@ -116,9 +116,8 @@ export const en = {
   "about.ossTitle": "Open Source Licenses",
 
   // Dialog
-  "dialog.unsavedChanges": " has unsaved changes.\nDo you want to save?",
-  "dialog.dontSave": "Don't Save",
-  "dialog.cancel": "Cancel",
+  "dialog.unsavedChanges": " has unsaved changes.",
+  "dialog.saveClose": "Save & Close",
   "dialog.close": "Close",
 
   // Trial

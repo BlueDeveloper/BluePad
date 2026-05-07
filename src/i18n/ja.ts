@@ -116,9 +116,8 @@ export const ja = {
   "about.ossTitle": "オープンソースライセンス",
 
   // Dialog
-  "dialog.unsavedChanges": "に未保存の変更があります。\n保存しますか？",
-  "dialog.dontSave": "保存しない",
-  "dialog.cancel": "キャンセル",
+  "dialog.unsavedChanges": "に未保存の変更があります。",
+  "dialog.saveClose": "保存して閉じる",
   "dialog.close": "閉じる",
 
   // Trial

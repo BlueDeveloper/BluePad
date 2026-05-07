@@ -34,7 +34,7 @@ export function InputDialog({ visible, title, placeholder, defaultValue, onConfi
             autoFocus
           />
           <div className="pro-gate-actions">
-            <button className="license-deactivate-btn" onClick={onCancel}>{t("dialog.cancel")}</button>
+            <button className="license-deactivate-btn" onClick={onCancel}>{t("dialog.close")}</button>
             <button className="license-activate-btn" onClick={() => onConfirm(value)}>OK</button>
           </div>
         </div>

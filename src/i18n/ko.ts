@@ -116,9 +116,8 @@ export const ko = {
   "about.ossTitle": "오픈소스 라이선스",
 
   // Dialog
-  "dialog.unsavedChanges": "에 저장하지 않은 변경사항이 있습니다.\n저장하시겠습니까?",
-  "dialog.dontSave": "저장 안 함",
-  "dialog.cancel": "취소",
+  "dialog.unsavedChanges": "에 저장하지 않은 변경사항이 있습니다.",
+  "dialog.saveClose": "저장하고 닫기",
   "dialog.close": "닫기",
 
   // Trial

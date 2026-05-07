@@ -5,8 +5,10 @@ import { invoke } from "@tauri-apps/api/core";
 
 interface DialogLabels {
   unsavedChanges: string;
-  dontSave: string;
-  cancel: string;
+  saveClose: string;
+  close: string;
+  dontSave?: string;
+  cancel?: string;
 }
 
 export type FileType = "markdown" | "json" | "yaml" | "text";
@@ -65,8 +67,8 @@ export function useFileManager() {
 
   const dialogLabelsRef = useRef<DialogLabels>({
     unsavedChanges: "에 저장하지 않은 변경사항이 있습니다.\n저장하시겠습니까?",
-    dontSave: "저장 안 함",
-    cancel: "취소",
+    saveClose: "저장하고 닫기",
+    close: "닫기",
   });
 
   const setDialogLabels = useCallback((labels: DialogLabels) => {
@@ -260,17 +262,34 @@ export function useFileManager() {
       const tab = tabsRef.current.find((t) => t.id === tabId);
       if (tab && tab.isModified) {
         const labels = dialogLabelsRef.current;
-        const shouldSave = await ask(`"${tab.fileName}"${labels.unsavedChanges}`, {
+        const saveAndClose = await ask(`"${tab.fileName}"${labels.unsavedChanges}`, {
           title: "BluePad",
           kind: "warning",
-          okLabel: labels.dontSave,
-          cancelLabel: labels.cancel,
+          okLabel: labels.saveClose,
+          cancelLabel: labels.close,
         });
-        if (!shouldSave) return;
+        if (saveAndClose) {
+          // 저장 후 닫기
+          if (tab.filePath) {
+            await writeTextFile(tab.filePath, tab.content);
+            updateTab(tab.id, { savedContent: tab.content, isModified: false });
+          } else {
+            const selected = await save({
+              filters: [
+                { name: "Markdown", extensions: ["md"] },
+                { name: "JSON", extensions: ["json"] },
+                { name: "YAML", extensions: ["yaml", "yml"] },
+                { name: "Text", extensions: ["txt"] },
+              ],
+            });
+            if (!selected) return; // 저장 취소 → 닫지 않음
+            await writeTextFile(selected, tab.content);
+          }
+        }
       }
       doCloseTab(tabId);
     },
-    [doCloseTab]
+    [doCloseTab, updateTab]
   );
 
   const switchTab = useCallback((tabId: string) => {

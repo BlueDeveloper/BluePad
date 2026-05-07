@@ -153,8 +153,8 @@ function App() {
   useEffect(() => {
     fileManager.setDialogLabels({
       unsavedChanges: i18n.t("dialog.unsavedChanges"),
-      dontSave: i18n.t("dialog.dontSave"),
-      cancel: i18n.t("dialog.cancel"),
+      saveClose: i18n.t("dialog.saveClose"),
+      close: i18n.t("dialog.close"),
     });
   }, [lang, fileManager.setDialogLabels, i18n]);
 
