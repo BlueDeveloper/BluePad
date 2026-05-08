@@ -267,128 +267,128 @@
 
   <article class="article-content wrap">
     
-    <p>As a developer, you write markdown every single day. README files, documentation, pull request descriptions, blog posts, changelogs, wiki pages — markdown is the lingua franca of developer communication. Yet most developers write all of this inside their code editor, which was designed for an entirely different task.</p>
+    <p>開発者として、あなたは毎日マークダウンを書いています。READMEファイル、ドキュメント、プルリクエストの説明文、ブログ記事、変更履歴、Wikiページ — マークダウンは開発者コミュニケーションの共通言語です。にもかかわらず、ほとんどの開発者はこれらすべてを、まったく別のタスクのために設計されたコードエディター内で書いています。</p>
 
-    <p>Here's why a dedicated markdown editor makes you a better technical writer, and why VS Code — as great as it is for code — isn't the best tool for writing prose.</p>
+    <p>ここでは、専用のマークダウンエディターがあなたをより優れたテクニカルライターにする理由、そしてVS Code — コーディングには素晴らしいツールですが — が文章を書くのに最適なツールではない理由をご説明します。</p>
 
-    <h2>Where Developers Write Markdown</h2>
+    <h2>開発者がマークダウンを書く場面</h2>
 
-    <p>Consider how much markdown you produce in a typical week:</p>
+    <p>一般的な1週間でどれだけのマークダウンを書いているか考えてみてください：</p>
 
     <ul>
-      <li><strong>README.md:</strong> Project documentation, setup guides, API references</li>
-      <li><strong>CHANGELOG.md:</strong> Release notes and version history</li>
-      <li><strong>Pull requests:</strong> Descriptions, review comments, design docs</li>
-      <li><strong>Technical blogs:</strong> Tutorials, architecture decisions, post-mortems</li>
-      <li><strong>Wiki pages:</strong> Team knowledge bases, onboarding guides</li>
-      <li><strong>Personal notes:</strong> Meeting notes, learning journals, TODO lists</li>
+      <li><strong>README.md：</strong>プロジェクトのドキュメント、セットアップガイド、APIリファレンス</li>
+      <li><strong>CHANGELOG.md：</strong>リリースノートとバージョン履歴</li>
+      <li><strong>プルリクエスト：</strong>説明文、レビューコメント、設計ドキュメント</li>
+      <li><strong>技術ブログ：</strong>チュートリアル、アーキテクチャ決定、ポストモーテム</li>
+      <li><strong>Wikiページ：</strong>チームのナレッジベース、オンボーディングガイド</li>
+      <li><strong>個人メモ：</strong>議事録、学習ジャーナル、TODOリスト</li>
     </ul>
 
-    <p>That's a lot of writing. And writing prose is fundamentally different from writing code.</p>
+    <p>かなりの量の文章です。そして文章を書くことは、コードを書くこととは根本的に異なります。</p>
 
-    <h2>Why VS Code Isn't Ideal for Writing</h2>
+    <h2>VS Codeが執筆に最適でない理由</h2>
 
-    <p>VS Code is an exceptional code editor. But when you're writing a 2,000-word technical blog post or crafting an important README, several things work against you:</p>
+    <p>VS Codeは卓越したコードエディターです。しかし、2,000語の技術ブログ記事を書いたり、重要なREADMEを作成したりするとき、いくつかの点があなたの妨げになります：</p>
 
-    <h3>1. No True WYSIWYG</h3>
-    <p>VS Code shows you raw markdown syntax with a separate preview pane. This split-view approach forces constant eye movement between source and output. You never see the final result as you type — you see <code>**bold**</code> instead of <strong>bold</strong>.</p>
+    <h3>1. 真のWYSIWYGがない</h3>
+    <p>VS Codeは生のマークダウン構文と別のプレビューペインを表示します。この分割ビューのアプローチは、ソースと出力の間で常に目を動かす必要があります。入力しながら最終結果を見ることはできません — <strong>太字</strong>の代わりに<code>**bold**</code>と表示されるのです。</p>
 
-    <h3>2. Code Editor UI Is Wrong for Prose</h3>
-    <p>Line numbers, minimap, bracket matching, file explorer, terminal panel — all essential for coding, all distracting for writing. When you're trying to compose a thoughtful paragraph, these elements create cognitive noise.</p>
+    <h3>2. コードエディターのUIは文章執筆に不向き</h3>
+    <p>行番号、ミニマップ、括弧マッチング、ファイルエクスプローラー、ターミナルパネル — すべてコーディングには不可欠ですが、文章を書くときにはすべてが気を散らす要因になります。考え抜かれた段落を構成しようとしているとき、これらの要素は認知的なノイズを生み出します。</p>
 
-    <h3>3. No Writing-Specific Features</h3>
-    <p>VS Code lacks focus mode, typewriter scrolling, word count goals, and reading time estimates. These aren't coding features, but they're essential for anyone writing more than a few paragraphs.</p>
+    <h3>3. 執筆向けの機能がない</h3>
+    <p>VS Codeにはフォーカスモード、タイプライタースクロール、文字数目標、読了時間の見積もりがありません。これらはコーディング機能ではありませんが、数段落以上の文章を書く人にとっては不可欠な機能です。</p>
 
-    <h3>4. Resource Overhead</h3>
-    <p>VS Code uses 350+ MB of RAM and takes several seconds to start. If you just need to edit a README, that's a lot of overhead. Extensions make it worse — each markdown plugin adds memory and startup time.</p>
+    <h3>4. リソースのオーバーヘッド</h3>
+    <p>VS Codeは350 MB以上のRAMを使用し、起動に数秒かかります。READMEを編集するだけなら、それはかなりのオーバーヘッドです。拡張機能がさらに悪化させます — マークダウンプラグインごとにメモリと起動時間が追加されます。</p>
 
-    <h2>What Developers Need in a Markdown Editor</h2>
+    <h2>開発者がマークダウンエディターに求めるもの</h2>
 
     <table class="comparison-table">
       <thead>
         <tr>
-          <th>Feature</th>
+          <th>機能</th>
           <th>VS Code</th>
           <th>BluePad</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><strong>WYSIWYG editing</strong></td>
-          <td>No (preview pane)</td>
-          <td>Yes</td>
+          <td><strong>WYSIWYG編集</strong></td>
+          <td>非対応（プレビューペイン）</td>
+          <td>対応</td>
         </tr>
         <tr>
-          <td><strong>Code block rendering</strong></td>
-          <td>Syntax highlighting</td>
-          <td>Syntax highlighting + preview</td>
+          <td><strong>コードブロック表示</strong></td>
+          <td>シンタックスハイライト</td>
+          <td>シンタックスハイライト + プレビュー</td>
         </tr>
         <tr>
-          <td><strong>Mermaid diagrams</strong></td>
-          <td>Extension required</td>
-          <td>Built-in (Pro)</td>
+          <td><strong>Mermaidダイアグラム</strong></td>
+          <td>拡張機能が必要</td>
+          <td>組み込み（Pro）</td>
         </tr>
         <tr>
-          <td><strong>Math (KaTeX)</strong></td>
-          <td>Extension required</td>
-          <td>Built-in (Pro)</td>
+          <td><strong>数式（KaTeX）</strong></td>
+          <td>拡張機能が必要</td>
+          <td>組み込み（Pro）</td>
         </tr>
         <tr>
-          <td><strong>Focus mode</strong></td>
-          <td>Zen Mode (no paragraph focus)</td>
-          <td>Paragraph-level focus</td>
+          <td><strong>フォーカスモード</strong></td>
+          <td>Zenモード（段落フォーカスなし）</td>
+          <td>段落レベルのフォーカス</td>
         </tr>
         <tr>
-          <td><strong>Startup time</strong></td>
-          <td>~4 seconds</td>
-          <td>&lt;1 second</td>
+          <td><strong>起動時間</strong></td>
+          <td>約4秒</td>
+          <td>1秒未満</td>
         </tr>
         <tr>
-          <td><strong>RAM usage</strong></td>
-          <td>350+ MB</td>
-          <td>50-80 MB</td>
+          <td><strong>RAM使用量</strong></td>
+          <td>350 MB以上</td>
+          <td>50〜80 MB</td>
         </tr>
         <tr>
-          <td><strong>App size</strong></td>
-          <td>~350 MB</td>
-          <td>~8 MB</td>
+          <td><strong>アプリサイズ</strong></td>
+          <td>約350 MB</td>
+          <td>約8 MB</td>
         </tr>
       </tbody>
     </table>
 
-    <h2>BluePad Features for Developers</h2>
+    <h2>開発者向けBluePadの機能</h2>
 
-    <h3>Mermaid Diagrams</h3>
-    <p>Document your architecture with Mermaid flowcharts, sequence diagrams, and class diagrams directly in markdown. BluePad renders them inline so you can verify your diagrams look correct before pushing to GitHub.</p>
+    <h3>Mermaidダイアグラム</h3>
+    <p>マークダウン内でMermaidフローチャート、シーケンス図、クラス図を使ってアーキテクチャを直接ドキュメント化できます。BluePadはインラインでレンダリングするため、GitHubにプッシュする前にダイアグラムが正しく表示されているか確認できます。</p>
 
-    <h3>Code Blocks with Syntax Highlighting</h3>
-    <p>Fenced code blocks render with proper syntax highlighting for dozens of languages. Write your README code examples and see exactly how they'll appear to readers — without switching to a preview tab.</p>
+    <h3>シンタックスハイライト付きコードブロック</h3>
+    <p>フェンスコードブロックは、数十の言語に対応した適切なシンタックスハイライトでレンダリングされます。READMEのコード例を書いて、読者にどう表示されるかを正確に確認できます — プレビュータブに切り替える必要はありません。</p>
 
-    <h3>Math Support (KaTeX)</h3>
-    <p>Writing documentation for algorithms or scientific computing? BluePad renders LaTeX math inline and in display mode. No extensions to install, no configuration needed.</p>
+    <h3>数式サポート（KaTeX）</h3>
+    <p>アルゴリズムや科学計算のドキュメントを書いていますか？BluePadはLaTeXの数式をインラインおよびディスプレイモードでレンダリングします。拡張機能のインストールも、設定も不要です。</p>
 
-    <h3>Source Mode Toggle</h3>
-    <p>Sometimes you need to see the raw markdown — for complex table editing or debugging formatting issues. Toggle between WYSIWYG and source mode with a single shortcut. No restart, no mode switch delay.</p>
+    <h3>ソースモード切り替え</h3>
+    <p>複雑なテーブル編集やフォーマットの問題をデバッグするために、生のマークダウンを確認する必要がある場合もあります。WYSIWYGモードとソースモードはショートカットひとつで切り替えられます。再起動もモード切り替えの遅延もありません。</p>
 
-    <h3>Instant Startup</h3>
-    <p>When you need to quickly edit a README before committing, every second counts. BluePad launches in under a second. Open, edit, save, done. No waiting for extensions to load or workspace to initialize.</p>
+    <h3>瞬時の起動</h3>
+    <p>コミット前にREADMEをすばやく編集する必要があるとき、1秒が重要です。BluePadは1秒以内に起動します。開いて、編集して、保存して、完了。拡張機能の読み込みやワークスペースの初期化を待つ必要はありません。</p>
 
-    <h2>The Two-Editor Workflow</h2>
+    <h2>2つのエディターを使うワークフロー</h2>
 
-    <p>The most productive developers don't use one tool for everything. They use the right tool for each task:</p>
+    <p>最も生産性の高い開発者は、すべてに1つのツールを使いません。各タスクに適切なツールを使います：</p>
 
     <ul>
-      <li><strong>VS Code / IDE:</strong> For writing and debugging code</li>
-      <li><strong>BluePad:</strong> For writing documentation, blogs, and prose</li>
+      <li><strong>VS Code / IDE：</strong>コードの記述とデバッグ用</li>
+      <li><strong>BluePad：</strong>ドキュメント、ブログ、文章の執筆用</li>
     </ul>
 
-    <p>This separation isn't about having more tools — it's about entering the right mental mode. When you open BluePad, your brain knows it's time to write. When you open VS Code, it's time to code. This context switch boundary actually helps you focus.</p>
+    <p>この使い分けは、ツールを増やすことが目的ではありません。正しい思考モードに入ることが目的です。BluePadを開くと、脳は「書く時間だ」と認識します。VS Codeを開くと、「コーディングの時間だ」と認識します。このコンテキスト切り替えの境界が、実は集中力の向上に役立つのです。</p>
 
-    <h2>Getting Started</h2>
+    <h2>はじめ方</h2>
 
-    <p>BluePad is free for core features: WYSIWYG editing, source mode, find and replace, multi-tab editing, and multi-language UI. The Pro tier ($14.99, one-time) adds Mermaid, math, focus mode, all themes, and HTML export.</p>
+    <p>BluePadはコア機能が無料です：WYSIWYG編集、ソースモード、検索と置換、マルチタブ編集、多言語UI。Proティア（$14.99、買い切り）では、Mermaid、数式、フォーカスモード、全テーマ、HTMLエクスポートが追加されます。</p>
 
-    <p>For developers who write significant amounts of markdown — and that's most of us — a dedicated editor pays for itself in the first week through improved writing speed and quality.</p>
+    <p>大量のマークダウンを書く開発者にとって — そしてそれはほとんどの開発者に当てはまりますが — 専用エディターは、ライティングの速度と品質の向上によって、最初の1週間で元が取れます。</p>
 
     <div class="cta-banner">
       <h3>より良いドキュメントを、より速く</h3>
