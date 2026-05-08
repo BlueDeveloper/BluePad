@@ -117,6 +117,22 @@ tr:last-child td{border-bottom:none}
     </table>
   </div>
 
+  <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">다운로드 내역</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>파일명</th>
+          <th>국가</th>
+          <th>IP</th>
+          <th>브라우저</th>
+          <th>날짜</th>
+        </tr>
+      </thead>
+      <tbody id="download-table"></tbody>
+    </table>
+  </div>
+
   <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">결제 내역</h2>
   <div class="table-wrap">
     <table>
@@ -218,13 +234,14 @@ async function loadDashboard() {
   loadTickets();
   loadPayments();
   loadErrors();
+  loadDownloads();
 }
 
 async function loadStats() {
   try {
     const res = await fetch(DOWNLOAD_API + '/api/stats');
     const data = await res.json();
-    document.getElementById('stat-downloads').textContent = (data.total_downloads || data.count || 0).toLocaleString();
+    document.getElementById('stat-downloads').textContent = (data.downloads || data.total_downloads || data.count || 0).toLocaleString();
   } catch (e) {
     document.getElementById('stat-downloads').textContent = '오류';
   }
@@ -413,6 +430,32 @@ async function replyTicket(email, type, ticketId) {
     if (data.success) { alert('답변 발송 완료: ' + email); loadTickets(); }
     else alert('실패: ' + (data.error || '알 수 없는 오류'));
   } catch (e) { alert('연결 오류'); }
+}
+
+async function loadDownloads() {
+  const token = getToken();
+  try {
+    const res = await fetch(LICENSE_API + '/api/admin/downloads', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const data = await res.json();
+    const downloads = data.downloads || [];
+    const tbody = document.getElementById('download-table');
+    tbody.innerHTML = downloads.map(d => {
+      const ua = d.user_agent || '';
+      let browser = ua.includes('Edg/') ? 'Edge' : ua.includes('Chrome/') ? 'Chrome' : ua.includes('Firefox/') ? 'Firefox' : ua.includes('curl') ? 'curl' : ua.includes('HeadlessChrome') ? 'Bot' : '기타';
+      return `<tr>
+        <td style="font-family:monospace;font-size:.8rem">${esc(d.file_name)}</td>
+        <td>${esc(d.country || '-')}</td>
+        <td style="font-family:monospace;font-size:.75rem">${esc(d.ip)}</td>
+        <td>${browser}</td>
+        <td>${formatDate(d.downloaded_at)}</td>
+      </tr>`;
+    }).join('');
+    if (!downloads.length) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted)">다운로드 없음</td></tr>';
+  } catch (e) {
+    document.getElementById('download-table').innerHTML = '<tr><td colspan="5">불러오기 실패</td></tr>';
+  }
 }
 
 async function loadErrors() {

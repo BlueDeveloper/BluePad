@@ -1,6 +1,6 @@
 # BluePad — 프로젝트 컨텍스트 가이드
 
-> **최종 업데이트**: 2026-05-04
+> **최종 업데이트**: 2026-05-08
 > **글로벌 인프라 참조**: [INFRASTRUCTURE_GLOBAL_REFERENCE.md](C:\Users\bluee\.claude\INFRASTRUCTURE_GLOBAL_REFERENCE.md)
 
 ---
@@ -36,8 +36,8 @@
 
 ### 환경변수/시크릿 (Workers)
 - `ADMIN_SECRET` — 관리자 API 인증용
-- `DOWNLOAD_KEY` — 다운로드 잠금 키 (Worker 시크릿)
 - `PAYPAL_CLIENT_ID`, `PAYPAL_SECRET` — PayPal Live API 키
+- ~~`DOWNLOAD_KEY`~~ — 다운로드 잠금 해제 완료 (2026-05-08 제거됨)
 
 ### 분석/SEO
 - Microsoft Clarity ID: `wkokfmayny`
@@ -82,7 +82,7 @@ src/
 - **서버 검증**: Worker API로 activate/validate/deactivate
 - **오프라인 유예**: 30일 grace period (마지막 검증 타임스탬프 기반)
 - **트라이얼**: 14일, localStorage `bluepad_trial_start` 기반
-- **키 형식**: `BPP-XXXXXXXX-XXXXXXXX-XXXXXXXX` (Worker에서 crypto.getRandomValues로 생성)
+- **키 형식**: `BP-XXXX-XXXX-XXXX-XXXX` (Worker에서 crypto.getRandomValues로 생성)
 
 ### Pro vs Free 기능 구분
 | 기능 | Free | Pro |
@@ -128,7 +128,8 @@ landing/
 - **결제 수단**: PayPal (Direct / REST API, Live 환경)
 - **사유**: Stripe는 한국 간이과세자 미지원
 - **흐름**: 랜딩 "Pro 구매" → checkout Worker → PayPal 승인 → 결제 캡처 → 라이선스 키 자동 발급 → 성공 페이지에 키 표시
-- **가격**: 미정 (checkout Worker에서 설정)
+- **가격**: $10.99 USD (checkout Worker `PRODUCT_PRICE` 변수)
+- **PayPal 결제**: 계좌 완전 인증 없이도 결제 수신 가능 (PayPal 정책상 제한 금액 이하)
 
 ### 환불 정책 (반드시 준수)
 - **전자상거래법 기준**: 디지털 콘텐츠는 청약철회 예외 가능하나, **구매 전 명시적 고지 + 동의** 필요
@@ -150,7 +151,7 @@ landing/
 온라인 판매 시 다음 정보를 구매 페이지에 반드시 표시:
 1. 상호 및 대표자명: 비알피(BlueRedPolarity) / 윤동제
 2. 사업자등록번호: 511-32-01572
-3. 통신판매업 신고번호: (신고 후 기재)
+3. 통신판매업 신고번호: (신고 완료, 승인 후 기재)
 4. 주소, 전화번호, 이메일
 5. 청약철회/환불 조건
 6. 재화의 내용, 가격, 배송(해당없음)
@@ -205,16 +206,14 @@ TAURI_SIGNING_PRIVATE_KEY="$(cat ~/.tauri/bluepad.key)" TAURI_SIGNING_PRIVATE_KE
   ```
 
 ### Windows 코드 서명 (Authenticode)
-- **현재 결정**: 코드 서명 없이 출시 (Typora도 3.5년간 미서명 운영)
-- **SmartScreen 대응**: 랜딩 페이지에 설치 안내 추가 예정
-- **SignPath Foundation**: 신청 완료 (2026-05-03), 승인 대기 — 상용 SW 적격 여부 불확실
-- **향후 옵션**: Sectigo OV (~$215/년), Microsoft Store ($19), Azure Trusted Signing (한국 지원 시)
-- **승인 후 작업**: GitHub Actions 빌드 → 서명 → R2 업로드 파이프라인 구축
+- **현재 결정**: 코드 서명 없이 운영 (Typora도 초기 수년간 미서명 운영)
+- **SmartScreen 대응**: 랜딩 페이지에 설치 안내 텍스트로 대응
+- **향후 옵션 (선택)**: Sectigo OV, Microsoft Store, Azure Trusted Signing
 
-### 다운로드 보안
-- 현재 잠금: `?key=<DOWNLOAD_KEY>` 없으면 403
-- `/update/download/` 경로는 DOWNLOAD_KEY 불필요 (업데이트용)
-- 코드 서명 완료 후 다운로드 잠금 해제 예정
+### 다운로드
+- **현재 상태**: 잠금 해제 완료 — `/download/<filename>` 퍼블릭 접근 가능
+- **현재 버전**: `1.8.0` (2026-05-07 릴리즈)
+- **다운로드 수**: 43건 (2026-05-08 기준)
 
 ---
 
@@ -222,40 +221,56 @@ TAURI_SIGNING_PRIVATE_KEY="$(cat ~/.tauri/bluepad.key)" TAURI_SIGNING_PRIVATE_KE
 
 ### 관리자 대시보드 (bluepad.work/admin/)
 - 비밀번호 로그인 (ADMIN_SECRET)
-- 다운로드 건수 확인
+- 다운로드 건수 + 내역 (개별 기록, 국가, IP)
 - 라이선스 목록 조회 (이메일, 키, 디바이스, 상태)
 - 라이선스 비활성화 (환불 시)
+- 체험 사용자 목록 + 트라이얼 일수 조정
+- 결제 내역 + 환불 처리
+- 에러 로그 (KST 시간 표시)
+- 문의 티켓 + 이메일 답변
 
-### API 엔드포인트
+### API 엔드포인트 (bluepad-license-api)
 ```
-POST /validate     — 라이선스 검증 (앱에서 호출)
-POST /deactivate   — 라이선스 비활성화 (앱에서 호출)
-POST /admin/generate   — 라이선스 수동 생성
-POST /admin/deactivate — 관리자 비활성화
-GET  /admin/licenses   — 전체 라이선스 목록
+POST /api/validate            — 라이선스 검증 (앱에서 호출)
+POST /api/deactivate          — 라이선스 비활성화 (앱에서 호출)
+POST /api/trial               — 트라이얼 등록/조회 (앱에서 호출)
+POST /api/support             — 문의 티켓 제출
+POST /api/admin/generate      — 라이선스 수동 생성
+POST /api/admin/deactivate    — 관리자 라이선스 비활성화
+GET  /api/admin/licenses      — 전체 라이선스 목록
+GET  /api/admin/trials        — 체험 사용자 목록
+GET  /api/admin/payments      — 결제 내역
+POST /api/admin/refund        — 환불 처리 (라이선스 비활성화)
+GET  /api/admin/errors        — 에러 로그
+GET  /api/admin/downloads     — 다운로드 내역
+POST /api/admin/trial/adjust  — 트라이얼 일수 조정
+POST /api/admin/reply         — 티켓 이메일 답변
 ```
 
 ---
 
-## 8. 대기 중 항목 (2026-05-04 기준)
+## 8. 현황 & 대기 항목 (2026-05-08 기준)
+
+### 현재 운영 상태
+| 항목 | 상태 |
+|------|------|
+| 다운로드 | ✅ 공개 (잠금 해제 완료) |
+| 결제 (PayPal) | ✅ 작동 (계좌 완전 인증 전에도 수신 가능) |
+| 코드 서명 | ⚠️ 없음 (SmartScreen 경고 — 운영 방침으로 수용) |
+| 통신판매업 신고 | ⏳ 신고 완료, 승인 대기 |
+| 총 다운로드 | 43건 |
+| 총 결제 | 0건 |
 
 ### 외부 대기
 | 항목 | 상태 | 비고 |
 |------|------|------|
-| SignPath 코드 서명 승인 | 대기 중 | 신청 2026-05-03, 예상 1~2주 |
-| PayPal 소액입금 계좌 인증 | 대기 중 | 사업자 계좌 발급 + PayPal 등록 완료, 소액입금 확인 대기 |
-| 통신판매업 신고 승인 | 대기 중 | 2026-05-04 신고 완료, 승인 대기 |
+| 통신판매업 신고 승인 | 대기 중 | 2026-05-04 신고 완료 |
 
-### 승인 후 Claude 작업
-- GitHub Actions 워크플로우: 빌드 → SignPath 서명 → R2 업로드
-- Download Worker에서 DOWNLOAD_KEY 검증 제거 (다운로드 잠금 해제)
-- 랜딩 "다운로드" 버튼 활성화
-- 실결제 E2E 테스트 (PayPal 인증 완료 후)
-
-### 선택적 개선
+### 선택적 개선 (할 일)
 - 블로그 추가 작성 (SEO 강화)
 - 앱 기능 추가 (TODO.md 참조)
 - Google Ads / 마케팅 캠페인
+- 통신판매업 신고번호 발급 후 랜딩 footer에 추가
 
 ---
 

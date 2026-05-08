@@ -421,6 +421,15 @@ export default {
         return json({ errors: errors.results }, 200, request);
       }
 
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // 관리자: 다운로드 내역 조회
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      if (path === "/api/admin/downloads" && request.method === "GET") {
+        if (!await checkAdmin(request, env)) return json({ error: "unauthorized" }, 401, request);
+        const downloads = await env.DB.prepare("SELECT * FROM downloads ORDER BY downloaded_at DESC LIMIT 100").all();
+        return json({ downloads: downloads.results, total: downloads.results.length }, 200, request);
+      }
+
       return json({ error: "not_found" }, 404, request);
 
     } catch (err) {
