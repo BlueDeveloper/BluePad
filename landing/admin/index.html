@@ -35,10 +35,18 @@ tr:last-child td{border-bottom:none}
 .error{color:var(--danger);font-size:.875rem;margin-top:.5rem}
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
 .header h1{margin-bottom:0}
+.filter-bar{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;padding:.75rem 1rem;border-bottom:1px solid var(--border);background:var(--surface);border-radius:12px 12px 0 0}
+.filter-bar select,.filter-bar input[type=text]{padding:.35rem .65rem;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:.8rem}
+.filter-bar select:focus,.filter-bar input[type=text]:focus{outline:none;border-color:var(--accent)}
+.filter-bar label{display:flex;align-items:center;gap:.35rem;font-size:.8rem;color:var(--muted);cursor:pointer;user-select:none}
+.filter-bar label input[type=checkbox]{accent-color:var(--accent);width:14px;height:14px;cursor:pointer}
+.filter-count{margin-left:auto;font-size:.75rem;color:var(--muted)}
+.table-wrap.has-filter{border-radius:0 0 12px 12px}
 @media(max-width:640px){
   body{padding:1rem}
   .card-value{font-size:1.5rem}
   th,td{padding:.5rem .6rem;font-size:.75rem}
+  .filter-bar{gap:.4rem}
 }
 </style>
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
@@ -84,7 +92,16 @@ tr:last-child td{border-bottom:none}
   </div>
 
   <h2 style="font-size:1.1rem;margin-bottom:1rem">라이선스</h2>
-  <div class="table-wrap">
+  <div class="filter-bar">
+    <select id="f-license-status" onchange="renderLicenses()">
+      <option value="">전체 상태</option>
+      <option value="active">활성</option>
+      <option value="inactive">비활성</option>
+    </select>
+    <input type="text" id="f-license-search" placeholder="이메일 검색" oninput="renderLicenses()" style="min-width:140px">
+    <span class="filter-count" id="f-license-count"></span>
+  </div>
+  <div class="table-wrap has-filter">
     <table>
       <thead>
         <tr>
@@ -101,7 +118,15 @@ tr:last-child td{border-bottom:none}
   </div>
 
   <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">체험 사용자</h2>
-  <div class="table-wrap">
+  <div class="filter-bar">
+    <select id="f-trial-status" onchange="renderTrials()">
+      <option value="">전체 상태</option>
+      <option value="active">사용 중</option>
+      <option value="expired">만료</option>
+    </select>
+    <span class="filter-count" id="f-trial-count"></span>
+  </div>
+  <div class="table-wrap has-filter">
     <table>
       <thead>
         <tr>
@@ -118,7 +143,13 @@ tr:last-child td{border-bottom:none}
   </div>
 
   <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">다운로드 내역</h2>
-  <div class="table-wrap">
+  <div class="filter-bar">
+    <label><input type="checkbox" id="f-dl-nobot" onchange="renderDownloads()"> 봇 제외</label>
+    <select id="f-dl-country" onchange="renderDownloads()"><option value="">전체 국가</option></select>
+    <input type="text" id="f-dl-ip" placeholder="IP 검색" oninput="renderDownloads()" style="min-width:120px">
+    <span class="filter-count" id="f-dl-count"></span>
+  </div>
+  <div class="table-wrap has-filter">
     <table>
       <thead>
         <tr>
@@ -134,7 +165,19 @@ tr:last-child td{border-bottom:none}
   </div>
 
   <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">결제 내역</h2>
-  <div class="table-wrap">
+  <div class="filter-bar">
+    <select id="f-pay-status" onchange="renderPayments()">
+      <option value="">전체 상태</option>
+      <option value="completed">완료</option>
+      <option value="captured">캡처</option>
+      <option value="refunded">환불됨</option>
+      <option value="license_failed">키발급실패</option>
+      <option value="amount_mismatch">금액불일치</option>
+    </select>
+    <input type="text" id="f-pay-email" placeholder="이메일 검색" oninput="renderPayments()" style="min-width:140px">
+    <span class="filter-count" id="f-pay-count"></span>
+  </div>
+  <div class="table-wrap has-filter">
     <table>
       <thead>
         <tr>
@@ -152,7 +195,11 @@ tr:last-child td{border-bottom:none}
   </div>
 
   <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">에러 로그</h2>
-  <div class="table-wrap">
+  <div class="filter-bar">
+    <select id="f-err-worker" onchange="renderErrors()"><option value="">전체 Worker</option></select>
+    <span class="filter-count" id="f-err-count"></span>
+  </div>
+  <div class="table-wrap has-filter">
     <table>
       <thead>
         <tr>
@@ -168,7 +215,22 @@ tr:last-child td{border-bottom:none}
   </div>
 
   <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">문의 티켓</h2>
-  <div class="table-wrap">
+  <div class="filter-bar">
+    <select id="f-ticket-type" onchange="renderTickets()">
+      <option value="">전체 유형</option>
+      <option value="refund">환불</option>
+      <option value="bug">버그</option>
+      <option value="feature">기능 요청</option>
+      <option value="other">기타</option>
+    </select>
+    <select id="f-ticket-status" onchange="renderTickets()">
+      <option value="">전체 상태</option>
+      <option value="open">접수</option>
+      <option value="resolved">처리 완료</option>
+    </select>
+    <span class="filter-count" id="f-ticket-count"></span>
+  </div>
+  <div class="table-wrap has-filter">
     <table>
       <thead>
         <tr>
@@ -247,30 +309,55 @@ async function loadStats() {
   }
 }
 
+let rawLicenses = [], rawTrials = [], rawDownloads = [], rawPayments = [], rawErrors = [], rawTickets = [];
+
+function parseUA(ua) {
+  ua = ua || '';
+  if (ua.includes('curl')) return 'curl';
+  if (ua.includes('GPTBot')) return '🤖 GPTBot';
+  if (ua.includes('ClaudeBot')) return '🤖 ClaudeBot';
+  if (ua.includes('HeadlessChrome')) return '🤖 HeadlessChrome';
+  if (ua.includes('bot') || ua.includes('Bot') || ua.includes('crawler') || ua.includes('spider')) return '🤖 Bot';
+  const os = ua.includes('Windows') ? 'Win' : ua.includes('iPhone') ? 'iPhone' : ua.includes('Android') ? 'Android' : ua.includes('Linux') ? 'Linux' : ua.includes('Mac') ? 'Mac' : '?';
+  const br = ua.includes('Edg/') ? 'Edge' : ua.includes('Chrome/') ? 'Chrome' : ua.includes('Firefox/') ? 'Firefox' : ua.includes('Safari/') ? 'Safari' : '기타';
+  return os + '/' + br;
+}
+function isBot(ua) { return parseUA(ua).startsWith('🤖') || parseUA(ua) === 'curl'; }
+
 async function loadLicenses() {
   const token = getToken();
   try {
-    const res = await fetch(LICENSE_API + '/api/admin/licenses', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
+    const res = await fetch(LICENSE_API + '/api/admin/licenses', { headers: { 'Authorization': 'Bearer ' + token } });
     const data = await res.json();
-    const licenses = data.licenses || [];
-    document.getElementById('stat-licenses').textContent = licenses.length;
-    document.getElementById('stat-active').textContent = licenses.filter(l => l.active === 1).length;
-    const tbody = document.getElementById('license-table');
-    tbody.innerHTML = licenses.map(l => `
-      <tr>
-        <td style="font-family:monospace;font-size:.8rem">${esc(l.license_key)}</td>
-        <td>${esc(l.email || '-')}</td>
-        <td>${l.device_count || 0} / ${l.max_devices}</td>
-        <td>${formatDate(l.created_at)}</td>
-        <td><span class="badge ${l.active ? 'badge-active' : 'badge-inactive'}">${l.active ? '활성' : '비활성'}</span></td>
-        <td>${l.active ? `<button class="btn btn-danger" onclick="deactivate('${esc(l.license_key)}')">비활성화</button>` : ''}</td>
-      </tr>
-    `).join('');
+    rawLicenses = data.licenses || [];
+    document.getElementById('stat-licenses').textContent = rawLicenses.length;
+    document.getElementById('stat-active').textContent = rawLicenses.filter(l => l.active === 1).length;
+    renderLicenses();
   } catch (e) {
     document.getElementById('license-table').innerHTML = '<tr><td colspan="6">불러오기 실패</td></tr>';
   }
+}
+
+function renderLicenses() {
+  const status = document.getElementById('f-license-status').value;
+  const search = document.getElementById('f-license-search').value.toLowerCase();
+  let list = rawLicenses.filter(l => {
+    if (status === 'active' && !l.active) return false;
+    if (status === 'inactive' && l.active) return false;
+    if (search && !(l.email || '').toLowerCase().includes(search) && !l.license_key.toLowerCase().includes(search)) return false;
+    return true;
+  });
+  document.getElementById('f-license-count').textContent = list.length + ' / ' + rawLicenses.length + '건';
+  document.getElementById('license-table').innerHTML = list.map(l => `
+    <tr>
+      <td style="font-family:monospace;font-size:.8rem">${esc(l.license_key)}</td>
+      <td>${esc(l.email || '-')}</td>
+      <td>${l.device_count || 0} / ${l.max_devices}</td>
+      <td>${formatDate(l.created_at)}</td>
+      <td><span class="badge ${l.active ? 'badge-active' : 'badge-inactive'}">${l.active ? '활성' : '비활성'}</span></td>
+      <td>${l.active ? `<button class="btn btn-danger" onclick="deactivate('${esc(l.license_key)}')">비활성화</button>` : ''}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--muted)">결과 없음</td></tr>';
 }
 
 async function deactivate(key) {
@@ -296,30 +383,37 @@ async function deactivate(key) {
 async function loadTrials() {
   const token = getToken();
   try {
-    const res = await fetch(LICENSE_API + '/api/admin/trials', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
+    const res = await fetch(LICENSE_API + '/api/admin/trials', { headers: { 'Authorization': 'Bearer ' + token } });
     const data = await res.json();
-    const trials = data.trials || [];
-    document.getElementById('stat-trials').textContent = trials.length;
-    const tbody = document.getElementById('trial-table');
-    tbody.innerHTML = trials.map(t => {
-      const startMs = new Date(t.trial_start + 'Z').getTime();
-      const elapsed = Date.now() - startMs;
-      const daysLeft = Math.max(0, Math.ceil((14*24*60*60*1000 - elapsed) / (24*60*60*1000)));
-      const expired = daysLeft <= 0;
-      return `<tr>
-        <td>${esc(t.device_name || '알 수 없음')}</td>
-        <td style="font-family:monospace;font-size:.8rem">${esc(t.device_id)}</td>
-        <td>${formatDate(t.trial_start)}</td>
-        <td>${expired ? '0' : daysLeft}일</td>
-        <td><span class="badge ${expired ? 'badge-inactive' : 'badge-active'}">${expired ? '만료' : '사용 중'}</span></td>
-        <td><button class="btn btn-danger" onclick="adjustTrial('${esc(t.device_id)}',${daysLeft})">일수 조정</button></td>
-      </tr>`;
-    }).join('');
+    rawTrials = data.trials || [];
+    document.getElementById('stat-trials').textContent = rawTrials.length;
+    renderTrials();
   } catch (e) {
     document.getElementById('trial-table').innerHTML = '<tr><td colspan="6">불러오기 실패</td></tr>';
   }
+}
+
+function renderTrials() {
+  const status = document.getElementById('f-trial-status').value;
+  const now = Date.now();
+  let list = rawTrials.map(t => {
+    const startMs = new Date(t.trial_start + 'Z').getTime();
+    const daysLeft = Math.max(0, Math.ceil((14*24*60*60*1000 - (now - startMs)) / (24*60*60*1000)));
+    return { ...t, daysLeft, expired: daysLeft <= 0 };
+  }).filter(t => {
+    if (status === 'active' && t.expired) return false;
+    if (status === 'expired' && !t.expired) return false;
+    return true;
+  });
+  document.getElementById('f-trial-count').textContent = list.length + ' / ' + rawTrials.length + '건';
+  document.getElementById('trial-table').innerHTML = list.map(t => `<tr>
+    <td>${esc(t.device_name || '알 수 없음')}</td>
+    <td style="font-family:monospace;font-size:.8rem">${esc(t.device_id)}</td>
+    <td>${formatDate(t.trial_start)}</td>
+    <td>${t.daysLeft}일</td>
+    <td><span class="badge ${t.expired ? 'badge-inactive' : 'badge-active'}">${t.expired ? '만료' : '사용 중'}</span></td>
+    <td><button class="btn btn-danger" onclick="adjustTrial('${esc(t.device_id)}',${t.daysLeft})">일수 조정</button></td>
+  </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--muted)">결과 없음</td></tr>';
 }
 
 async function adjustTrial(deviceId, currentDays) {
@@ -343,54 +437,72 @@ async function adjustTrial(deviceId, currentDays) {
 async function loadTickets() {
   const token = getToken();
   try {
-    const res = await fetch(LICENSE_API + '/api/admin/tickets', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
+    const res = await fetch(LICENSE_API + '/api/admin/tickets', { headers: { 'Authorization': 'Bearer ' + token } });
     const data = await res.json();
-    const tickets = data.tickets || [];
-    document.getElementById('stat-tickets').textContent = tickets.length;
-    const typeMap = { refund: '환불', bug: '버그', feature: '기능 요청', other: '기타' };
-    const tbody = document.getElementById('ticket-table');
-    tbody.innerHTML = tickets.map(t => `<tr>
-      <td><span class="badge ${t.type === 'refund' ? 'badge-inactive' : 'badge-active'}">${typeMap[t.type] || t.type}</span></td>
-      <td>${esc(t.email)}</td>
-      <td style="font-family:monospace;font-size:.8rem">${esc(t.license_key || '-')}</td>
-      <td class="ticket-msg" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer" data-msg="${esc(t.message)}">${esc(t.message)}</td>
-      <td>${formatDate(t.created_at)}</td>
-      <td><span class="badge ${t.status === 'open' ? 'badge-active' : 'badge-inactive'}">${t.status === 'open' ? '접수' : '처리 완료'}</span></td>
-      <td>${t.status === 'open' ? `<button class="btn btn-primary" style="padding:.4rem .8rem;font-size:.75rem" onclick="replyTicket('${esc(t.email)}','${esc(t.type)}',${t.id})">답변</button>` : ''}</td>
-    </tr>`).join('');
+    rawTickets = data.tickets || [];
+    document.getElementById('stat-tickets').textContent = rawTickets.length;
+    renderTickets();
   } catch (e) {
     document.getElementById('ticket-table').innerHTML = '<tr><td colspan="7">불러오기 실패</td></tr>';
   }
 }
 
+function renderTickets() {
+  const typeFilter = document.getElementById('f-ticket-type').value;
+  const statusFilter = document.getElementById('f-ticket-status').value;
+  const typeMap = { refund: '환불', bug: '버그', feature: '기능 요청', other: '기타' };
+  let list = rawTickets.filter(t => {
+    if (typeFilter && t.type !== typeFilter) return false;
+    if (statusFilter && t.status !== statusFilter) return false;
+    return true;
+  });
+  document.getElementById('f-ticket-count').textContent = list.length + ' / ' + rawTickets.length + '건';
+  document.getElementById('ticket-table').innerHTML = list.map(t => `<tr>
+    <td><span class="badge ${t.type === 'refund' ? 'badge-inactive' : 'badge-active'}">${typeMap[t.type] || t.type}</span></td>
+    <td>${esc(t.email)}</td>
+    <td style="font-family:monospace;font-size:.8rem">${esc(t.license_key || '-')}</td>
+    <td class="ticket-msg" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer" data-msg="${esc(t.message)}">${esc(t.message)}</td>
+    <td>${formatDate(t.created_at)}</td>
+    <td><span class="badge ${t.status === 'open' ? 'badge-active' : 'badge-inactive'}">${t.status === 'open' ? '접수' : '처리 완료'}</span></td>
+    <td>${t.status === 'open' ? `<button class="btn btn-primary" style="padding:.4rem .8rem;font-size:.75rem" onclick="replyTicket('${esc(t.email)}','${esc(t.type)}',${t.id})">답변</button>` : ''}</td>
+  </tr>`).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--muted)">결과 없음</td></tr>';
+}
+
 async function loadPayments() {
   const token = getToken();
   try {
-    const res = await fetch(LICENSE_API + '/api/admin/payments', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
+    const res = await fetch(LICENSE_API + '/api/admin/payments', { headers: { 'Authorization': 'Bearer ' + token } });
     const data = await res.json();
-    const payments = data.payments || [];
-    const tbody = document.getElementById('payment-table');
-    tbody.innerHTML = payments.map(p => {
-      const statusMap = { completed: '완료', captured: '캡처', refunded: '환불됨', license_failed: '키발급실패', amount_mismatch: '금액불일치' };
-      const statusClass = p.refunded ? 'badge-inactive' : (p.status === 'completed' ? 'badge-active' : 'badge-inactive');
-      return `<tr>
-        <td style="font-family:monospace;font-size:.75rem">${esc(p.paypal_order_id)}</td>
-        <td>${esc(p.email || '-')}</td>
-        <td>$${esc(p.amount || '0')} ${esc(p.currency || '')}</td>
-        <td style="font-family:monospace;font-size:.75rem">${esc(p.license_key || '-')}</td>
-        <td><span class="badge ${statusClass}">${statusMap[p.status] || p.status}</span></td>
-        <td>${formatDate(p.created_at)}</td>
-        <td>${!p.refunded && p.license_key ? `<button class="btn btn-danger" onclick="doRefund('${esc(p.paypal_order_id)}','${esc(p.email)}','${esc(p.license_key)}')">환불</button>` : (p.refunded ? '<span style="color:var(--muted);font-size:.75rem">환불완료</span>' : '-')}</td>
-      </tr>`;
-    }).join('');
-    if (!payments.length) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--muted)">결제 내역 없음</td></tr>';
+    rawPayments = data.payments || [];
+    renderPayments();
   } catch (e) {
     document.getElementById('payment-table').innerHTML = '<tr><td colspan="7">불러오기 실패</td></tr>';
   }
+}
+
+function renderPayments() {
+  const statusFilter = document.getElementById('f-pay-status').value;
+  const emailFilter = document.getElementById('f-pay-email').value.toLowerCase();
+  const statusMap = { completed: '완료', captured: '캡처', refunded: '환불됨', license_failed: '키발급실패', amount_mismatch: '금액불일치' };
+  let list = rawPayments.filter(p => {
+    if (statusFilter && p.status !== statusFilter) return false;
+    if (emailFilter && !(p.email || '').toLowerCase().includes(emailFilter)) return false;
+    return true;
+  });
+  document.getElementById('f-pay-count').textContent = list.length + ' / ' + rawPayments.length + '건';
+  const html = list.map(p => {
+    const statusClass = p.refunded ? 'badge-inactive' : (p.status === 'completed' ? 'badge-active' : 'badge-inactive');
+    return `<tr>
+      <td style="font-family:monospace;font-size:.75rem">${esc(p.paypal_order_id)}</td>
+      <td>${esc(p.email || '-')}</td>
+      <td>$${esc(p.amount || '0')} ${esc(p.currency || '')}</td>
+      <td style="font-family:monospace;font-size:.75rem">${esc(p.license_key || '-')}</td>
+      <td><span class="badge ${statusClass}">${statusMap[p.status] || p.status}</span></td>
+      <td>${formatDate(p.created_at)}</td>
+      <td>${!p.refunded && p.license_key ? `<button class="btn btn-danger" onclick="doRefund('${esc(p.paypal_order_id)}','${esc(p.email)}','${esc(p.license_key)}')">환불</button>` : (p.refunded ? '<span style="color:var(--muted);font-size:.75rem">환불완료</span>' : '-')}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('payment-table').innerHTML = html || '<tr><td colspan="7" style="text-align:center;color:var(--muted)">결과 없음</td></tr>';
 }
 
 async function doRefund(orderId, email, licenseKey) {
@@ -435,59 +547,66 @@ async function replyTicket(email, type, ticketId) {
 async function loadDownloads() {
   const token = getToken();
   try {
-    const res = await fetch(LICENSE_API + '/api/admin/downloads', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
+    const res = await fetch(LICENSE_API + '/api/admin/downloads', { headers: { 'Authorization': 'Bearer ' + token } });
     const data = await res.json();
-    const downloads = data.downloads || [];
-    const tbody = document.getElementById('download-table');
-    tbody.innerHTML = downloads.map(d => {
-      const ua = d.user_agent || '';
-      let browser;
-      if (ua.includes('curl')) browser = 'curl';
-      else if (ua.includes('GPTBot')) browser = '🤖 GPTBot';
-      else if (ua.includes('ClaudeBot')) browser = '🤖 ClaudeBot';
-      else if (ua.includes('HeadlessChrome')) browser = '🤖 HeadlessChrome';
-      else if (ua.includes('bot') || ua.includes('Bot') || ua.includes('crawler') || ua.includes('spider')) browser = '🤖 Bot';
-      else {
-        const os = ua.includes('Windows') ? 'Win' : ua.includes('iPhone') ? 'iPhone' : ua.includes('Android') ? 'Android' : ua.includes('Linux') ? 'Linux' : ua.includes('Mac') ? 'Mac' : '?';
-        const br = ua.includes('Edg/') ? 'Edge' : ua.includes('Chrome/') ? 'Chrome' : ua.includes('Firefox/') ? 'Firefox' : ua.includes('Safari/') ? 'Safari' : '기타';
-        browser = os + '/' + br;
-      }
-      return `<tr>
-        <td style="font-family:monospace;font-size:.8rem">${esc(d.file_name)}</td>
-        <td>${esc(d.country || '-')}</td>
-        <td style="font-family:monospace;font-size:.75rem">${esc(d.ip)}</td>
-        <td>${browser}</td>
-        <td>${formatDate(d.downloaded_at)}</td>
-      </tr>`;
-    }).join('');
-    if (!downloads.length) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted)">다운로드 없음</td></tr>';
+    rawDownloads = data.downloads || [];
+    // 국가 드롭다운 동적 생성
+    const countries = [...new Set(rawDownloads.map(d => d.country || '-'))].sort();
+    const sel = document.getElementById('f-dl-country');
+    sel.innerHTML = '<option value="">전체 국가</option>' + countries.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+    renderDownloads();
   } catch (e) {
     document.getElementById('download-table').innerHTML = '<tr><td colspan="5">불러오기 실패</td></tr>';
   }
 }
 
+function renderDownloads() {
+  const noBot = document.getElementById('f-dl-nobot').checked;
+  const country = document.getElementById('f-dl-country').value;
+  const ipFilter = document.getElementById('f-dl-ip').value.toLowerCase();
+  let list = rawDownloads.filter(d => {
+    if (noBot && isBot(d.user_agent)) return false;
+    if (country && (d.country || '-') !== country) return false;
+    if (ipFilter && !d.ip.includes(ipFilter)) return false;
+    return true;
+  });
+  document.getElementById('f-dl-count').textContent = list.length + ' / ' + rawDownloads.length + '건';
+  document.getElementById('download-table').innerHTML = list.map(d => `<tr>
+    <td style="font-family:monospace;font-size:.8rem">${esc(d.file_name)}</td>
+    <td>${esc(d.country || '-')}</td>
+    <td style="font-family:monospace;font-size:.75rem">${esc(d.ip)}</td>
+    <td>${parseUA(d.user_agent)}</td>
+    <td>${formatDate(d.downloaded_at)}</td>
+  </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted)">결과 없음</td></tr>';
+}
+
 async function loadErrors() {
   const token = getToken();
   try {
-    const res = await fetch(LICENSE_API + '/api/admin/errors', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
+    const res = await fetch(LICENSE_API + '/api/admin/errors', { headers: { 'Authorization': 'Bearer ' + token } });
     const data = await res.json();
-    const errors = data.errors || [];
-    const tbody = document.getElementById('error-table');
-    tbody.innerHTML = errors.map(e => `<tr>
-      <td>${esc(e.worker)}</td>
-      <td>${esc(e.path || '-')}</td>
-      <td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.75rem">${esc(e.error)}</td>
-      <td>${esc(e.ip)}</td>
-      <td>${formatDate(e.created_at)}</td>
-    </tr>`).join('');
-    if (!errors.length) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted)">에러 없음</td></tr>';
+    rawErrors = data.errors || [];
+    // Worker 드롭다운 동적 생성
+    const workers = [...new Set(rawErrors.map(e => e.worker))].sort();
+    const sel = document.getElementById('f-err-worker');
+    sel.innerHTML = '<option value="">전체 Worker</option>' + workers.map(w => `<option value="${esc(w)}">${esc(w)}</option>`).join('');
+    renderErrors();
   } catch (e) {
     document.getElementById('error-table').innerHTML = '<tr><td colspan="5">불러오기 실패</td></tr>';
   }
+}
+
+function renderErrors() {
+  const workerFilter = document.getElementById('f-err-worker').value;
+  let list = rawErrors.filter(e => !workerFilter || e.worker === workerFilter);
+  document.getElementById('f-err-count').textContent = list.length + ' / ' + rawErrors.length + '건';
+  document.getElementById('error-table').innerHTML = list.map(e => `<tr>
+    <td>${esc(e.worker)}</td>
+    <td>${esc(e.path || '-')}</td>
+    <td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.75rem">${esc(e.error)}</td>
+    <td>${esc(e.ip)}</td>
+    <td>${formatDate(e.created_at)}</td>
+  </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted)">에러 없음</td></tr>';
 }
 
 function formatDate(d) {
