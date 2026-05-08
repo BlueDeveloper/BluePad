@@ -244,7 +244,7 @@ export default {
         if (!await checkAdmin(request, env)) return json({ error: "unauthorized" }, 401, request);
 
         const payments = await env.DB.prepare(
-          "SELECT * FROM payments ORDER BY created_at DESC"
+          "SELECT * FROM payments ORDER BY created_at DESC LIMIT 500"
         ).all();
         return json({ payments: payments.results }, 200, request);
       }
@@ -418,7 +418,7 @@ export default {
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       if (path === "/api/admin/errors" && request.method === "GET") {
         if (!await checkAdmin(request, env)) return json({ error: "unauthorized" }, 401, request);
-        const errors = await env.DB.prepare("SELECT * FROM error_logs ORDER BY created_at DESC LIMIT 50").all();
+        const errors = await env.DB.prepare("SELECT * FROM error_logs ORDER BY created_at DESC LIMIT 100").all();
         return json({ errors: errors.results }, 200, request);
       }
 

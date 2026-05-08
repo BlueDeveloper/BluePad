@@ -65,7 +65,10 @@ tr:last-child td{border-bottom:none}
 <div id="dashboard" class="hidden">
   <div class="header">
     <h1>BluePad 관리자 대시보드</h1>
-    <button class="btn btn-danger" onclick="doLogout()">로그아웃</button>
+    <div style="display:flex;gap:.5rem">
+      <button class="btn btn-primary" onclick="loadDashboard()" style="background:var(--surface);border:1px solid var(--border);color:var(--text)">새로고침</button>
+      <button class="btn btn-danger" onclick="doLogout()">로그아웃</button>
+    </div>
   </div>
 
   <div class="cards">
@@ -89,9 +92,38 @@ tr:last-child td{border-bottom:none}
       <div class="card-label">문의 티켓</div>
       <div class="card-value" id="stat-tickets">--</div>
     </div>
+    <div class="card">
+      <div class="card-label">총 결제</div>
+      <div class="card-value" id="stat-payments">--</div>
+    </div>
+    <div class="card">
+      <div class="card-label">총 매출</div>
+      <div class="card-value" id="stat-revenue">--</div>
+    </div>
   </div>
 
-  <h2 style="font-size:1.1rem;margin-bottom:1rem">라이선스</h2>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+    <h2 style="font-size:1.1rem">라이선스</h2>
+    <button class="btn btn-primary" onclick="openGenerateModal()" style="font-size:.8rem;padding:.4rem .9rem">+ 수동 생성</button>
+  </div>
+
+  <!-- 라이선스 수동 생성 모달 -->
+  <div id="generate-modal" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:flex;align-items:center;justify-content:center">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;width:100%;max-width:380px">
+      <h3 style="margin-bottom:1rem;font-size:1rem">라이선스 수동 생성</h3>
+      <input type="email" id="gen-email" placeholder="이메일 (선택)" style="width:100%;padding:.6rem .8rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:.875rem;margin-bottom:.75rem">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1rem">
+        <label style="font-size:.875rem;color:var(--muted);white-space:nowrap">최대 기기 수</label>
+        <input type="number" id="gen-devices" value="3" min="1" max="10" style="width:70px;padding:.6rem .8rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:.875rem">
+      </div>
+      <div style="display:flex;gap:.5rem">
+        <button class="btn btn-primary" onclick="doGenerate()" style="flex:1">생성</button>
+        <button class="btn" onclick="closeGenerateModal()" style="flex:1;background:var(--surface);border:1px solid var(--border);color:var(--text)">취소</button>
+      </div>
+      <div id="gen-result" style="margin-top:.75rem;font-family:monospace;font-size:.875rem;color:var(--success);word-break:break-all"></div>
+    </div>
+  </div>
+
   <div class="filter-bar">
     <select id="f-license-status" onchange="renderLicenses()">
       <option value="">전체 상태</option>
@@ -484,6 +516,11 @@ function renderPayments() {
   const statusFilter = document.getElementById('f-pay-status').value;
   const emailFilter = document.getElementById('f-pay-email').value.toLowerCase();
   const statusMap = { completed: '완료', captured: '캡처', refunded: '환불됨', license_failed: '키발급실패', amount_mismatch: '금액불일치' };
+  // stat 카드 업데이트
+  const completed = rawPayments.filter(p => p.status === 'completed' && !p.refunded);
+  const revenue = completed.reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
+  document.getElementById('stat-payments').textContent = completed.length;
+  document.getElementById('stat-revenue').textContent = '$' + revenue.toFixed(2);
   let list = rawPayments.filter(p => {
     if (statusFilter && p.status !== statusFilter) return false;
     if (emailFilter && !(p.email || '').toLowerCase().includes(emailFilter)) return false;
@@ -609,6 +646,41 @@ function renderErrors() {
   </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted)">에러 없음</td></tr>';
 }
 
+function openGenerateModal() {
+  document.getElementById('gen-email').value = '';
+  document.getElementById('gen-devices').value = '3';
+  document.getElementById('gen-result').textContent = '';
+  document.getElementById('generate-modal').classList.remove('hidden');
+  document.getElementById('generate-modal').style.display = 'flex';
+}
+function closeGenerateModal() {
+  document.getElementById('generate-modal').classList.add('hidden');
+  document.getElementById('generate-modal').style.display = 'none';
+}
+async function doGenerate() {
+  const email = document.getElementById('gen-email').value.trim();
+  const maxDevices = parseInt(document.getElementById('gen-devices').value, 10) || 3;
+  const token = getToken();
+  try {
+    const res = await fetch(LICENSE_API + '/api/admin/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ email: email || null, max_devices: maxDevices })
+    });
+    const data = await res.json();
+    if (data.license_key) {
+      document.getElementById('gen-result').textContent = '✓ ' + data.license_key;
+      loadLicenses();
+    } else {
+      document.getElementById('gen-result').style.color = 'var(--danger)';
+      document.getElementById('gen-result').textContent = '실패: ' + (data.error || '알 수 없는 오류');
+    }
+  } catch (e) {
+    document.getElementById('gen-result').style.color = 'var(--danger)';
+    document.getElementById('gen-result').textContent = '연결 오류';
+  }
+}
+
 function formatDate(d) {
   if (!d) return '-';
   const date = new Date(d.endsWith('Z') ? d : d + 'Z');
@@ -620,10 +692,12 @@ function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-// Event delegation for ticket messages (avoids inline onclick with unsanitized data)
+// Event delegation
 document.addEventListener('click', function(e) {
   const el = e.target.closest('.ticket-msg');
   if (el) alert(el.getAttribute('data-msg'));
+  // 모달 바깥 클릭 시 닫기
+  if (e.target.id === 'generate-modal') closeGenerateModal();
 });
 
 // Brute force protection
