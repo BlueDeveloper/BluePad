@@ -282,14 +282,19 @@ wrangler deploy
 - **MSI 배포 시 반드시 버전을 올린다** (1.0.0 → 1.1.0 등)
 - 동일 버전으로 R2에 덮어쓰면 기존 사용자가 업데이트를 받을 수 없음
 - 버전은 `src-tauri/tauri.conf.json`의 `version` 필드에서 관리 (package.json과 동기화)
+- **deploy.sh 하나로 전체 배포 자동화** — 수동 단계 없음
 
-### 버전 업데이트 배포 절차
-1. `src-tauri/tauri.conf.json` + `package.json`의 `version` 변경
-2. 프로덕션 빌드 (위 명령어)
-3. MSI를 R2에 업로드 (`BluePad_{version}_x64.msi`)
-4. `update.json` 생성 (version, notes, .sig 내용 포함) → R2에 업로드
-5. Worker가 자동으로 `/update.json` 및 `/update/download/` 서빙
-6. 기존 사용자 앱에서 "업데이트 확인" 시 새 버전 감지 → 다운로드 → 설치
+### 버전 업데이트 배포 절차 (deploy.sh 자동화)
+`./scripts/deploy.sh <version> "<release notes>"` 실행 시:
+1. 버전 변경 (tauri.conf.json + package.json)
+2. MSI 빌드 (서명 포함)
+3. R2 업로드 (MSI + update.json)
+4. 랜딩 다운로드 URL 치환 (34개 파일)
+5. 릴리즈 노트 자동 추가 (/changelog/ 페이지)
+6. git 커밋 & 푸시
+7. 다운로드/update.json 검증
+8. IndexNow 제출 (Bing/Naver/Yandex 색인)
+9. GitHub Release 생성
 
 ---
 

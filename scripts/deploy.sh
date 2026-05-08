@@ -111,29 +111,62 @@ COUNT=$(grep -rl "$OLD_MSI" landing/ 2>/dev/null | wc -l)
 find landing -name "*.html" -exec sed -i "s/${OLD_MSI}/${NEW_MSI}/g" {} +
 echo "   ${COUNT}개 파일 업데이트 ✓"
 
-# ── 6. 커밋 & 푸시 ──
+# ── 6. 릴리즈 노트 자동 추가 ──
 echo ""
-echo "📦 [5/6] 커밋 & 푸시..."
+echo "📝 [5/8] 릴리즈 노트 업데이트..."
+CHANGELOG_FILE="${PROJECT_ROOT}/landing/changelog/index.html"
+TODAY=$(date +"%Y-%m-%d")
+NEW_RELEASE="<div class=\"release\">\n    <div class=\"release-header\">\n      <span class=\"version\">v${VERSION}<\/span>\n      <span class=\"tag tag-latest\">Latest<\/span>\n      <span class=\"date\">${TODAY}<\/span>\n    <\/div>\n    <h3>Changes<\/h3>\n    <ul>\n      <li>${NOTES}<\/li>\n    <\/ul>\n    <a href=\"${WORKER_BASE}\/download\/${R2_MSI_NAME}\" class=\"dl-btn\">Download v${VERSION}<\/a>\n  <\/div>\n\n  "
+# 이전 Latest 태그 → Stable로 변경
+sed -i 's/tag-latest">Latest/tag-stable">Stable/g' "$CHANGELOG_FILE"
+# 새 릴리즈 블록 삽입 (첫 번째 release div 앞에)
+sed -i "0,/<div class=\"release\">/{s/<div class=\"release\">/${NEW_RELEASE}<div class=\"release\">/}" "$CHANGELOG_FILE"
+# 다운로드 버전 업데이트
+sed -i "s/Download v${CURRENT_VERSION}/Download v${CURRENT_VERSION}/g" "$CHANGELOG_FILE"
+echo "   changelog 업데이트 ✓"
+
+# ── 7. 커밋 & 푸시 ──
+echo ""
+echo "📦 [6/8] 커밋 & 푸시..."
 git add -A
 git commit -m "v${VERSION} 배포: ${NOTES}
 
 Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>" 2>&1 | tail -1
 git push 2>&1 | tail -1
 
-# ── 7. 검증 ──
+# ── 8. 검증 ──
 echo ""
-echo "✅ [6/6] 검증..."
+echo "✅ [7/8] 검증..."
 HTTP_CODE=$(curl -sI "${WORKER_BASE}/download/${R2_MSI_NAME}" | head -1 | awk '{print $2}')
 UPDATE_VER=$(curl -s "${WORKER_BASE}/update.json" | grep -o '"version":"[^"]*"' | grep -o '[0-9][0-9.]*')
 
 echo "   다운로드 HTTP: ${HTTP_CODE}"
 echo "   update.json 버전: ${UPDATE_VER}"
 
+# ── 9. IndexNow 제출 ──
+echo ""
+echo "🔍 [8/8] IndexNow 제출..."
+INDEXNOW_KEY="52cbe3af562eb1c50d5dfb86fc922388"
+INDEXNOW_CODE=$(curl -s -o /dev/null -w '%{http_code}' -X POST "https://api.indexnow.org/indexnow" \
+  -H "Content-Type: application/json; charset=utf-8" \
+  -d "{\"host\":\"bluepad.work\",\"key\":\"${INDEXNOW_KEY}\",\"keyLocation\":\"https://bluepad.work/${INDEXNOW_KEY}.txt\",\"urlList\":[\"https://bluepad.work/changelog/\",\"https://bluepad.work/ko/\",\"https://bluepad.work/en/\",\"https://bluepad.work/ja/\"]}")
+echo "   IndexNow: ${INDEXNOW_CODE}"
+
 if [ "$HTTP_CODE" = "200" ] && [ "$UPDATE_VER" = "$VERSION" ]; then
+  # GitHub Release 생성
+  echo ""
+  echo "🏷️  GitHub Release 생성..."
+  gh release create "v${VERSION}" \
+    --title "v${VERSION}" \
+    --notes "${NOTES}" \
+    --latest 2>&1 | tail -1 || echo "   (gh CLI 없거나 실패 — 수동 생성 필요)"
+
   echo ""
   echo "🎉 v${VERSION} 배포 완료!"
   echo "   다운로드: ${WORKER_BASE}/download/${R2_MSI_NAME}"
   echo "   업데이트: ${WORKER_BASE}/update.json"
+  echo "   릴리즈 노트: https://bluepad.work/changelog/"
+  echo "   GitHub: https://github.com/BlueDeveloper/BluePad/releases/tag/v${VERSION}"
 else
   echo ""
   echo "⚠️  검증 실패. 수동으로 확인해주세요."
