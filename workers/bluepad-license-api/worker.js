@@ -225,6 +225,7 @@ export default {
 
         const { device_id, days_left } = await request.json();
         if (!device_id || days_left === undefined) return json({ error: "missing_fields" }, 400, request);
+        if (typeof days_left !== "number" || !Number.isInteger(days_left) || days_left < 0 || days_left > 365) return json({ error: "invalid_days_left" }, 400, request);
 
         const trial = await env.DB.prepare("SELECT * FROM trials WHERE device_id = ?").bind(device_id).first();
         if (!trial) return json({ error: "trial_not_found" }, 404, request);

@@ -318,7 +318,7 @@ async function loadTrials() {
       </tr>`;
     }).join('');
   } catch (e) {
-    document.getElementById('trial-table').innerHTML = '<tr><td colspan="5">불러오기 실패</td></tr>';
+    document.getElementById('trial-table').innerHTML = '<tr><td colspan="6">불러오기 실패</td></tr>';
   }
 }
 
@@ -361,7 +361,7 @@ async function loadTickets() {
       <td>${t.status === 'open' ? `<button class="btn btn-primary" style="padding:.4rem .8rem;font-size:.75rem" onclick="replyTicket('${esc(t.email)}','${esc(t.type)}',${t.id})">답변</button>` : ''}</td>
     </tr>`).join('');
   } catch (e) {
-    document.getElementById('ticket-table').innerHTML = '<tr><td colspan="6">불러오기 실패</td></tr>';
+    document.getElementById('ticket-table').innerHTML = '<tr><td colspan="7">불러오기 실패</td></tr>';
   }
 }
 
