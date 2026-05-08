@@ -378,10 +378,79 @@ export default {
         return json({ trial_start: new Date().toISOString(), days_left: 14, expired: false }, 200, request);
       }
 
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // 관리자: 티켓 답변 (이메일 발송)
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      if (path === "/api/admin/reply" && request.method === "POST") {
+        if (!await checkAdmin(request, env)) return json({ error: "unauthorized" }, 401, request);
+
+        const { email, reply, ticket_id } = await request.json();
+        if (!email || !reply) return json({ error: "missing_fields" }, 400, request);
+
+        // MailChannels로 이메일 발송
+        try {
+          await fetch("https://api.mailchannels.net/tx/v1/send", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              personalizations: [{ to: [{ email, name: email }] }],
+              from: { email: "support@bluepad.work", name: "BluePad Support" },
+              subject: "[BluePad] 문의 답변",
+              content: [{
+                type: "text/plain",
+                value: reply + "\n\n---\nBluePad Support\nhttps://bluepad.work",
+              }],
+            }),
+          });
+        } catch {}
+
+        // 티켓 상태 업데이트
+        if (ticket_id) {
+          await env.DB.prepare("UPDATE support_tickets SET status = 'resolved' WHERE id = ?").bind(ticket_id).run();
+        }
+
+        return json({ success: true }, 200, request);
+      }
+
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // 관리자: 에러 로그 조회
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      if (path === "/api/admin/errors" && request.method === "GET") {
+        if (!await checkAdmin(request, env)) return json({ error: "unauthorized" }, 401, request);
+        const errors = await env.DB.prepare("SELECT * FROM error_logs ORDER BY created_at DESC LIMIT 50").all();
+        return json({ errors: errors.results }, 200, request);
+      }
+
       return json({ error: "not_found" }, 404, request);
 
     } catch (err) {
+      try {
+        const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+        await env.DB.prepare("INSERT INTO error_logs (worker, path, error, ip) VALUES (?, ?, ?, ?)")
+          .bind("license-api", url.pathname, String(err).substring(0, 500), ip).run();
+      } catch {}
       return json({ error: "internal_error" }, 500, request);
+    }
+  },
+
+  // 6시간마다 헬스체크 (Cron Trigger)
+  async scheduled(event, env) {
+    const endpoints = [
+      { name: "download", url: "https://bluepad-download.blueehdwp.workers.dev/api/stats" },
+      { name: "checkout", url: "https://bluepad-checkout.blueehdwp.workers.dev/" },
+      { name: "landing", url: "https://bluepad.work/" },
+    ];
+    for (const ep of endpoints) {
+      try {
+        const res = await fetch(ep.url, { method: "HEAD" });
+        if (!res.ok) {
+          await env.DB.prepare("INSERT INTO error_logs (worker, path, error, ip) VALUES (?, ?, ?, ?)")
+            .bind("healthcheck", ep.name, `HTTP ${res.status}`, "cron").run();
+        }
+      } catch (err) {
+        await env.DB.prepare("INSERT INTO error_logs (worker, path, error, ip) VALUES (?, ?, ?, ?)")
+          .bind("healthcheck", ep.name, String(err).substring(0, 500), "cron").run();
+      }
     }
   },
 };

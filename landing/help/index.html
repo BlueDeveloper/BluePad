@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BluePad Help & FAQ</title>
+<meta name="description" content="BluePad help center — frequently asked questions, keyboard shortcuts, troubleshooting, and getting started guide.">
+<link rel="canonical" href="https://bluepad.work/help/">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Pretendard Variable',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#09090b;color:#fafafa;min-height:100vh;padding:2rem 1.5rem}
+.wrap{max-width:720px;margin:0 auto}
+header{text-align:center;margin-bottom:2.5rem}
+header a{color:#155dfc;text-decoration:none;font-size:14px;font-weight:600}
+h1{font-size:28px;font-weight:800;margin:12px 0 8px}
+.sub{color:#a1a1aa;font-size:14px;margin-bottom:1rem}
+h2{font-size:18px;font-weight:700;margin:2rem 0 1rem;padding-bottom:8px;border-bottom:1px solid #27272a}
+.faq{margin-bottom:8px}
+.faq summary{padding:12px 16px;background:#18181b;border:1px solid #27272a;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;list-style:none;display:flex;align-items:center;gap:8px}
+.faq summary::before{content:'Q';background:#155dfc;color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.faq[open] summary{border-radius:8px 8px 0 0;border-bottom:none}
+.faq .answer{padding:12px 16px 16px;background:#18181b;border:1px solid #27272a;border-top:none;border-radius:0 0 8px 8px;font-size:13.5px;color:#a1a1aa;line-height:1.7}
+.faq .answer strong{color:#fafafa}
+.shortcuts{width:100%;border-collapse:collapse;margin:1rem 0}
+.shortcuts td,.shortcuts th{padding:8px 12px;border-bottom:1px solid #27272a;font-size:13px;text-align:left}
+.shortcuts th{color:#a1a1aa;font-weight:600}
+.shortcuts kbd{background:#27272a;padding:2px 8px;border-radius:4px;font-family:monospace;font-size:12px}
+footer{text-align:center;margin-top:3rem;color:#3f3f46;font-size:13px}
+footer a{color:#52525b}
+.lang-switch{position:fixed;top:16px;right:20px;display:flex;gap:8px}
+.lang-switch a{color:#52525b;text-decoration:none;font-size:13px;font-weight:600}
+.lang-switch a:hover{color:#fafafa}
+@media(max-width:600px){body{padding:1rem .75rem}.shortcuts td,.shortcuts th{padding:6px 8px;font-size:12px}h2{font-size:16px}}
+</style>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+</head>
+<body>
+
+<div class="lang-switch">
+  <a href="#" onclick="setLang('ko');return false">KO</a>
+  <a href="#" onclick="setLang('en');return false">EN</a>
+  <a href="#" onclick="setLang('ja');return false">JA</a>
+</div>
+
+<div class="wrap">
+  <header>
+    <a href="https://bluepad.work">&larr; BluePad</a>
+    <h1 id="t-title">Help & FAQ</h1>
+    <div class="sub" id="t-sub">Find answers to common questions</div>
+  </header>
+
+  <h2 id="t-getting-started">Getting Started</h2>
+
+  <details class="faq"><summary id="q1">How do I install BluePad?</summary>
+  <div class="answer" id="a1">Download the MSI file from <a href="https://bluepad.work" style="color:#155dfc">bluepad.work</a> and run it. If Windows SmartScreen shows a warning, click "More info" then "Run anyway". BluePad is safe — it's built on open-source technology.</div></details>
+
+  <details class="faq"><summary id="q2">What's the difference between Free and Pro?</summary>
+  <div class="answer" id="a2"><strong>Free:</strong> Up to 3 tabs, Classic + Dark theme, JSON/YAML editing, auto-save, find & replace.<br><strong>Pro ($10.99, one-time):</strong> Unlimited tabs, all 5 themes, focus mode, HTML/PDF export. 14-day free trial included.</div></details>
+
+  <details class="faq"><summary id="q3">How do I activate a Pro license?</summary>
+  <div class="answer" id="a3">Go to <strong>Settings &gt; Activate License</strong>, paste your license key (format: BP-XXXX-XXXX-XXXX-XXXX), and click Activate. You can use it on up to 3 devices.</div></details>
+
+  <h2 id="t-features">Features</h2>
+
+  <details class="faq"><summary id="q4">Which file formats are supported?</summary>
+  <div class="answer" id="a4"><strong>Markdown:</strong> .md, .markdown, .mdx (WYSIWYG editor)<br><strong>JSON:</strong> .json, .jsonc (syntax highlighting + auto-format)<br><strong>YAML:</strong> .yaml, .yml (syntax highlighting + auto-format)<br><strong>Text:</strong> .txt, .log, .env, .ini, .conf</div></details>
+
+  <details class="faq"><summary id="q5">How do I auto-format JSON/YAML?</summary>
+  <div class="answer" id="a5">Open a .json or .yaml file, then press <strong>Ctrl+Shift+F</strong> or go to Edit &gt; Format.</div></details>
+
+  <details class="faq"><summary id="q6">How do I use the dark theme?</summary>
+  <div class="answer" id="a6">Go to <strong>View &gt; Theme: Dark</strong>. Dark and Classic themes are free for all users.</div></details>
+
+  <details class="faq"><summary id="q7">Does BluePad save my work automatically?</summary>
+  <div class="answer" id="a7">Yes. Auto-save runs every 30 seconds for files that have been saved before. You can toggle it in File &gt; Auto Save. All settings, open tabs, and sidebar state persist when you restart the app.</div></details>
+
+  <h2 id="t-shortcuts">Keyboard Shortcuts</h2>
+  <table class="shortcuts">
+    <tr><th>Shortcut</th><th>Action</th></tr>
+    <tr><td><kbd>Ctrl+N</kbd></td><td>New file</td></tr>
+    <tr><td><kbd>Ctrl+O</kbd></td><td>Open file</td></tr>
+    <tr><td><kbd>Ctrl+S</kbd></td><td>Save</td></tr>
+    <tr><td><kbd>Ctrl+Shift+S</kbd></td><td>Save As</td></tr>
+    <tr><td><kbd>Ctrl+W</kbd></td><td>Close tab</td></tr>
+    <tr><td><kbd>Ctrl+Tab</kbd></td><td>Next tab</td></tr>
+    <tr><td><kbd>Ctrl+/</kbd></td><td>Toggle source mode</td></tr>
+    <tr><td><kbd>Ctrl+F</kbd></td><td>Find</td></tr>
+    <tr><td><kbd>Ctrl+H</kbd></td><td>Find & Replace</td></tr>
+    <tr><td><kbd>Ctrl+Shift+F</kbd></td><td>Format (JSON/YAML)</td></tr>
+    <tr><td><kbd>Ctrl+=/-/0</kbd></td><td>Font size</td></tr>
+    <tr><td><kbd>F11</kbd></td><td>Focus mode (Pro)</td></tr>
+  </table>
+
+  <h2 id="t-troubleshoot">Troubleshooting</h2>
+
+  <details class="faq"><summary id="q8">Windows SmartScreen blocks the installer</summary>
+  <div class="answer" id="a8">This happens because BluePad doesn't have a code signing certificate yet. Click <strong>"More info"</strong> then <strong>"Run anyway"</strong>. The app is safe.</div></details>
+
+  <details class="faq"><summary id="q9">How do I request a refund?</summary>
+  <div class="answer" id="a9">Go to <a href="/support/" style="color:#155dfc">bluepad.work/support</a> and select "Refund Request". Include your email and we'll process it within 1-2 business days.</div></details>
+
+  <details class="faq"><summary id="q10">How do I move my license to another computer?</summary>
+  <div class="answer" id="a10">On the old computer: Settings &gt; Activate License &gt; <strong>Deactivate</strong>. Then activate on the new computer with the same key. Max 3 devices.</div></details>
+
+  <footer>
+    <p>Still need help? <a href="/support/" style="color:#155dfc">Contact Support</a></p>
+    <p style="margin-top:8px">&copy; 2026 BRP &middot; <a href="https://bluepad.work">bluepad.work</a></p>
+  </footer>
+</div>
+
+<script>
+const i18n={
+  ko:{title:'도움말 & FAQ',sub:'자주 묻는 질문과 사용법',
+    'getting-started':'시작하기','features':'기능','shortcuts':'단축키','troubleshoot':'문제 해결',
+    q1:'어떻게 설치하나요?',a1:'<a href="https://bluepad.work" style="color:#155dfc">bluepad.work</a>에서 MSI 파일을 다운로드하고 실행하세요. Windows SmartScreen 경고가 나타나면 "추가 정보"를 클릭한 후 "실행"을 클릭하세요.',
+    q2:'Free와 Pro의 차이는?',a2:'<strong>Free:</strong> 탭 3개, Classic+Dark 테마, JSON/YAML 편집, 자동저장, 찾기/바꾸기.<br><strong>Pro ($10.99, 1회):</strong> 무제한 탭, 5개 테마, 집중모드, HTML/PDF 내보내기. 14일 무료 체험 포함.',
+    q3:'Pro 라이선스 어떻게 활성화하나요?',a3:'<strong>설정 &gt; 라이선스 등록</strong>에서 키를 입력하고 활성화를 클릭하세요. 최대 3대 기기에서 사용 가능.',
+    q4:'어떤 파일 형식을 지원하나요?',a4:'<strong>Markdown:</strong> .md, .markdown, .mdx<br><strong>JSON:</strong> .json (구문강조+자동정렬)<br><strong>YAML:</strong> .yaml, .yml<br><strong>텍스트:</strong> .txt, .log, .env, .ini',
+    q5:'JSON/YAML 자동 정렬은 어떻게?',a5:'.json 또는 .yaml 파일을 연 후 <strong>Ctrl+Shift+F</strong> 또는 편집 &gt; 자동 정렬.',
+    q6:'다크 테마 어떻게 사용하나요?',a6:'<strong>보기 &gt; 테마: Dark</strong>. Dark와 Classic 테마는 무료입니다.',
+    q7:'자동 저장 되나요?',a7:'네. 저장된 파일은 30초마다 자동 저장됩니다. 파일 &gt; 자동 저장으로 토글 가능. 탭, 사이드바, 설정은 앱 재시작 후에도 유지됩니다.',
+    q8:'SmartScreen이 설치를 차단해요',a8:'코드 서명이 아직 적용되지 않아 발생합니다. <strong>"추가 정보"</strong> → <strong>"실행"</strong>을 클릭하세요.',
+    q9:'환불은 어떻게 하나요?',a9:'<a href="/support/" style="color:#155dfc">bluepad.work/support</a>에서 "환불 요청"을 선택하세요. 1~2 영업일 내 처리됩니다.',
+    q10:'다른 컴퓨터로 라이선스를 옮기려면?',a10:'이전 컴퓨터: 설정 &gt; 라이선스 &gt; <strong>비활성화</strong>. 새 컴퓨터에서 같은 키로 활성화. 최대 3대.'
+  },
+  ja:{title:'ヘルプ & FAQ',sub:'よくある質問と使い方',
+    'getting-started':'はじめに','features':'機能','shortcuts':'ショートカット','troubleshoot':'トラブルシューティング',
+    q1:'インストール方法は？',a1:'<a href="https://bluepad.work" style="color:#155dfc">bluepad.work</a>からMSIファイルをダウンロードして実行してください。',
+    q2:'FreeとProの違いは？',a2:'<strong>Free:</strong> タブ3個、Classic+Darkテーマ。<br><strong>Pro ($10.99):</strong> 無制限タブ、5テーマ、集中モード。14日間無料トライアル。',
+    q3:'Proライセンスの有効化方法は？',a3:'<strong>設定 &gt; ライセンス登録</strong>でキーを入力して有効化をクリック。最大3台。',
+    q4:'対応ファイル形式は？',a4:'Markdown (.md), JSON (.json), YAML (.yaml), Text (.txt) など。',
+    q5:'JSON/YAMLの自動整形は？',a5:'<strong>Ctrl+Shift+F</strong>または編集 &gt; 整形。',
+    q6:'ダークテーマの使い方は？',a6:'<strong>表示 &gt; テーマ: Dark</strong>。無料で利用可能。',
+    q7:'自動保存されますか？',a7:'はい。30秒ごとに自動保存。設定は再起動後も維持。',
+    q8:'SmartScreenがブロックする',a8:'「詳細情報」→「実行」をクリックしてください。',
+    q9:'返金方法は？',a9:'<a href="/support/" style="color:#155dfc">サポートページ</a>から返金リクエストを送信。',
+    q10:'別のPCにライセンスを移すには？',a10:'旧PC: 設定 &gt; ライセンス &gt; 無効化。新PCで同じキーで有効化。'
+  }
+};
+function setLang(l){
+  const t=i18n[l];if(!t)return;
+  document.getElementById('t-title').textContent=t.title;
+  document.getElementById('t-sub').textContent=t.sub;
+  ['getting-started','features','shortcuts','troubleshoot'].forEach(k=>{const el=document.getElementById('t-'+k);if(el)el.textContent=t[k];});
+  for(let i=1;i<=10;i++){
+    const q=document.getElementById('q'+i),a=document.getElementById('a'+i);
+    if(q&&t['q'+i])q.textContent=t['q'+i];
+    if(a&&t['a'+i])a.innerHTML=t['a'+i];
+  }
+}
+const nav=(navigator.language||'').toLowerCase();
+if(nav.startsWith('ko'))setLang('ko');
+else if(nav.startsWith('ja'))setLang('ja');
+</script>
+</body>
+</html>

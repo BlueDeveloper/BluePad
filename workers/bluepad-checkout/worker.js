@@ -326,6 +326,11 @@ export default {
       return json({ error: "not_found" }, 404, request);
 
     } catch (err) {
+      try {
+        const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+        await env.DB.prepare("INSERT INTO error_logs (worker, path, error, ip) VALUES (?, ?, ?, ?)")
+          .bind("checkout", url.pathname, String(err).substring(0, 500), ip).run();
+      } catch {}
       return page(errorPage(
         "Internal Error",
         "처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
