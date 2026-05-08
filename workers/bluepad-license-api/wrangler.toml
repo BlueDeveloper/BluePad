@@ -8,4 +8,4 @@ database_name = "bluepad-licenses"
 database_id = "6e9776a9-f68a-45b9-b3f7-00cbd6bda70c"
 
 [triggers]
-crons = ["0 */6 * * *"]
+crons = ["0 */5 * * *"]

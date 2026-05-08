@@ -443,8 +443,9 @@ export default {
     }
   },
 
-  // 6시간마다 헬스체크 (Cron Trigger)
+  // 5시간마다 헬스체크 + 신규 유저 알림 (Cron Trigger)
   async scheduled(event, env) {
+    // ── 헬스체크 ──
     const endpoints = [
       { name: "download", url: "https://bluepad-download.blueehdwp.workers.dev/api/stats" },
       { name: "checkout", url: "https://bluepad-checkout.blueehdwp.workers.dev/" },
@@ -461,6 +462,53 @@ export default {
         await env.DB.prepare("INSERT INTO error_logs (worker, path, error, ip) VALUES (?, ?, ?, ?)")
           .bind("healthcheck", ep.name, String(err).substring(0, 500), "cron").run();
       }
+    }
+
+    // ── 신규 유저 알림 ──
+    // 마지막 체크 시각 (KV 없으므로 5시간 전 기준으로 계산)
+    const since = new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString().replace("T", " ").split(".")[0];
+
+    const newDownloads = await env.DB.prepare(
+      "SELECT COUNT(*) as cnt FROM downloads WHERE downloaded_at > ?"
+    ).bind(since).first();
+
+    const newTrials = await env.DB.prepare(
+      "SELECT COUNT(*) as cnt FROM trials WHERE created_at > ?"
+    ).bind(since).first();
+
+    const newPayments = await env.DB.prepare(
+      "SELECT COUNT(*) as cnt FROM payments WHERE created_at > ? AND status = 'completed'"
+    ).bind(since).first();
+
+    const dlCnt = newDownloads?.cnt || 0;
+    const trialCnt = newTrials?.cnt || 0;
+    const payCnt = newPayments?.cnt || 0;
+
+    if (dlCnt > 0 || trialCnt > 0 || payCnt > 0) {
+      const lines = [];
+      if (payCnt > 0) lines.push(`💰 신규 결제: ${payCnt}건`);
+      if (trialCnt > 0) lines.push(`🆕 신규 체험 사용자: ${trialCnt}명`);
+      if (dlCnt > 0) lines.push(`📥 신규 다운로드: ${dlCnt}건`);
+
+      const subject = payCnt > 0
+        ? `[BluePad] 🎉 결제 발생! ${payCnt}건`
+        : `[BluePad] 신규 활동 감지 (${lines.length}개 항목)`;
+
+      try {
+        await fetch("https://api.mailchannels.net/tx/v1/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            personalizations: [{ to: [{ email: "blueehdwp@gmail.com", name: "BluePad Admin" }] }],
+            from: { email: "noreply@bluepad.work", name: "BluePad 알림" },
+            subject,
+            content: [{
+              type: "text/plain",
+              value: `지난 5시간 내 신규 활동이 감지되었습니다.\n\n${lines.join("\n")}\n\n관리자 대시보드: https://bluepad.work/admin/`,
+            }],
+          }),
+        });
+      } catch {}
     }
   },
 };
