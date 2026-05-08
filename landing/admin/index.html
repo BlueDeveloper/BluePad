@@ -443,7 +443,17 @@ async function loadDownloads() {
     const tbody = document.getElementById('download-table');
     tbody.innerHTML = downloads.map(d => {
       const ua = d.user_agent || '';
-      let browser = ua.includes('Edg/') ? 'Edge' : ua.includes('Chrome/') ? 'Chrome' : ua.includes('Firefox/') ? 'Firefox' : ua.includes('curl') ? 'curl' : ua.includes('HeadlessChrome') ? 'Bot' : '기타';
+      let browser;
+      if (ua.includes('curl')) browser = 'curl';
+      else if (ua.includes('GPTBot')) browser = '🤖 GPTBot';
+      else if (ua.includes('ClaudeBot')) browser = '🤖 ClaudeBot';
+      else if (ua.includes('HeadlessChrome')) browser = '🤖 HeadlessChrome';
+      else if (ua.includes('bot') || ua.includes('Bot') || ua.includes('crawler') || ua.includes('spider')) browser = '🤖 Bot';
+      else {
+        const os = ua.includes('Windows') ? 'Win' : ua.includes('iPhone') ? 'iPhone' : ua.includes('Android') ? 'Android' : ua.includes('Linux') ? 'Linux' : ua.includes('Mac') ? 'Mac' : '?';
+        const br = ua.includes('Edg/') ? 'Edge' : ua.includes('Chrome/') ? 'Chrome' : ua.includes('Firefox/') ? 'Firefox' : ua.includes('Safari/') ? 'Safari' : '기타';
+        browser = os + '/' + br;
+      }
       return `<tr>
         <td style="font-family:monospace;font-size:.8rem">${esc(d.file_name)}</td>
         <td>${esc(d.country || '-')}</td>
