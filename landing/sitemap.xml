@@ -43,6 +43,12 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://bluepad.work/legal/refund.html</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://bluepad.work/blog/</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>weekly</changefreq>
