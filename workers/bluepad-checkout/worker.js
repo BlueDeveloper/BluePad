@@ -54,6 +54,38 @@ async function getPaddleCustomerEmail(customerId, apiKey) {
   return data.data?.email || null;
 }
 
+async function logWebhookEvent(env, type, summary) {
+  try {
+    await env.DB.prepare(
+      "INSERT INTO error_logs (worker, path, error, ip) VALUES (?, ?, ?, ?)"
+    ).bind("checkout", "webhook", `[${type}] ${summary}`, "paddle").run();
+  } catch (_) {}
+}
+
+async function handleAdjustment(env, data) {
+  const action = data.action;
+  if (action !== "refund" && action !== "chargeback") return;
+  const txnId = data.transaction_id;
+  if (!txnId) return;
+
+  const payment = await env.DB.prepare(
+    "SELECT license_key FROM payments WHERE paddle_txn_id = ?"
+  ).bind(txnId).first();
+  if (!payment?.license_key) return;
+
+  await env.DB.prepare(
+    "UPDATE licenses SET active = 0 WHERE license_key = ?"
+  ).bind(payment.license_key).run();
+  await env.DB.prepare(
+    "DELETE FROM activations WHERE license_key = ?"
+  ).bind(payment.license_key).run();
+  await env.DB.prepare(
+    "UPDATE payments SET refunded = 1, status = 'refunded', refunded_at = datetime('now') WHERE paddle_txn_id = ?"
+  ).bind(txnId).run();
+
+  await logWebhookEvent(env, "adjustment.created", `auto-refund: license=${payment.license_key} txn=${txnId} action=${action}`);
+}
+
 async function generateLicenseKey(env, email) {
   const url = env.LICENSE_API + "/api/admin/generate";
   const opts = {
@@ -233,9 +265,63 @@ export default {
         }
 
         const event = JSON.parse(rawBody);
+        const eventType = event.event_type;
 
-        // transaction.completed 이벤트만 처리
-        if (event.event_type !== "transaction.completed") {
+        // 비-completed 이벤트 핸들러들
+        if (eventType !== "transaction.completed") {
+          const d = event.data || {};
+
+          // 환불 자동 처리
+          if (eventType === "adjustment.created") {
+            await handleAdjustment(env, d);
+          } else if (eventType === "adjustment.updated") {
+            await logWebhookEvent(env, eventType, `adj=${d.id} action=${d.action} status=${d.status} txn=${d.transaction_id}`);
+          }
+
+          // 결제 관련 추적
+          else if (eventType === "transaction.canceled") {
+            await logWebhookEvent(env, eventType, `txn=${d.id} customer=${d.customer_id || "unknown"}`);
+          } else if (eventType === "transaction.payment_failed") {
+            await logWebhookEvent(env, eventType, `txn=${d.id} customer=${d.customer_id || "unknown"}`);
+          } else if (eventType === "transaction.updated") {
+            await logWebhookEvent(env, eventType, `txn=${d.id} status=${d.status}`);
+          } else if (eventType === "transaction.revised") {
+            await logWebhookEvent(env, eventType, `txn=${d.id} status=${d.status}`);
+          }
+
+          // 고객 정보 변경 (이메일 변경 추적)
+          else if (eventType === "customer.updated") {
+            await logWebhookEvent(env, eventType, `customer=${d.id} email=${d.email || ""}`);
+          }
+
+          // 정산
+          else if (eventType === "payout.created") {
+            await logWebhookEvent(env, eventType, `payout=${d.id} amount=${d.amount} ${d.currency_code}`);
+          } else if (eventType === "payout.paid") {
+            await logWebhookEvent(env, eventType, `payout=${d.id} amount=${d.amount} ${d.currency_code} paid_at=${d.paid_at}`);
+          }
+
+          // 🚨 보안 핵심 이벤트
+          else if (eventType === "api_key_exposure.created") {
+            await logWebhookEvent(env, eventType, `🚨🚨 SECURITY: API KEY EXPOSED: ${d.api_key_id || d.id || ""} — REVOKE IMMEDIATELY`);
+          } else if (eventType === "api_key.revoked") {
+            await logWebhookEvent(env, eventType, `🚨 SECURITY: API key revoked: ${d.name || ""} (${d.id || ""})`);
+          } else if (eventType === "api_key.expired") {
+            await logWebhookEvent(env, eventType, `🚨 API KEY EXPIRED: ${d.name || ""} (${d.id || ""})`);
+          } else if (eventType === "api_key.expiring") {
+            await logWebhookEvent(env, eventType, `⚠️ API key expiring: ${d.name || ""} (${d.id || ""}) expires_at=${d.expires_at || ""}`);
+          } else if (eventType === "api_key.created") {
+            await logWebhookEvent(env, eventType, `[SECURITY] new api_key: ${d.name || ""} (${d.id || ""})`);
+          } else if (eventType === "api_key.updated") {
+            await logWebhookEvent(env, eventType, `[SECURITY] api_key updated: ${d.name || ""} (${d.id || ""})`);
+          } else if (eventType === "client_token.created") {
+            await logWebhookEvent(env, eventType, `[SECURITY] new client_token: ${d.name || ""} (${d.id || ""})`);
+          } else if (eventType === "client_token.updated") {
+            await logWebhookEvent(env, eventType, `[SECURITY] client_token updated: ${d.name || ""} (${d.id || ""})`);
+          } else if (eventType === "client_token.revoked") {
+            await logWebhookEvent(env, eventType, `🚨 SECURITY: client_token revoked: ${d.name || ""} (${d.id || ""})`);
+          }
+
           return new Response("OK", { status: 200 });
         }
 

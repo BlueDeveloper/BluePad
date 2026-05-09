@@ -7,8 +7,8 @@ PRODUCT_PRICE = "10.99"
 PRODUCT_NAME = "BluePad Pro License"
 LICENSE_API = "https://bluepad-license-api.blueehdwp.workers.dev"
 # Paddle 대시보드에서 발급 후 채워넣기:
-PADDLE_CLIENT_TOKEN = ""   # Paddle > Developer Tools > Authentication > Client-side token
-PADDLE_PRICE_ID = ""       # Paddle > Catalog > Prices > pri_xxx
+PADDLE_CLIENT_TOKEN = "live_8383d7797ae892172350aa1a750"   # Paddle Client-side token (public, OK to expose)
+PADDLE_PRICE_ID = "pri_01kr6jpy938bgxqwj46xn7gs0d"  # BluePad Pro Lifetime License
 
 [[d1_databases]]
 binding = "DB"
