@@ -250,19 +250,25 @@ export default {
       }
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      // 관리자: 환불 처리 (NEW)
-      // 정확한 매칭: paypal_order_id → license_key
+      // 관리자: 환불 처리
+      // paypal_order_id 또는 paddle_txn_id 둘 다 지원
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       if (path === "/api/admin/refund" && request.method === "POST") {
         if (!await checkAdmin(request, env)) return json({ error: "unauthorized" }, 401, request);
 
-        const { paypal_order_id } = await request.json();
-        if (!paypal_order_id) return json({ error: "missing_paypal_order_id" }, 400, request);
+        const body = await request.json();
+        const orderId = body.paypal_order_id || body.paddle_txn_id || body.order_id;
+        if (!orderId) return json({ error: "missing_order_id" }, 400, request);
 
-        // 결제 기록에서 라이선스 키 조회
-        const payment = await env.DB.prepare(
+        // PayPal 또는 Paddle 결제 기록 조회
+        let payment = await env.DB.prepare(
           "SELECT * FROM payments WHERE paypal_order_id = ?"
-        ).bind(paypal_order_id).first();
+        ).bind(orderId).first();
+        if (!payment) {
+          payment = await env.DB.prepare(
+            "SELECT * FROM payments WHERE paddle_txn_id = ?"
+          ).bind(orderId).first();
+        }
 
         if (!payment) return json({ error: "payment_not_found" }, 404, request);
         if (payment.refunded) return json({ error: "already_refunded", payment }, 400, request);
@@ -278,17 +284,19 @@ export default {
           "DELETE FROM activations WHERE license_key = ?"
         ).bind(payment.license_key).run();
 
-        // 결제 기록에 환불 표시
+        // 결제 기록에 환불 표시 (id 기준으로 업데이트)
         await env.DB.prepare(
-          "UPDATE payments SET refunded = 1, status = 'refunded', refunded_at = datetime('now') WHERE paypal_order_id = ?"
-        ).bind(paypal_order_id).run();
+          "UPDATE payments SET refunded = 1, status = 'refunded', refunded_at = datetime('now') WHERE id = ?"
+        ).bind(payment.id).run();
 
+        const provider = payment.paddle_txn_id ? "Paddle" : "PayPal";
         return json({
           success: true,
           refunded_license: payment.license_key,
           email: payment.email,
           amount: payment.amount,
-          message: "라이선스가 비활성화되었습니다. PayPal에서 수동 환불을 진행해주세요."
+          provider,
+          message: `라이선스가 비활성화되었습니다. ${provider} 대시보드에서 수동 환불을 진행해주세요.`
         }, 200, request);
       }
 

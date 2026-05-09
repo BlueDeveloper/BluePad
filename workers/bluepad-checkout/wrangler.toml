@@ -3,17 +3,19 @@ main = "worker.js"
 compatibility_date = "2026-05-03"
 
 [vars]
-PAYPAL_API = "https://api-m.paypal.com"
 PRODUCT_PRICE = "10.99"
 PRODUCT_NAME = "BluePad Pro License"
 LICENSE_API = "https://bluepad-license-api.blueehdwp.workers.dev"
+# Paddle 대시보드에서 발급 후 채워넣기:
+PADDLE_CLIENT_TOKEN = ""   # Paddle > Developer Tools > Authentication > Client-side token
+PADDLE_PRICE_ID = ""       # Paddle > Catalog > Prices > pri_xxx
 
 [[d1_databases]]
 binding = "DB"
 database_name = "bluepad-licenses"
 database_id = "6e9776a9-f68a-45b9-b3f7-00cbd6bda70c"
 
-# Secrets (set via wrangler secret put):
-# PAYPAL_CLIENT_ID
-# PAYPAL_SECRET
-# LICENSE_ADMIN_SECRET
+# Secrets (wrangler secret put 으로 설정):
+# PADDLE_API_KEY          — Paddle > Developer Tools > Authentication > API key
+# PADDLE_WEBHOOK_SECRET   — Paddle > Notifications > Webhook 등록 후 발급
+# LICENSE_ADMIN_SECRET    — 기존 유지
