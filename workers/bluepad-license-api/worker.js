@@ -427,7 +427,7 @@ export default {
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       if (path === "/api/admin/downloads" && request.method === "GET") {
         if (!await checkAdmin(request, env)) return json({ error: "unauthorized" }, 401, request);
-        const downloads = await env.DB.prepare("SELECT * FROM downloads ORDER BY downloaded_at DESC LIMIT 100").all();
+        const downloads = await env.DB.prepare("SELECT * FROM downloads ORDER BY downloaded_at DESC LIMIT 500").all();
         return json({ downloads: downloads.results, total: downloads.results.length }, 200, request);
       }
 

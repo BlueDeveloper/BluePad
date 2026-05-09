@@ -56,7 +56,7 @@ tr:last-child td{border-bottom:none}
 <div id="login-screen" class="login-wrap">
   <div class="login-box">
     <h2>BluePad 관리자</h2>
-    <input type="password" id="password-input" placeholder="관리자 비밀번호" autocomplete="off">
+    <input type="password" id="password-input" placeholder="관리자 비밀번호" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="btn btn-primary btn-block" onclick="doLogin()">로그인</button>
     <p id="login-error" class="error hidden"></p>
   </div>
@@ -332,13 +332,7 @@ async function loadDashboard() {
 }
 
 async function loadStats() {
-  try {
-    const res = await fetch(DOWNLOAD_API + '/api/stats');
-    const data = await res.json();
-    document.getElementById('stat-downloads').textContent = (data.downloads || data.total_downloads || data.count || 0).toLocaleString();
-  } catch (e) {
-    document.getElementById('stat-downloads').textContent = '오류';
-  }
+  // stat-downloads는 loadDownloads()에서 갱신
 }
 
 let rawLicenses = [], rawTrials = [], rawDownloads = [], rawPayments = [], rawErrors = [], rawTickets = [];
@@ -587,6 +581,7 @@ async function loadDownloads() {
     const res = await fetch(LICENSE_API + '/api/admin/downloads', { headers: { 'Authorization': 'Bearer ' + token } });
     const data = await res.json();
     rawDownloads = data.downloads || [];
+    document.getElementById('stat-downloads').textContent = rawDownloads.length.toLocaleString();
     // 국가 드롭다운 동적 생성
     const countries = [...new Set(rawDownloads.map(d => d.country || '-'))].sort();
     const sel = document.getElementById('f-dl-country');
@@ -669,6 +664,7 @@ async function doGenerate() {
     });
     const data = await res.json();
     if (data.license_key) {
+      document.getElementById('gen-result').style.color = 'var(--success)';
       document.getElementById('gen-result').textContent = '✓ ' + data.license_key;
       loadLicenses();
     } else {
