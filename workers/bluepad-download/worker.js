@@ -8,7 +8,9 @@ function getCorsHeaders(request) {
     /^https?:\/\/127\.0\.0\.1(:\d+)?$/.test(origin) ||
     /^https:\/\/bluepad\.work$/.test(origin) ||
     /^https:\/\/www\.bluepad\.work$/.test(origin) ||
-    /^https?:\/\/tauri\.localhost$/.test(origin)
+    /^https?:\/\/tauri\.localhost$/.test(origin) ||
+    /^tauri:\/\/localhost$/.test(origin) ||
+    /^wry:\/\/localhost$/.test(origin)
   ) {
     allowOrigin = origin;
   } else {
