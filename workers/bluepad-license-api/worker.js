@@ -146,14 +146,21 @@ export default {
           return json({ valid: true, pro: true }, 200, request);
         }
 
-        if (activations.results.length >= license.max_devices) {
-          return json({ valid: false, error: "device_limit", max: license.max_devices, current: activations.results.length }, 403, request);
-        }
+        // Atomic INSERT with COUNT subquery — TOCTOU 방어
+        // 동시 활성화로 max_devices 초과되는 race 차단 (단일 SQL에서 COUNT+INSERT 원자적)
+        const insertRes = await env.DB.prepare(
+          `INSERT INTO activations (license_key, device_id, device_name)
+           SELECT ?, ?, ?
+           WHERE (SELECT COUNT(*) FROM activations WHERE license_key = ?) < ?`
+        ).bind(license_key, device_id, device_name || "Unknown", license_key, license.max_devices).run();
 
-        // Atomic insert with device limit check
-        await env.DB.prepare(
-          "INSERT INTO activations (license_key, device_id, device_name) VALUES (?, ?, ?)"
-        ).bind(license_key, device_id, device_name || "Unknown").run();
+        if (!insertRes.meta || insertRes.meta.changes === 0) {
+          // INSERT 미실행 = max_devices 초과 (또는 UNIQUE 충돌이지만 위에서 existing 체크함)
+          const cnt = await env.DB.prepare(
+            "SELECT COUNT(*) as c FROM activations WHERE license_key = ?"
+          ).bind(license_key).first();
+          return json({ valid: false, error: "device_limit", max: license.max_devices, current: cnt?.c || 0 }, 403, request);
+        }
         return json({ valid: true, pro: true }, 200, request);
       }
 

@@ -207,8 +207,12 @@ export function useLicense() {
       setHasLicense(false);
       return false;
     } catch {
-      // Offline fallback: if previously validated within grace period, keep pro status
+      // Offline fallback: if previously validated within grace period, keep pro status.
+      // 시계 역행(validated_at > now) 감지 시 거부 — grace period 무한 갱신 우회 방어.
+      const validatedAt = Number(localStorage.getItem(LICENSE_VALIDATED_AT_KEY) || "0");
+      const clockTampered = validatedAt > Date.now();
       if (
+        !clockTampered &&
         localStorage.getItem(LICENSE_STATUS_KEY) === "pro" &&
         localStorage.getItem(LICENSE_KEY) === trimmed &&
         isOfflineGracePeriodValid()

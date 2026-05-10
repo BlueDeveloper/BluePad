@@ -340,12 +340,22 @@ export default {
         const txn = event.data;
         const txnId = txn.id;
 
-        // 중복 처리 방지
+        // 결제 금액 검증 — 음수/0/NaN 거부 (악의적 webhook 또는 데이터 오류 방어)
+        const amountCents = parseInt(
+          String(txn.payments?.[0]?.amount || "0"),
+          10
+        );
+        if (!Number.isFinite(amountCents) || amountCents <= 0) {
+          await logWebhookEvent(env, "transaction.completed", `invalid amount: ${amountCents} for txn=${txnId}`, "warn");
+          return new Response("OK", { status: 200 });
+        }
+        const amountDecimal = (amountCents / 100).toFixed(2);
+        const currency = txn.currency_code || "USD";
+
+        // 빠른 중복 체크 (race window 좁힘 — 최종 보장은 paddle_txn_id UNIQUE)
         const existing = await env.DB.prepare(
           "SELECT id FROM payments WHERE paddle_txn_id = ?"
-        )
-          .bind(txnId)
-          .first();
+        ).bind(txnId).first();
         if (existing) {
           return new Response("OK", { status: 200 });
         }
@@ -360,20 +370,17 @@ export default {
           }
         } catch (_) {}
 
-        // 결제 금액 (Paddle은 센트 단위 문자열)
-        const amountCents = parseInt(
-          String(txn.payments?.[0]?.amount || "0"),
-          10
-        );
-        const amountDecimal = (amountCents / 100).toFixed(2);
-        const currency = txn.currency_code || "USD";
-
-        // 결제 기록 삽입 (customer_id도 보관 — API key 만료 시 수동 보정용)
-        await env.DB.prepare(
-          "INSERT INTO payments (paddle_txn_id, paddle_customer_id, email, amount, currency, status) VALUES (?, ?, ?, ?, ?, ?)"
+        // 결제 기록 삽입 — UNIQUE(paddle_txn_id) + INSERT OR IGNORE로 중복 webhook race 완전 방어
+        const insertRes = await env.DB.prepare(
+          "INSERT OR IGNORE INTO payments (paddle_txn_id, paddle_customer_id, email, amount, currency, status) VALUES (?, ?, ?, ?, ?, ?)"
         )
           .bind(txnId, txn.customer_id || null, email, amountDecimal, currency, "captured")
           .run();
+
+        // INSERT 무시됨 = 동시 webhook이 이미 처리 → 라이선스 발급 단계 skip (중복 발급 방지)
+        if (!insertRes.meta || insertRes.meta.changes === 0) {
+          return new Response("OK", { status: 200 });
+        }
 
         // 라이선스 생성
         try {
@@ -411,14 +418,14 @@ export default {
           .first();
 
         if (!payment) {
-          // 웹훅 아직 미도착 — 최대 5회 재시도 (3초 간격)
-          if (retry < 5) {
+          // 웹훅 아직 미도착 — 최대 10회 재시도 (3초 간격, 총 30초)
+          if (retry < 10) {
             return page(processingPage(txnId, retry));
           }
           return page(
             errorPage(
               "처리 지연",
-              "결제는 완료되었으나 라이선스 발급에 시간이 걸리고 있습니다. 잠시 후 이 페이지를 새로고침하거나 아래 이메일로 문의해주세요.",
+              "결제는 완료되었으나 라이선스 발급이 지연되고 있습니다. 1분 후 이 페이지를 새로고침하시면 키가 표시됩니다. 5분 이상 지연되면 결제번호와 함께 문의해주세요.",
               txnId
             )
           );
