@@ -64,7 +64,9 @@ jobs:
         run: npm ci
 
       - name: Build Tauri (Linux)
-        run: npm run tauri build -- --bundles deb,rpm,appimage
+        # Linux는 자동 업데이트 미사용 (.deb/.rpm/.AppImage는 패키지 매니저 또는 사용자 수동 업데이트)
+        # → createUpdaterArtifacts=false로 서명 키 요구 회피
+        run: npm run tauri build -- --bundles deb,rpm,appimage --config '{"bundle":{"createUpdaterArtifacts":false}}'
 
       - name: List build artifacts
         run: |
