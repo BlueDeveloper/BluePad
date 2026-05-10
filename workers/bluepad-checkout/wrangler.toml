@@ -2,6 +2,14 @@ name = "bluepad-checkout"
 main = "worker.js"
 compatibility_date = "2026-05-03"
 
+# Custom domain (Paddle 승인 도메인 bluepad.work 활용)
+routes = [
+  { pattern = "checkout.bluepad.work", custom_domain = true }
+]
+
+# 기존 workers.dev URL도 유지 (webhook 호환성, 점진적 마이그레이션용)
+workers_dev = true
+
 [vars]
 PRODUCT_PRICE = "10.99"
 PRODUCT_NAME = "BluePad Pro License"

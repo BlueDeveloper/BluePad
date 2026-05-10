@@ -47,7 +47,7 @@ export function LicenseDialog({ visible, isPro, isTrial, licenseKey: currentKey,
           </div>
           {(!isPro || isTrial) && (
             <>
-              <button className="license-activate-btn" style={{ width: "100%", marginBottom: "12px" }} onClick={() => { import("@tauri-apps/plugin-shell").then(m => m.open(import.meta.env.DEV ? "https://bluepad-checkout-sandbox.blueehdwp.workers.dev/" : "https://bluepad-checkout.blueehdwp.workers.dev/")).catch(() => window.open(import.meta.env.DEV ? "https://bluepad-checkout-sandbox.blueehdwp.workers.dev/" : "https://bluepad-checkout.blueehdwp.workers.dev/", "_blank")); }}>
+              <button className="license-activate-btn" style={{ width: "100%", marginBottom: "12px" }} onClick={() => { import("@tauri-apps/plugin-shell").then(m => m.open(import.meta.env.DEV ? "https://bluepad-checkout-sandbox.blueehdwp.workers.dev/" : "https://checkout.bluepad.work/")).catch(() => window.open(import.meta.env.DEV ? "https://bluepad-checkout-sandbox.blueehdwp.workers.dev/" : "https://checkout.bluepad.work/", "_blank")); }}>
                 {t("trial.buyNow")}
               </button>
               <div className="license-input-group">

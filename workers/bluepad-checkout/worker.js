@@ -164,7 +164,7 @@ function openCheckout() {
   Paddle.Checkout.open({
     items: [{ priceId: '${priceId}', quantity: 1 }],
     settings: {
-      successUrl: 'https://bluepad-checkout.blueehdwp.workers.dev/success',
+      successUrl: 'https://checkout.bluepad.work/success',
       displayMode: 'overlay',
     },
     eventCallback: function(e) {
