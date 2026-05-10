@@ -24,7 +24,7 @@
 |--------|-----|------|
 | bluepad-license-api | https://bluepad-license-api.blueehdwp.workers.dev | 라이선스 검증/생성/비활성화 |
 | bluepad-download | https://bluepad-download.blueehdwp.workers.dev | MSI 파일 서빙 + 다운로드 카운트 |
-| bluepad-checkout | https://checkout.bluepad.work (custom) / https://bluepad-checkout.blueehdwp.workers.dev | Paddle 결제 → 라이선스 키 발급 |
+| bluepad-checkout | https://checkout.bluepad.work | Paddle 결제 → 라이선스 키 발급 |
 
 ### Cloudflare 리소스
 | 리소스 | ID/이름 |
@@ -241,7 +241,8 @@ GET  /api/admin/licenses      — 전체 라이선스 목록
 GET  /api/admin/trials        — 체험 사용자 목록
 GET  /api/admin/payments      — 결제 내역
 POST /api/admin/refund        — 환불 처리 (라이선스 비활성화)
-GET  /api/admin/errors        — 에러 로그
+GET  /api/admin/errors        — 에러 로그 (실제 worker 에러)
+GET  /api/admin/webhook-events — Paddle webhook 이벤트 audit (?severity=info|warn|critical&type=&limit=)
 GET  /api/admin/downloads     — 다운로드 내역
 POST /api/admin/trial/adjust  — 트라이얼 일수 조정
 POST /api/admin/reply         — 티켓 이메일 답변

@@ -431,6 +431,28 @@ export default {
       }
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // 관리자: Webhook 이벤트 로그 (severity 필터 지원)
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      if (path === "/api/admin/webhook-events" && request.method === "GET") {
+        if (!await checkAdmin(request, env)) return json({ error: "unauthorized" }, 401, request);
+        const url2 = new URL(request.url);
+        const severity = url2.searchParams.get("severity");
+        const eventType = url2.searchParams.get("type");
+        const limit = Math.min(parseInt(url2.searchParams.get("limit") || "200", 10), 1000);
+
+        const conds = [];
+        const binds = [];
+        if (severity) { conds.push("severity = ?"); binds.push(severity); }
+        if (eventType) { conds.push("event_type = ?"); binds.push(eventType); }
+        const where = conds.length ? "WHERE " + conds.join(" AND ") : "";
+        const sql = `SELECT * FROM webhook_events ${where} ORDER BY created_at DESC LIMIT ?`;
+        binds.push(limit);
+
+        const events = await env.DB.prepare(sql).bind(...binds).all();
+        return json({ events: events.results, total: events.results.length }, 200, request);
+      }
+
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       // 관리자: 다운로드 내역 조회
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       if (path === "/api/admin/downloads" && request.method === "GET") {
