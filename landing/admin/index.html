@@ -45,11 +45,18 @@ tr:last-child td{border-bottom:none}
 .filter-bar label input[type=checkbox]{accent-color:var(--accent);width:14px;height:14px;cursor:pointer}
 .filter-count{margin-left:auto;font-size:.75rem;color:var(--muted)}
 .table-wrap.has-filter{border-radius:0 0 12px 12px}
+.admin-nav{position:sticky;top:0;z-index:50;background:rgba(9,9,11,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);margin:0 -1.5rem 1.5rem;padding:.65rem 1.5rem;border-bottom:1px solid var(--border);display:flex;gap:.25rem;overflow-x:auto;scrollbar-width:thin}
+.admin-nav a{flex-shrink:0;padding:.4rem .85rem;border-radius:8px;font-size:.825rem;color:var(--muted);text-decoration:none;white-space:nowrap;font-weight:500;transition:background .15s,color .15s}
+.admin-nav a:hover{background:var(--surface);color:var(--text)}
+.admin-nav a.active{background:var(--accent);color:#fff}
+h2[id],div[data-section]{scroll-margin-top:64px}
 @media(max-width:640px){
   body{padding:1rem}
   .card-value{font-size:1.5rem}
   th,td{padding:.5rem .6rem;font-size:.75rem}
   .filter-bar{gap:.4rem}
+  .admin-nav{margin:0 -1rem 1rem;padding:.5rem 1rem}
+  .admin-nav a{padding:.35rem .7rem;font-size:.75rem}
 }
 </style>
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
@@ -105,7 +112,17 @@ tr:last-child td{border-bottom:none}
     </div>
   </div>
 
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+  <nav class="admin-nav" id="admin-nav">
+    <a href="#sec-licenses">라이선스</a>
+    <a href="#sec-trials">체험</a>
+    <a href="#sec-downloads">다운로드</a>
+    <a href="#sec-payments">결제</a>
+    <a href="#sec-webhooks">Webhook</a>
+    <a href="#sec-errors">에러</a>
+    <a href="#sec-tickets">문의</a>
+  </nav>
+
+  <div id="sec-licenses" data-section style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
     <h2 style="font-size:1.1rem">라이선스</h2>
     <button class="btn btn-primary" onclick="openGenerateModal()" style="font-size:.8rem;padding:.4rem .9rem">+ 수동 생성</button>
   </div>
@@ -152,7 +169,7 @@ tr:last-child td{border-bottom:none}
     </table>
   </div>
 
-  <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">체험 사용자</h2>
+  <h2 id="sec-trials" style="font-size:1.1rem;margin:1.5rem 0 1rem">체험 사용자</h2>
   <div class="filter-bar">
     <select id="f-trial-status" onchange="renderTrials()">
       <option value="">전체 상태</option>
@@ -177,7 +194,7 @@ tr:last-child td{border-bottom:none}
     </table>
   </div>
 
-  <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">다운로드 내역</h2>
+  <h2 id="sec-downloads" style="font-size:1.1rem;margin:1.5rem 0 1rem">다운로드 내역</h2>
   <div class="filter-bar">
     <label><input type="checkbox" id="f-dl-nobot" onchange="renderDownloads()"> 봇 제외</label>
     <select id="f-dl-country" onchange="renderDownloads()"><option value="">전체 국가</option></select>
@@ -199,7 +216,7 @@ tr:last-child td{border-bottom:none}
     </table>
   </div>
 
-  <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">결제 내역</h2>
+  <h2 id="sec-payments" style="font-size:1.1rem;margin:1.5rem 0 1rem">결제 내역</h2>
   <div class="filter-bar">
     <select id="f-pay-status" onchange="renderPayments()">
       <option value="">전체 상태</option>
@@ -231,7 +248,7 @@ tr:last-child td{border-bottom:none}
     </table>
   </div>
 
-  <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">Webhook 이벤트 (Paddle audit)</h2>
+  <h2 id="sec-webhooks" style="font-size:1.1rem;margin:1.5rem 0 1rem">Webhook 이벤트 (Paddle audit)</h2>
   <div class="filter-bar">
     <select id="f-wh-severity" onchange="renderWebhookEvents()">
       <option value="">전체 심각도</option>
@@ -256,7 +273,7 @@ tr:last-child td{border-bottom:none}
     </table>
   </div>
 
-  <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">에러 로그</h2>
+  <h2 id="sec-errors" style="font-size:1.1rem;margin:1.5rem 0 1rem">에러 로그</h2>
   <div class="filter-bar">
     <select id="f-err-worker" onchange="renderErrors()"><option value="">전체 Worker</option></select>
     <span class="filter-count" id="f-err-count"></span>
@@ -276,7 +293,7 @@ tr:last-child td{border-bottom:none}
     </table>
   </div>
 
-  <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">문의 티켓</h2>
+  <h2 id="sec-tickets" style="font-size:1.1rem;margin:1.5rem 0 1rem">문의 티켓</h2>
   <div class="filter-bar">
     <select id="f-ticket-type" onchange="renderTickets()">
       <option value="">전체 유형</option>
@@ -345,10 +362,29 @@ async function checkAuth() {
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('dashboard').classList.remove('hidden');
     loadDashboard();
+    initScrollSpy();
   } catch (e) {
     document.getElementById('login-error').textContent = '연결 오류';
     document.getElementById('login-error').classList.remove('hidden');
   }
+}
+
+function initScrollSpy() {
+  const links = document.querySelectorAll('#admin-nav a');
+  const targets = Array.from(links).map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  if (!targets.length || !('IntersectionObserver' in window)) return;
+  const linkByHash = {};
+  links.forEach(a => { linkByHash[a.getAttribute('href').slice(1)] = a; });
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(a => a.classList.remove('active'));
+        const a = linkByHash[e.target.id];
+        if (a) a.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-65px 0px -70% 0px' });
+  targets.forEach(t => io.observe(t));
 }
 
 async function loadDashboard() {
@@ -806,6 +842,7 @@ const LOCKOUT_MS = 30000;
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('dashboard').classList.remove('hidden');
       loadDashboard();
+      initScrollSpy();
     } catch (e) {
       document.getElementById('login-error').textContent = '연결 오류';
       document.getElementById('login-error').classList.remove('hidden');
