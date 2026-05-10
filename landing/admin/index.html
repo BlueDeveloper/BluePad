@@ -31,6 +31,9 @@ tr:last-child td{border-bottom:none}
 .badge{display:inline-block;padding:.2rem .6rem;border-radius:9999px;font-size:.7rem;font-weight:600}
 .badge-active{background:rgba(34,197,94,.15);color:var(--success)}
 .badge-inactive{background:rgba(239,68,68,.15);color:var(--danger)}
+.badge-info{background:rgba(161,161,170,.15);color:var(--muted)}
+.badge-warn{background:rgba(251,146,60,.15);color:#fb923c}
+.badge-critical{background:rgba(239,68,68,.2);color:var(--danger);font-weight:700}
 .hidden{display:none}
 .error{color:var(--danger);font-size:.875rem;margin-top:.5rem}
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
@@ -226,6 +229,31 @@ tr:last-child td{border-bottom:none}
     </table>
   </div>
 
+  <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">Webhook 이벤트 (Paddle audit)</h2>
+  <div class="filter-bar">
+    <select id="f-wh-severity" onchange="renderWebhookEvents()">
+      <option value="">전체 심각도</option>
+      <option value="critical">critical</option>
+      <option value="warn">warn</option>
+      <option value="info">info</option>
+    </select>
+    <select id="f-wh-type" onchange="renderWebhookEvents()"><option value="">전체 이벤트</option></select>
+    <span class="filter-count" id="f-wh-count"></span>
+  </div>
+  <div class="table-wrap has-filter">
+    <table>
+      <thead>
+        <tr>
+          <th>심각도</th>
+          <th>이벤트</th>
+          <th>내용</th>
+          <th>시간</th>
+        </tr>
+      </thead>
+      <tbody id="webhook-table"></tbody>
+    </table>
+  </div>
+
   <h2 style="font-size:1.1rem;margin:1.5rem 0 1rem">에러 로그</h2>
   <div class="filter-bar">
     <select id="f-err-worker" onchange="renderErrors()"><option value="">전체 Worker</option></select>
@@ -327,6 +355,7 @@ async function loadDashboard() {
   loadTrials();
   loadTickets();
   loadPayments();
+  loadWebhookEvents();
   loadErrors();
   loadDownloads();
 }
@@ -335,7 +364,7 @@ async function loadStats() {
   // stat-downloads는 loadDownloads()에서 갱신
 }
 
-let rawLicenses = [], rawTrials = [], rawDownloads = [], rawPayments = [], rawErrors = [], rawTickets = [];
+let rawLicenses = [], rawTrials = [], rawDownloads = [], rawPayments = [], rawErrors = [], rawTickets = [], rawWebhookEvents = [];
 
 function parseUA(ua) {
   ua = ua || '';
@@ -639,6 +668,41 @@ function renderErrors() {
     <td>${esc(e.ip)}</td>
     <td>${formatDate(e.created_at)}</td>
   </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted)">에러 없음</td></tr>';
+}
+
+async function loadWebhookEvents() {
+  const token = getToken();
+  try {
+    const res = await fetch(LICENSE_API + '/api/admin/webhook-events?limit=300', { headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await res.json();
+    rawWebhookEvents = data.events || [];
+    const types = [...new Set(rawWebhookEvents.map(e => e.event_type))].sort();
+    const sel = document.getElementById('f-wh-type');
+    sel.innerHTML = '<option value="">전체 이벤트</option>' + types.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
+    renderWebhookEvents();
+  } catch (e) {
+    document.getElementById('webhook-table').innerHTML = '<tr><td colspan="4">불러오기 실패</td></tr>';
+  }
+}
+
+function renderWebhookEvents() {
+  const sevFilter = document.getElementById('f-wh-severity').value;
+  const typeFilter = document.getElementById('f-wh-type').value;
+  let list = rawWebhookEvents.filter(e =>
+    (!sevFilter || e.severity === sevFilter) &&
+    (!typeFilter || e.event_type === typeFilter)
+  );
+  document.getElementById('f-wh-count').textContent = list.length + ' / ' + rawWebhookEvents.length + '건';
+  document.getElementById('webhook-table').innerHTML = list.map(e => {
+    const sev = e.severity || 'info';
+    const badgeClass = sev === 'critical' ? 'badge-critical' : (sev === 'warn' ? 'badge-warn' : 'badge-info');
+    return `<tr>
+      <td><span class="badge ${badgeClass}">${esc(sev)}</span></td>
+      <td style="font-family:monospace;font-size:.8rem">${esc(e.event_type)}</td>
+      <td style="max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.75rem;color:var(--muted)">${esc(e.summary || '')}</td>
+      <td>${formatDate(e.created_at)}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--muted)">이벤트 없음</td></tr>';
 }
 
 function openGenerateModal() {
