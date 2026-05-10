@@ -676,7 +676,7 @@ ${editorEl.innerHTML}
           title={i18n.t("license.upgradeTitle")}
           message={license.trialDaysLeft > 0 ? i18n.t("trial.expiringSoon").replace("{days}", String(license.trialDaysLeft)) : i18n.t("trial.expired")}
           actionLabel={i18n.t("trial.buyNow")}
-          onAction={() => openExternal(import.meta.env.DEV ? "https://bluepad-checkout-sandbox.blueehdwp.workers.dev/" : "https://checkout.bluepad.work/")}
+          onAction={() => openExternal(import.meta.env.DEV ? "https://bluepad-checkout-sandbox.blueehdwp.workers.dev/" : "https://bluepad.work/buy")}
           onClose={() => setTrialExpiredVisible(false)}
         />
       </div>

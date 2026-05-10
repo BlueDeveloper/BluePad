@@ -24,7 +24,7 @@
 |--------|-----|------|
 | bluepad-license-api | https://bluepad-license-api.blueehdwp.workers.dev | 라이선스 검증/생성/비활성화 |
 | bluepad-download | https://bluepad-download.blueehdwp.workers.dev | MSI 파일 서빙 + 다운로드 카운트 |
-| bluepad-checkout | https://checkout.bluepad.work | Paddle 결제 → 라이선스 키 발급 |
+| bluepad-checkout | https://bluepad.work/buy (route, /buy*만) | Paddle 결제 → 라이선스 키 발급 |
 
 ### Cloudflare 리소스
 | 리소스 | ID/이름 |

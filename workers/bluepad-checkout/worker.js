@@ -174,7 +174,7 @@ function openCheckout() {
   Paddle.Checkout.open({
     items: [{ priceId: '${priceId}', quantity: 1 }],
     settings: {
-      successUrl: 'https://checkout.bluepad.work/success',
+      successUrl: 'https://bluepad.work/buy/success',
       displayMode: 'overlay',
     },
     eventCallback: function(e) {
@@ -252,7 +252,9 @@ const CANCEL_PAGE = `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    const path = url.pathname;
+    // bluepad.work/buy* route — /buy prefix 제거하여 내부 라우팅 단순화
+    // /buy → /, /buy/success → /success, /buy/paddle-webhook → /paddle-webhook
+    const path = url.pathname.replace(/^\/buy(\/|$)/, "/");
 
     try {
       // 구매 페이지

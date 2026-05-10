@@ -2,9 +2,11 @@ name = "bluepad-checkout"
 main = "worker.js"
 compatibility_date = "2026-05-03"
 
-# Custom domain (Paddle 승인 도메인 bluepad.work 활용)
+# 루트 도메인 경로로 운영 (bluepad.work는 이미 Paddle Approved)
+# 서브도메인 별도 승인 대기 우회 + URL 일관성
 routes = [
-  { pattern = "checkout.bluepad.work", custom_domain = true }
+  { pattern = "bluepad.work/buy", zone_name = "bluepad.work" },
+  { pattern = "bluepad.work/buy/*", zone_name = "bluepad.work" }
 ]
 
 workers_dev = false
