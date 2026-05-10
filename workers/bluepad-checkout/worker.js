@@ -178,6 +178,17 @@ function openCheckout() {
       displayMode: 'overlay',
     },
     eventCallback: function(e) {
+      // checkout.completed 시 명시적으로 _ptxn 추가하여 redirect
+      // (Paddle.js의 자동 redirect는 일부 결제 수단에서 query 누락되는 케이스 있음)
+      if (e.name === 'checkout.completed') {
+        var d = e.data || {};
+        var txnId = d.transaction_id || (d.transaction && d.transaction.id) || '';
+        if (txnId) {
+          window.location.replace('https://bluepad.work/buy/success?_ptxn=' + encodeURIComponent(txnId));
+        } else {
+          window.location.replace('https://bluepad.work/buy/success');
+        }
+      }
       if (e.name === 'checkout.closed') {
         document.getElementById('buyBtn').disabled = false;
       }
@@ -225,6 +236,60 @@ function processingPage(txnId, retry) {
   <h1>결제 처리 중...</h1>
   <p>잠시만 기다려주세요.<br>3초 후 자동으로 확인됩니다.</p>
 </div></body></html>`;
+}
+
+function lookupPage() {
+  return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>BluePad - 라이선스 조회</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,system-ui,sans-serif;background:#09090b;color:#fafafa;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}.card{background:#18181b;border:1px solid #27272a;border-radius:16px;padding:40px;max-width:480px;width:100%;text-align:center}.icon{font-size:40px;margin-bottom:12px}h1{font-size:22px;font-weight:700;margin-bottom:8px}.sub{color:#a1a1aa;font-size:13.5px;margin-bottom:24px;line-height:1.6}form{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}input{padding:12px 14px;background:#09090b;border:1px solid #27272a;border-radius:9px;color:#fafafa;font-size:14px}input:focus{outline:none;border-color:#155dfc}button{padding:12px;background:#155dfc;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer}button:hover{background:#3b7dff}button:disabled{background:#27272a;cursor:not-allowed}.result{margin:16px 0;padding:16px;background:#09090b;border:1px solid #27272a;border-radius:9px;font-family:monospace;font-size:18px;color:#22c55e;word-break:break-all;display:none}.result.show{display:block}.msg{color:#a1a1aa;font-size:13px;margin-top:12px}.help{margin-top:20px;font-size:12px;color:#52525b;line-height:1.7}.help a{color:#a1a1aa}</style></head>
+<body><div class="card">
+  <div class="icon">&#128270;</div>
+  <h1>라이선스 키 조회</h1>
+  <div class="sub">결제 후 자동 redirect가 누락된 경우 이메일로 키를 조회하실 수 있습니다.<br>최근 10분 이내 결제만 조회됩니다.</div>
+  <form id="lookupForm" onsubmit="return doLookup(event)">
+    <input type="email" id="emailInput" placeholder="결제 시 입력한 이메일" required autocomplete="email">
+    <button type="submit" id="lookupBtn">조회</button>
+  </form>
+  <div class="result" id="result"></div>
+  <div class="msg" id="msg"></div>
+  <div class="help">
+    조회되지 않으면 결제 시각과 결제 이메일을 <a href="mailto:blueehdwp@gmail.com">blueehdwp@gmail.com</a>으로 보내주세요.<br>
+    <a href="https://bluepad.work">&larr; BluePad로 돌아가기</a>
+  </div>
+</div>
+<script>
+async function doLookup(e) {
+  e.preventDefault();
+  var email = document.getElementById('emailInput').value.trim();
+  var btn = document.getElementById('lookupBtn');
+  var result = document.getElementById('result');
+  var msg = document.getElementById('msg');
+  result.classList.remove('show');
+  msg.textContent = '';
+  btn.disabled = true;
+  btn.textContent = '조회 중...';
+  try {
+    var res = await fetch('/buy/lookup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    });
+    var data = await res.json();
+    if (data.found) {
+      result.textContent = data.license_key;
+      result.classList.add('show');
+      msg.textContent = '키를 BluePad 앱에 입력하여 활성화하세요.';
+    } else {
+      msg.textContent = '최근 10분 이내 결제 기록이 없습니다. 이메일을 다시 확인하거나 관리자에게 문의해주세요.';
+    }
+  } catch (err) {
+    msg.textContent = '조회 실패. 잠시 후 다시 시도해주세요.';
+  }
+  btn.disabled = false;
+  btn.textContent = '조회';
+  return false;
+}
+</script>
+</body></html>`;
 }
 
 function errorPage(title, message, ref) {
@@ -410,13 +475,48 @@ export default {
         return new Response("OK", { status: 200 });
       }
 
+      // 라이선스 키 자가조회 (success 페이지 _ptxn 누락 fallback)
+      // 보안: 최근 10분 이내 결제만 조회 가능 (이메일 brute force 윈도우 좁힘)
+      if (path === "/lookup" && request.method === "POST") {
+        const body = await request.json().catch(() => ({}));
+        const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          return new Response(JSON.stringify({ found: false, error: "invalid_email" }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        const payment = await env.DB.prepare(
+          "SELECT license_key, paddle_txn_id FROM payments WHERE LOWER(email) = ? AND license_key IS NOT NULL AND status = 'completed' AND created_at > datetime('now', '-10 minutes') ORDER BY id DESC LIMIT 1"
+        ).bind(email).first();
+
+        await logWebhookEvent(env, "lookup", `email=${email} found=${!!payment}`, payment ? "info" : "warn");
+
+        if (!payment) {
+          return new Response(JSON.stringify({ found: false }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+        return new Response(JSON.stringify({
+          found: true,
+          license_key: payment.license_key,
+          txn_id: payment.paddle_txn_id,
+        }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
       // 결제 완료 콜백 (Paddle이 ?_ptxn=TXN_ID 추가)
       if (path === "/success") {
         const txnId = url.searchParams.get("_ptxn");
         const retry = parseInt(url.searchParams.get("retry") || "0", 10);
 
+        // _ptxn 없을 때: 자동 redirect 누락 케이스 → 이메일 조회 폼 표시
         if (!txnId) {
-          return page(errorPage("잘못된 요청", "결제 정보를 찾을 수 없습니다."), 400);
+          return page(lookupPage());
         }
 
         const payment = await env.DB.prepare(
