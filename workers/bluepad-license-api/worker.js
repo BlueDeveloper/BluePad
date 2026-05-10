@@ -204,10 +204,18 @@ export default {
       if (path === "/api/admin/licenses" && request.method === "GET") {
         if (!await checkAdmin(request, env)) return json({ error: "unauthorized" }, 401, request);
 
-        const licenses = await env.DB.prepare(
-          "SELECT l.*, COUNT(a.id) as device_count FROM licenses l LEFT JOIN activations a ON l.license_key = a.license_key GROUP BY l.id ORDER BY l.created_at DESC"
-        ).all();
-        return json({ licenses: licenses.results }, 200, request);
+        // pagination — ?limit=&offset= (default 500)
+        const url2 = new URL(request.url);
+        const limit = Math.min(parseInt(url2.searchParams.get("limit") || "500", 10), 1000);
+        const offset = Math.max(parseInt(url2.searchParams.get("offset") || "0", 10), 0);
+
+        const [licenses, total] = await Promise.all([
+          env.DB.prepare(
+            "SELECT l.*, COUNT(a.id) as device_count FROM licenses l LEFT JOIN activations a ON l.license_key = a.license_key GROUP BY l.id ORDER BY l.created_at DESC LIMIT ? OFFSET ?"
+          ).bind(limit, offset).all(),
+          env.DB.prepare("SELECT COUNT(*) as c FROM licenses").first(),
+        ]);
+        return json({ licenses: licenses.results, total: total?.c || 0, limit, offset }, 200, request);
       }
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -382,7 +390,13 @@ export default {
           if (device_name) {
             await env.DB.prepare("UPDATE trials SET device_name = ? WHERE device_id = ?").bind(device_name, device_id).run();
           }
-          const startMs = new Date(existing.trial_start + "Z").getTime();
+          // SQLite "YYYY-MM-DD HH:MM:SS"는 비표준 — 일부 JS 엔진에서 NaN 가능
+          // 표준 ISO 8601("YYYY-MM-DDTHH:MM:SSZ")로 변환 후 파싱
+          const isoStart = String(existing.trial_start).replace(" ", "T") + "Z";
+          const startMs = new Date(isoStart).getTime();
+          if (!Number.isFinite(startMs)) {
+            return json({ trial_start: existing.trial_start, days_left: 0, expired: true, error: "invalid_trial_start" }, 200, request);
+          }
           const elapsed = Date.now() - startMs;
           const daysLeft = Math.ceil((14 * 24 * 60 * 60 * 1000 - elapsed) / (24 * 60 * 60 * 1000));
           return json({ trial_start: existing.trial_start, days_left: Math.max(daysLeft, 0), expired: daysLeft <= 0 }, 200, request);
