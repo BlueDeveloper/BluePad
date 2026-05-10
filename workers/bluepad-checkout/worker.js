@@ -66,8 +66,8 @@ async function handleAdjustment(env, data) {
   const action = data.action;
   const txnId = data.transaction_id;
   const adjId = data.id || "";
+  const adjStatus = data.status || "";
 
-  // refund / chargeback: 라이선스 자동 비활성화
   if (action === "refund" || action === "chargeback") {
     if (!txnId) {
       await logWebhookEvent(env, "adjustment.created", `${action} without transaction_id (adj=${adjId})`, "warn");
@@ -81,19 +81,72 @@ async function handleAdjustment(env, data) {
       return;
     }
 
+    // 라이선스는 보수적으로 즉시 비활성화 (rejected 시 adjustment.updated에서 복구)
     await env.DB.prepare("UPDATE licenses SET active = 0 WHERE license_key = ?").bind(payment.license_key).run();
     await env.DB.prepare("DELETE FROM activations WHERE license_key = ?").bind(payment.license_key).run();
-    await env.DB.prepare(
-      "UPDATE payments SET refunded = 1, status = 'refunded', refunded_at = datetime('now') WHERE paddle_txn_id = ?"
-    ).bind(txnId).run();
 
-    await logWebhookEvent(env, "adjustment.created", `auto-deactivate: license=${payment.license_key} txn=${txnId} action=${action}`, "warn");
+    // 결제 상태:
+    //   refund(pending_approval) → 'refund_pending' (Paddle 검토 대기, 자금 미이동)
+    //   chargeback(자동 created)   → 'refunded' (카드사 분쟁이라 이미 사실상 환불 확정)
+    //   refund 즉시 approved 케이스 → 'refunded'
+    const isPending = action === "refund" && adjStatus === "pending_approval";
+    if (isPending) {
+      await env.DB.prepare(
+        "UPDATE payments SET status = 'refund_pending' WHERE paddle_txn_id = ? AND refunded = 0"
+      ).bind(txnId).run();
+    } else {
+      await env.DB.prepare(
+        "UPDATE payments SET refunded = 1, status = 'refunded', refunded_at = datetime('now') WHERE paddle_txn_id = ?"
+      ).bind(txnId).run();
+    }
+
+    await logWebhookEvent(env, "adjustment.created", `${isPending ? "deactivate(pending refund)" : "deactivate+refunded"}: license=${payment.license_key} txn=${txnId} action=${action} status=${adjStatus}`, "warn");
     return;
   }
 
   // 기타 action (chargeback_reverse, credit, credit_reverse, chargeback_warning 등):
   // 자동 재활성화는 위험하므로 수동 검토 — warn 로그로 알림
   await logWebhookEvent(env, "adjustment.created", `manual review needed: txn=${txnId || "?"} action=${action} adj=${adjId}`, "warn");
+}
+
+/** adjustment.updated 처리: pending_approval → approved/rejected 전이 */
+async function handleAdjustmentUpdated(env, data) {
+  const action = data.action;
+  const txnId = data.transaction_id;
+  const adjId = data.id || "";
+  const status = data.status || "";
+
+  if (action !== "refund" || !txnId) {
+    await logWebhookEvent(env, "adjustment.updated", `noop adj=${adjId} action=${action} status=${status} txn=${txnId || "?"}`, "info");
+    return;
+  }
+
+  const payment = await env.DB.prepare(
+    "SELECT license_key, status FROM payments WHERE paddle_txn_id = ?"
+  ).bind(txnId).first();
+
+  if (status === "approved") {
+    // 환불 확정 → refunded로 최종 마킹 (라이선스는 이미 비활성화 상태 유지)
+    await env.DB.prepare(
+      "UPDATE payments SET refunded = 1, status = 'refunded', refunded_at = datetime('now') WHERE paddle_txn_id = ?"
+    ).bind(txnId).run();
+    await logWebhookEvent(env, "adjustment.updated", `refund APPROVED: txn=${txnId} adj=${adjId} license=${payment?.license_key || "?"}`, "warn");
+    return;
+  }
+
+  if (status === "rejected") {
+    // 환불 거부 → 자금 이동 없음. 비활성화된 라이선스 복구 + 상태 원복.
+    if (payment?.license_key) {
+      await env.DB.prepare("UPDATE licenses SET active = 1 WHERE license_key = ?").bind(payment.license_key).run();
+    }
+    await env.DB.prepare(
+      "UPDATE payments SET refunded = 0, status = 'completed', refunded_at = NULL WHERE paddle_txn_id = ?"
+    ).bind(txnId).run();
+    await logWebhookEvent(env, "adjustment.updated", `refund REJECTED: license restored txn=${txnId} adj=${adjId} license=${payment?.license_key || "?"}`, "warn");
+    return;
+  }
+
+  await logWebhookEvent(env, "adjustment.updated", `unknown status: txn=${txnId} adj=${adjId} status=${status}`, "info");
 }
 
 async function generateLicenseKey(env, email) {
@@ -360,7 +413,7 @@ export default {
           if (eventType === "adjustment.created") {
             await handleAdjustment(env, d);
           } else if (eventType === "adjustment.updated") {
-            await logWebhookEvent(env, eventType, `adj=${d.id} action=${d.action} status=${d.status} txn=${d.transaction_id}`);
+            await handleAdjustmentUpdated(env, d);
           }
 
           // 결제 관련 추적 (info)

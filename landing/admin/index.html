@@ -205,6 +205,7 @@ tr:last-child td{border-bottom:none}
       <option value="">전체 상태</option>
       <option value="completed">완료</option>
       <option value="captured">캡처</option>
+      <option value="refund_pending">환불요청중</option>
       <option value="refunded">환불됨</option>
       <option value="license_failed">키발급실패</option>
       <option value="amount_mismatch">금액불일치</option>
@@ -539,7 +540,7 @@ async function loadPayments() {
 function renderPayments() {
   const statusFilter = document.getElementById('f-pay-status').value;
   const emailFilter = document.getElementById('f-pay-email').value.toLowerCase();
-  const statusMap = { completed: '완료', captured: '캡처', refunded: '환불됨', license_failed: '키발급실패', amount_mismatch: '금액불일치' };
+  const statusMap = { completed: '완료', captured: '캡처', refund_pending: '환불요청중', refunded: '환불됨', license_failed: '키발급실패', amount_mismatch: '금액불일치' };
   // stat 카드 업데이트
   const completed = rawPayments.filter(p => p.status === 'completed' && !p.refunded);
   const revenue = completed.reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
@@ -552,7 +553,7 @@ function renderPayments() {
   });
   document.getElementById('f-pay-count').textContent = list.length + ' / ' + rawPayments.length + '건';
   const html = list.map(p => {
-    const statusClass = p.refunded ? 'badge-inactive' : (p.status === 'completed' ? 'badge-active' : 'badge-inactive');
+    const statusClass = p.refunded ? 'badge-inactive' : (p.status === 'completed' ? 'badge-active' : (p.status === 'refund_pending' ? 'badge-warn' : 'badge-inactive'));
     return `<tr>
       <td style="font-family:monospace;font-size:.75rem">${esc(p.invoice_number || '-')}</td>
       <td style="font-family:monospace;font-size:.75rem">${esc(p.paddle_txn_id || p.paypal_order_id || '-')}</td>
@@ -561,7 +562,7 @@ function renderPayments() {
       <td style="font-family:monospace;font-size:.75rem">${esc(p.license_key || '-')}</td>
       <td><span class="badge ${statusClass}">${statusMap[p.status] || p.status}</span></td>
       <td>${formatDate(p.created_at)}</td>
-      <td>${!p.refunded && p.license_key ? `<button class="btn btn-danger" onclick="doRefund('${esc(p.paddle_txn_id || p.paypal_order_id)}','${esc(p.email)}','${esc(p.license_key)}')">환불</button>` : (p.refunded ? '<span style="color:var(--muted);font-size:.75rem">환불완료</span>' : '-')}</td>
+      <td>${p.status === 'refund_pending' ? '<span style="color:var(--muted);font-size:.75rem">검토중</span>' : (!p.refunded && p.license_key ? `<button class="btn btn-danger" onclick="doRefund('${esc(p.paddle_txn_id || p.paypal_order_id)}','${esc(p.email)}','${esc(p.license_key)}')">환불</button>` : (p.refunded ? '<span style="color:var(--muted);font-size:.75rem">환불완료</span>' : '-'))}</td>
     </tr>`;
   }).join('');
   document.getElementById('payment-table').innerHTML = html || '<tr><td colspan="8" style="text-align:center;color:var(--muted)">결과 없음</td></tr>';
