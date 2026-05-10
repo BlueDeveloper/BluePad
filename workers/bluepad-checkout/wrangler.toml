@@ -9,7 +9,9 @@ routes = [
   { pattern = "bluepad.work/buy/*", zone_name = "bluepad.work" }
 ]
 
-workers_dev = false
+# 옛 MSI(1.8.0 이하) 사용자가 *.workers.dev URL을 호출 → 임시로 살려두고 worker.js에서 redirect
+# 1.9.0+ 사용자가 충분히 마이그레이션되면 다시 false로 전환
+workers_dev = true
 preview_urls = false
 
 [vars]

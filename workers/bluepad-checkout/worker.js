@@ -252,6 +252,14 @@ const CANCEL_PAGE = `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    // 옛 *.workers.dev 도메인 → 신 도메인 영구 redirect (옛 MSI 1.8.0 이하 호환)
+    // Paddle webhook은 이미 신 URL로 변경되었으므로 여기로 안 옴 (브라우저 트래픽만)
+    if (url.hostname.endsWith(".workers.dev")) {
+      const targetPath = url.pathname === "/" ? "/buy" : `/buy${url.pathname}`;
+      return Response.redirect(`https://bluepad.work${targetPath}${url.search}`, 301);
+    }
+
     // bluepad.work/buy* route — /buy prefix 제거하여 내부 라우팅 단순화
     // /buy → /, /buy/success → /success, /buy/paddle-webhook → /paddle-webhook
     const path = url.pathname.replace(/^\/buy(\/|$)/, "/");
