@@ -369,7 +369,13 @@ export default {
           } else if (eventType === "transaction.payment_failed") {
             await logWebhookEvent(env, eventType, `txn=${d.id} customer=${d.customer_id || "unknown"}`, "warn");
           } else if (eventType === "transaction.updated") {
-            await logWebhookEvent(env, eventType, `txn=${d.id} status=${d.status}`, "info");
+            // invoice_number가 completed 이후 늦게 생성/변경되는 경우 보강
+            if (d.id && d.invoice_number) {
+              await env.DB.prepare(
+                "UPDATE payments SET invoice_number = ? WHERE paddle_txn_id = ? AND (invoice_number IS NULL OR invoice_number != ?)"
+              ).bind(d.invoice_number, d.id, d.invoice_number).run();
+            }
+            await logWebhookEvent(env, eventType, `txn=${d.id} status=${d.status} invoice=${d.invoice_number || "-"}`, "info");
           } else if (eventType === "transaction.revised") {
             await logWebhookEvent(env, eventType, `txn=${d.id} status=${d.status}`, "info");
           }
@@ -424,12 +430,19 @@ export default {
         }
         const amountDecimal = (amountCents / 100).toFixed(2);
         const currency = txn.currency_code || "USD";
+        const invoiceNumber = txn.invoice_number || null;
 
         // 빠른 중복 체크 (race window 좁힘 — 최종 보장은 paddle_txn_id UNIQUE)
         const existing = await env.DB.prepare(
-          "SELECT id FROM payments WHERE paddle_txn_id = ?"
+          "SELECT id, invoice_number FROM payments WHERE paddle_txn_id = ?"
         ).bind(txnId).first();
         if (existing) {
+          // invoice_number가 늦게 도착했을 수 있으므로 보강 업데이트
+          if (invoiceNumber && !existing.invoice_number) {
+            await env.DB.prepare(
+              "UPDATE payments SET invoice_number = ? WHERE id = ?"
+            ).bind(invoiceNumber, existing.id).run();
+          }
           return new Response("OK", { status: 200 });
         }
 
@@ -445,9 +458,9 @@ export default {
 
         // 결제 기록 삽입 — UNIQUE(paddle_txn_id) + INSERT OR IGNORE로 중복 webhook race 완전 방어
         const insertRes = await env.DB.prepare(
-          "INSERT OR IGNORE INTO payments (paddle_txn_id, paddle_customer_id, email, amount, currency, status) VALUES (?, ?, ?, ?, ?, ?)"
+          "INSERT OR IGNORE INTO payments (paddle_txn_id, paddle_customer_id, email, amount, currency, status, invoice_number) VALUES (?, ?, ?, ?, ?, ?, ?)"
         )
-          .bind(txnId, txn.customer_id || null, email, amountDecimal, currency, "captured")
+          .bind(txnId, txn.customer_id || null, email, amountDecimal, currency, "captured", invoiceNumber)
           .run();
 
         // INSERT 무시됨 = 동시 webhook이 이미 처리 → 라이선스 발급 단계 skip (중복 발급 방지)

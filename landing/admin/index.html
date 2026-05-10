@@ -216,7 +216,8 @@ tr:last-child td{border-bottom:none}
     <table>
       <thead>
         <tr>
-          <th>PayPal 주문 ID</th>
+          <th>Invoice</th>
+          <th>Paddle 거래 ID</th>
           <th>이메일</th>
           <th>금액</th>
           <th>라이선스 키</th>
@@ -553,30 +554,31 @@ function renderPayments() {
   const html = list.map(p => {
     const statusClass = p.refunded ? 'badge-inactive' : (p.status === 'completed' ? 'badge-active' : 'badge-inactive');
     return `<tr>
-      <td style="font-family:monospace;font-size:.75rem">${esc(p.paypal_order_id)}</td>
+      <td style="font-family:monospace;font-size:.75rem">${esc(p.invoice_number || '-')}</td>
+      <td style="font-family:monospace;font-size:.75rem">${esc(p.paddle_txn_id || p.paypal_order_id || '-')}</td>
       <td>${esc(p.email || '-')}</td>
       <td>$${esc(p.amount || '0')} ${esc(p.currency || '')}</td>
       <td style="font-family:monospace;font-size:.75rem">${esc(p.license_key || '-')}</td>
       <td><span class="badge ${statusClass}">${statusMap[p.status] || p.status}</span></td>
       <td>${formatDate(p.created_at)}</td>
-      <td>${!p.refunded && p.license_key ? `<button class="btn btn-danger" onclick="doRefund('${esc(p.paypal_order_id)}','${esc(p.email)}','${esc(p.license_key)}')">환불</button>` : (p.refunded ? '<span style="color:var(--muted);font-size:.75rem">환불완료</span>' : '-')}</td>
+      <td>${!p.refunded && p.license_key ? `<button class="btn btn-danger" onclick="doRefund('${esc(p.paddle_txn_id || p.paypal_order_id)}','${esc(p.email)}','${esc(p.license_key)}')">환불</button>` : (p.refunded ? '<span style="color:var(--muted);font-size:.75rem">환불완료</span>' : '-')}</td>
     </tr>`;
   }).join('');
-  document.getElementById('payment-table').innerHTML = html || '<tr><td colspan="7" style="text-align:center;color:var(--muted)">결과 없음</td></tr>';
+  document.getElementById('payment-table').innerHTML = html || '<tr><td colspan="8" style="text-align:center;color:var(--muted)">결과 없음</td></tr>';
 }
 
 async function doRefund(orderId, email, licenseKey) {
-  if (!confirm(`환불 처리하시겠습니까?\n\n주문: ${orderId}\n이메일: ${email}\n라이선스: ${licenseKey}\n\n⚠️ 라이선스가 비활성화됩니다.\n⚠️ PayPal에서 수동 환불도 진행해야 합니다.`)) return;
+  if (!confirm(`환불 처리하시겠습니까?\n\n거래: ${orderId}\n이메일: ${email}\n라이선스: ${licenseKey}\n\n⚠️ 라이선스가 즉시 비활성화됩니다.\n💡 Paddle 대시보드에서 환불 요청을 누르면 webhook으로 자동 비활성화됩니다 — 이 버튼은 webhook 누락 시 수동 비활성화용입니다.`)) return;
   const token = getToken();
   try {
     const res = await fetch(LICENSE_API + '/api/admin/refund', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({ paypal_order_id: orderId })
+      body: JSON.stringify({ paddle_txn_id: orderId })
     });
     const data = await res.json();
     if (data.success) {
-      alert(`환불 처리 완료!\n\n비활성화된 라이선스: ${data.refunded_license}\n\n⚠️ PayPal 대시보드에서 $${data.amount} 수동 환불을 진행해주세요.`);
+      alert(`라이선스 비활성화 완료!\n\n비활성화된 라이선스: ${data.refunded_license}\n\n💰 실제 자금 환불은 Paddle 대시보드에서 별도로 Full refund 진행하세요. ($${data.amount})`);
       loadPayments();
       loadLicenses();
     } else {
