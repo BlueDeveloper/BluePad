@@ -74,11 +74,25 @@ async function handleAdjustment(env, data) {
       return;
     }
     const payment = await env.DB.prepare(
-      "SELECT license_key FROM payments WHERE paddle_txn_id = ?"
+      "SELECT license_key, created_at FROM payments WHERE paddle_txn_id = ?"
     ).bind(txnId).first();
     if (!payment?.license_key) {
       await logWebhookEvent(env, "adjustment.created", `${action} but no license for txn=${txnId} (adj=${adjId})`, "warn");
       return;
+    }
+
+    // 14일 환불 정책 위반 감지 (라이선스는 비활성화하되 로그로 추적)
+    // 결제 후 14일 초과한 환불 요청 → Paddle support 분쟁 대응용 audit
+    const REFUND_WINDOW_DAYS = 14;
+    let daysSincePurchase = -1;
+    try {
+      const purchaseMs = new Date(String(payment.created_at).replace(" ", "T") + "Z").getTime();
+      if (Number.isFinite(purchaseMs)) {
+        daysSincePurchase = Math.floor((Date.now() - purchaseMs) / 86400000);
+      }
+    } catch (_) {}
+    if (action === "refund" && daysSincePurchase > REFUND_WINDOW_DAYS) {
+      await logWebhookEvent(env, "adjustment.created", `LATE REFUND (policy violation): txn=${txnId} days=${daysSincePurchase} window=${REFUND_WINDOW_DAYS} license=${payment.license_key}`, "critical");
     }
 
     // 라이선스는 보수적으로 즉시 비활성화 (rejected 시 adjustment.updated에서 복구)
@@ -214,7 +228,8 @@ body{font-family:-apple-system,system-ui,sans-serif;background:#09090b;color:#fa
   <div class="methods">카드 &middot; 카카오페이 &middot; 네이버페이 &middot; PayPal</div>
   <div class="secure">&#128274; Paddle 보안 결제</div>
   <div class="legal">
-    &#x26A0; 디지털 상품 특성상 라이선스 활성화 후 환불이 제한될 수 있습니다.<br>
+    &#128338; <strong>구매일로부터 14일 이내 무조건 환불 가능</strong> (사유 불문)<br>
+    14일 경과 후엔 기술 결함 등 예외 사항에 한해 환불됩니다.<br>
     구매 전 <a href="https://bluepad.work/legal/eula.html" target="_blank">이용약관</a>을 확인해주세요.<br>
     상호: 비알피(BRP) | 대표: 윤동제 | 사업자: 511-32-01572
   </div>
@@ -253,10 +268,22 @@ function openCheckout() {
 </html>`;
 }
 
-function successPage(licenseKey, email, txnId) {
+function successPage(licenseKey, email, txnId, createdAtUtc) {
   const safeKey = escHtml(licenseKey);
   const safeEmail = escHtml(email);
   const safeTxn = escHtml(txnId);
+  // 환불 가능 기한: 결제일(UTC) + 14일을 한국 시간(YYYY-MM-DD)으로
+  let refundDeadline = "";
+  try {
+    const startMs = new Date(String(createdAtUtc).replace(" ", "T") + "Z").getTime();
+    if (Number.isFinite(startMs)) {
+      const kst = new Date(startMs + 14 * 86400000 + 9 * 3600000);
+      refundDeadline = kst.toISOString().slice(0, 10);
+    }
+  } catch (_) {}
+  const refundLine = refundDeadline
+    ? `<div class="info" style="font-size:12px;color:#71717a;margin-bottom:24px">환불 가능 기한: <strong style="color:#a1a1aa">${refundDeadline}</strong> (구매일로부터 14일)</div>`
+    : "";
   return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>BluePad Pro - 완료</title>
 <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,system-ui,sans-serif;background:#09090b;color:#fafafa;min-height:100vh;display:flex;align-items:center;justify-content:center}.card{background:#18181b;border:1px solid #27272a;border-radius:16px;padding:48px 40px;max-width:480px;width:100%;text-align:center}.check{font-size:48px;margin-bottom:16px}h1{font-size:24px;font-weight:700;margin-bottom:8px}.sub{color:#a1a1aa;font-size:14px;margin-bottom:32px}.key-box{background:#09090b;border:1px solid #27272a;border-radius:10px;padding:20px;margin-bottom:24px}.key-label{font-size:12px;color:#52525b;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em}.key-value{font-family:monospace;font-size:20px;font-weight:700;color:#22c55e;letter-spacing:0.02em;word-break:break-all;user-select:all}.info{font-size:13px;color:#52525b;margin-bottom:6px}.steps{text-align:left;margin-bottom:28px;list-style:none;counter-reset:step}.steps li{padding:6px 0;font-size:13.5px;color:#a1a1aa;counter-increment:step}.steps li::before{content:counter(step) ".";color:#155dfc;font-weight:700;margin-right:10px}.btn{display:inline-block;padding:12px 28px;background:#155dfc;color:#fff;border-radius:9px;text-decoration:none;font-size:14px;font-weight:600}.help{margin-top:20px;font-size:12px;color:#52525b}</style></head>
 <body><div class="card">
@@ -268,7 +295,8 @@ function successPage(licenseKey, email, txnId) {
     <div class="key-value">${safeKey}</div>
   </div>
   <div class="info">이메일: ${safeEmail}</div>
-  <div class="info" style="font-size:11px;color:#3f3f46;margin-bottom:24px">결제번호: ${safeTxn}</div>
+  <div class="info" style="font-size:11px;color:#3f3f46;margin-bottom:8px">결제번호: ${safeTxn}</div>
+  ${refundLine}
   <ol class="steps">
     <li>위 라이선스 키를 복사하세요</li>
     <li>BluePad &rarr; 설정 &rarr; 라이선스 활성화</li>
@@ -586,7 +614,7 @@ export default {
         }
 
         const payment = await env.DB.prepare(
-          "SELECT license_key, email, status FROM payments WHERE paddle_txn_id = ?"
+          "SELECT license_key, email, status, created_at FROM payments WHERE paddle_txn_id = ?"
         )
           .bind(txnId)
           .first();
@@ -615,7 +643,7 @@ export default {
           );
         }
 
-        return page(successPage(payment.license_key, payment.email, txnId));
+        return page(successPage(payment.license_key, payment.email, txnId, payment.created_at));
       }
 
       // 결제 취소

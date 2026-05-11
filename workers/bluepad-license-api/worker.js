@@ -291,6 +291,26 @@ export default {
         if (payment.refunded) return json({ error: "already_refunded", payment }, 400, request);
         if (!payment.license_key) return json({ error: "no_license_key", message: "이 결제에 연결된 라이선스가 없습니다.", payment }, 400, request);
 
+        // 14일 환불 정책 — 기간 초과 시 force=1 명시적 우회 필요 (관리자 예외 처리용)
+        const REFUND_WINDOW_DAYS = 14;
+        const force = body.force === true || body.force === 1 || body.force === "1";
+        let daysSincePurchase = 0;
+        try {
+          const purchaseMs = new Date(String(payment.created_at).replace(" ", "T") + "Z").getTime();
+          if (Number.isFinite(purchaseMs)) {
+            daysSincePurchase = Math.floor((Date.now() - purchaseMs) / 86400000);
+          }
+        } catch (_) {}
+        if (daysSincePurchase > REFUND_WINDOW_DAYS && !force) {
+          return json({
+            error: "refund_window_expired",
+            message: `구매 후 ${daysSincePurchase}일 경과 (정책: ${REFUND_WINDOW_DAYS}일). 기술 결함 등 예외 처리는 force=1로 재요청`,
+            days_since_purchase: daysSincePurchase,
+            window_days: REFUND_WINDOW_DAYS,
+            payment,
+          }, 400, request);
+        }
+
         // 라이선스 비활성화
         await env.DB.prepare(
           "UPDATE licenses SET active = 0 WHERE license_key = ?"

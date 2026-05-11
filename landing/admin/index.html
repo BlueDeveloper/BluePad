@@ -241,6 +241,7 @@ h2[id],div[data-section]{scroll-margin-top:64px}
           <th>라이선스 키</th>
           <th>상태</th>
           <th>날짜</th>
+          <th>환불 정책</th>
           <th>환불</th>
         </tr>
       </thead>
@@ -577,6 +578,19 @@ function renderPayments() {
   const statusFilter = document.getElementById('f-pay-status').value;
   const emailFilter = document.getElementById('f-pay-email').value.toLowerCase();
   const statusMap = { completed: '완료', captured: '캡처', refund_pending: '환불요청중', refunded: '환불됨', license_failed: '키발급실패', amount_mismatch: '금액불일치' };
+  const REFUND_WINDOW_DAYS = 14;
+  function refundEligibility(p) {
+    if (p.refunded) return { label: '환불완료', cls: 'badge-info', eligible: false };
+    if (p.status === 'refund_pending') return { label: '검토중', cls: 'badge-warn', eligible: false };
+    if (!p.license_key) return { label: '-', cls: 'badge-info', eligible: false };
+    if (!p.created_at) return { label: '날짜불명', cls: 'badge-warn', eligible: true };
+    const ms = Date.parse(String(p.created_at).replace(' ', 'T') + 'Z');
+    if (!Number.isFinite(ms)) return { label: '날짜오류', cls: 'badge-warn', eligible: true };
+    const days = Math.floor((Date.now() - ms) / 86400000);
+    const left = REFUND_WINDOW_DAYS - days;
+    if (left >= 0) return { label: `가능 D-${left}`, cls: 'badge-active', eligible: true };
+    return { label: `기간 초과 (+${-left}일)`, cls: 'badge-inactive', eligible: false };
+  }
   // stat 카드 업데이트
   const completed = rawPayments.filter(p => p.status === 'completed' && !p.refunded);
   const revenue = completed.reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
@@ -590,6 +604,19 @@ function renderPayments() {
   document.getElementById('f-pay-count').textContent = list.length + ' / ' + rawPayments.length + '건';
   const html = list.map(p => {
     const statusClass = p.refunded ? 'badge-inactive' : (p.status === 'completed' ? 'badge-active' : (p.status === 'refund_pending' ? 'badge-warn' : 'badge-inactive'));
+    const elig = refundEligibility(p);
+    let refundCell;
+    if (p.status === 'refund_pending') {
+      refundCell = '<span style="color:var(--muted);font-size:.75rem">검토중</span>';
+    } else if (p.refunded) {
+      refundCell = '<span style="color:var(--muted);font-size:.75rem">환불완료</span>';
+    } else if (!p.license_key) {
+      refundCell = '-';
+    } else if (elig.eligible) {
+      refundCell = `<button class="btn btn-danger" onclick="doRefund('${esc(p.paddle_txn_id || p.paypal_order_id)}','${esc(p.email)}','${esc(p.license_key)}',false)">환불</button>`;
+    } else {
+      refundCell = `<button class="btn btn-danger" style="opacity:.45" title="14일 정책 초과 — 강제 환불(예외 처리)" onclick="doRefund('${esc(p.paddle_txn_id || p.paypal_order_id)}','${esc(p.email)}','${esc(p.license_key)}',true)">예외환불</button>`;
+    }
     return `<tr>
       <td style="font-family:monospace;font-size:.75rem">${esc(p.invoice_number || '-')}</td>
       <td style="font-family:monospace;font-size:.75rem">${esc(p.paddle_txn_id || p.paypal_order_id || '-')}</td>
@@ -598,22 +625,28 @@ function renderPayments() {
       <td style="font-family:monospace;font-size:.75rem">${esc(p.license_key || '-')}</td>
       <td><span class="badge ${statusClass}">${statusMap[p.status] || p.status}</span></td>
       <td>${formatDate(p.created_at)}</td>
-      <td>${p.status === 'refund_pending' ? '<span style="color:var(--muted);font-size:.75rem">검토중</span>' : (!p.refunded && p.license_key ? `<button class="btn btn-danger" onclick="doRefund('${esc(p.paddle_txn_id || p.paypal_order_id)}','${esc(p.email)}','${esc(p.license_key)}')">환불</button>` : (p.refunded ? '<span style="color:var(--muted);font-size:.75rem">환불완료</span>' : '-'))}</td>
+      <td><span class="badge ${elig.cls}">${elig.label}</span></td>
+      <td>${refundCell}</td>
     </tr>`;
   }).join('');
-  document.getElementById('payment-table').innerHTML = html || '<tr><td colspan="8" style="text-align:center;color:var(--muted)">결과 없음</td></tr>';
+  document.getElementById('payment-table').innerHTML = html || '<tr><td colspan="9" style="text-align:center;color:var(--muted)">결과 없음</td></tr>';
 }
 
-async function doRefund(orderId, email, licenseKey) {
-  if (!confirm(`환불 처리하시겠습니까?\n\n거래: ${orderId}\n이메일: ${email}\n라이선스: ${licenseKey}\n\n⚠️ 라이선스가 즉시 비활성화됩니다.\n💡 Paddle 대시보드에서 환불 요청을 누르면 webhook으로 자동 비활성화됩니다 — 이 버튼은 webhook 누락 시 수동 비활성화용입니다.`)) return;
+async function doRefund(orderId, email, licenseKey, force) {
+  const forceMsg = force ? '\n\n⚠️ 14일 환불 정책 기간 초과 — 예외(기술결함 등) 사유로만 진행하세요.' : '';
+  if (!confirm(`환불 처리하시겠습니까?\n\n거래: ${orderId}\n이메일: ${email}\n라이선스: ${licenseKey}${forceMsg}\n\n⚠️ 라이선스가 즉시 비활성화됩니다.\n💡 Paddle 대시보드에서 환불 요청을 누르면 webhook으로 자동 비활성화됩니다 — 이 버튼은 webhook 누락 시 수동 비활성화용입니다.`)) return;
   const token = getToken();
   try {
     const res = await fetch(LICENSE_API + '/api/admin/refund', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({ paddle_txn_id: orderId })
+      body: JSON.stringify({ paddle_txn_id: orderId, force: !!force })
     });
     const data = await res.json();
+    if (res.status === 400 && data.error === 'refund_window_expired') {
+      alert(`환불 기간 초과 (구매 후 ${data.days_since_purchase}일, 정책 ${data.window_days}일)\n\n예외 처리하려면 "예외환불" 버튼을 다시 누르세요.`);
+      return;
+    }
     if (data.success) {
       alert(`라이선스 비활성화 완료!\n\n비활성화된 라이선스: ${data.refunded_license}\n\n💰 실제 자금 환불은 Paddle 대시보드에서 별도로 Full refund 진행하세요. ($${data.amount})`);
       loadPayments();
