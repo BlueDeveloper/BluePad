@@ -6,7 +6,9 @@ compatibility_date = "2026-05-03"
 # 서브도메인 별도 승인 대기 우회 + URL 일관성
 routes = [
   { pattern = "bluepad.work/buy", zone_name = "bluepad.work" },
-  { pattern = "bluepad.work/buy/*", zone_name = "bluepad.work" }
+  { pattern = "bluepad.work/buy/*", zone_name = "bluepad.work" },
+  { pattern = "bluepad.work/sandbox/buy", zone_name = "bluepad.work" },
+  { pattern = "bluepad.work/sandbox/buy/*", zone_name = "bluepad.work" }
 ]
 
 # 옛 MSI(1.8.0 이하) 사용자가 *.workers.dev URL을 호출 → 임시로 살려두고 worker.js에서 redirect
@@ -28,6 +30,12 @@ database_name = "bluepad-licenses"
 database_id = "6e9776a9-f68a-45b9-b3f7-00cbd6bda70c"
 
 # Secrets (wrangler secret put 으로 설정):
-# PADDLE_API_KEY          — Paddle > Developer Tools > Authentication > API key
-# PADDLE_WEBHOOK_SECRET   — Paddle > Notifications > Webhook 등록 후 발급
-# LICENSE_ADMIN_SECRET    — 기존 유지
+# PADDLE_API_KEY                  — Paddle Live > Developer Tools > Authentication > API key
+# PADDLE_WEBHOOK_SECRET           — Paddle Live > Notifications > Webhook 등록 후 발급
+# LICENSE_ADMIN_SECRET            — 기존 유지
+# PADDLE_SANDBOX_API_KEY          — Paddle Sandbox > Developer Tools > API key (sandbox 계정 가입 후)
+# PADDLE_SANDBOX_WEBHOOK_SECRET   — Paddle Sandbox > Notifications > Webhook URL: bluepad.work/sandbox/buy/paddle-webhook
+
+# Sandbox 환경 변수 (Paddle Sandbox 대시보드에서 발급):
+# PADDLE_SANDBOX_CLIENT_TOKEN     — Sandbox client-side token
+# PADDLE_SANDBOX_PRICE_ID         — Sandbox에서 동일 상품 등록 후 price_id

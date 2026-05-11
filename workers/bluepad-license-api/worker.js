@@ -72,7 +72,8 @@ function json(data, status = 200, request) {
 }
 
 // ── License Key ──
-function generateKey() {
+// 환경별 키 접두사 — Live: "BP-", Sandbox: "BPSB-"
+function generateKey(environment = "live") {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const result = [];
   const randomValues = new Uint32Array(16);
@@ -84,11 +85,13 @@ function generateKey() {
   for (let s = 0; s < 4; s++) {
     segments.push(result.slice(s * 4, s * 4 + 4).join(""));
   }
-  return "BP-" + segments.join("-");
+  const prefix = environment === "sandbox" ? "BPSB-" : "BP-";
+  return prefix + segments.join("-");
 }
 
-const LICENSE_KEY_REGEX = /^BP-[A-Z2-9]{4}-[A-Z2-9]{4}-[A-Z2-9]{4}-[A-Z2-9]{4}$/;
+const LICENSE_KEY_REGEX = /^(BP|BPSB)-[A-Z2-9]{4}-[A-Z2-9]{4}-[A-Z2-9]{4}-[A-Z2-9]{4}$/;
 function validateLicenseKey(key) { return typeof key === "string" && LICENSE_KEY_REGEX.test(key); }
+function envOfKey(key) { return typeof key === "string" && key.startsWith("BPSB-") ? "sandbox" : "live"; }
 function validateDeviceId(id) { return typeof id === "string" && id.length > 0 && id.length <= 100; }
 function validateDeviceName(name) { return name === undefined || name === null || (typeof name === "string" && name.length <= 200); }
 
@@ -151,10 +154,10 @@ export default {
         // Atomic INSERT with COUNT subquery — TOCTOU 방어
         // 동시 활성화로 max_devices 초과되는 race 차단 (단일 SQL에서 COUNT+INSERT 원자적)
         const insertRes = await env.DB.prepare(
-          `INSERT INTO activations (license_key, device_id, device_name)
-           SELECT ?, ?, ?
+          `INSERT INTO activations (license_key, device_id, device_name, environment)
+           SELECT ?, ?, ?, ?
            WHERE (SELECT COUNT(*) FROM activations WHERE license_key = ?) < ?`
-        ).bind(license_key, device_id, device_name || "Unknown", license_key, license.max_devices).run();
+        ).bind(license_key, device_id, device_name || "Unknown", envOfKey(license_key), license_key, license.max_devices).run();
 
         if (!insertRes.meta || insertRes.meta.changes === 0) {
           // INSERT 미실행 = max_devices 초과 (또는 UNIQUE 충돌이지만 위에서 existing 체크함)
@@ -192,12 +195,13 @@ export default {
       if (path === "/api/admin/generate" && request.method === "POST") {
         if (!await checkAdmin(request, env)) return json({ error: "unauthorized" }, 401, request);
 
-        const { email, max_devices } = await request.json();
-        const key = generateKey();
+        const { email, max_devices, environment } = await request.json();
+        const env_ = environment === "sandbox" ? "sandbox" : "live";
+        const key = generateKey(env_);
         await env.DB.prepare(
-          "INSERT INTO licenses (license_key, email, max_devices) VALUES (?, ?, ?)"
-        ).bind(key, email || null, max_devices || 3).run();
-        return json({ license_key: key, email, max_devices: max_devices || 3 }, 200, request);
+          "INSERT INTO licenses (license_key, email, max_devices, environment) VALUES (?, ?, ?, ?)"
+        ).bind(key, email || null, max_devices || 3, env_).run();
+        return json({ license_key: key, email, max_devices: max_devices || 3, environment: env_ }, 200, request);
       }
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -424,9 +428,12 @@ export default {
           return json({ trial_start: existing.trial_start, days_left: Math.max(daysLeft, 0), expired: daysLeft <= 0 }, 200, request);
         }
 
+        // trials는 디바이스 단위로 한 번만 등록되므로 환경 컬럼은 디폴트 'live' 유지
+        // (sandbox 검증용 트라이얼은 별도 API 호출자가 환경 명시한 경우만 sandbox로 마킹)
+        const trialEnv = (request.headers.get("X-Environment") === "sandbox") ? "sandbox" : "live";
         await env.DB.prepare(
-          "INSERT INTO trials (device_id, device_name) VALUES (?, ?)"
-        ).bind(device_id, device_name || "Unknown").run();
+          "INSERT INTO trials (device_id, device_name, environment) VALUES (?, ?, ?)"
+        ).bind(device_id, device_name || "Unknown", trialEnv).run();
         return json({ trial_start: new Date().toISOString(), days_left: 14, expired: false }, 200, request);
       }
 

@@ -49,6 +49,9 @@ tr:last-child td{border-bottom:none}
 .admin-nav a{flex-shrink:0;padding:.4rem .85rem;border-radius:8px;font-size:.825rem;color:var(--muted);text-decoration:none;white-space:nowrap;font-weight:500;transition:background .15s,color .15s}
 .admin-nav a:hover{background:var(--surface);color:var(--text)}
 .admin-nav a.active{background:var(--accent);color:#fff}
+.badge-sandbox{background:rgba(124,58,237,.18);color:#a78bfa;font-weight:700}
+.badge-live{background:rgba(34,197,94,.12);color:#22c55e;font-size:.65rem;font-weight:600}
+tr.row-sandbox td{background:rgba(124,58,237,.04)}
 h2[id],div[data-section]{scroll-margin-top:64px}
 @media(max-width:640px){
   body{padding:1rem}
@@ -120,6 +123,11 @@ h2[id],div[data-section]{scroll-margin-top:64px}
     <a href="#sec-webhooks">Webhook</a>
     <a href="#sec-errors">에러</a>
     <a href="#sec-tickets">문의</a>
+    <span style="flex:1"></span>
+    <span style="font-size:.75rem;color:var(--muted);align-self:center;padding:0 .25rem">환경:</span>
+    <a href="#" id="env-live" data-env="live" onclick="setEnvFilter('live');return false">Live</a>
+    <a href="#" id="env-sandbox" data-env="sandbox" onclick="setEnvFilter('sandbox');return false">Sandbox</a>
+    <a href="#" id="env-all" data-env="all" onclick="setEnvFilter('all');return false">전체</a>
   </nav>
 
   <div id="sec-licenses" data-section style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
@@ -157,6 +165,7 @@ h2[id],div[data-section]{scroll-margin-top:64px}
     <table>
       <thead>
         <tr>
+          <th>환경</th>
           <th>라이선스 키</th>
           <th>이메일</th>
           <th>기기</th>
@@ -234,6 +243,7 @@ h2[id],div[data-section]{scroll-margin-top:64px}
     <table>
       <thead>
         <tr>
+          <th>환경</th>
           <th>Invoice</th>
           <th>Paddle 거래 ID</th>
           <th>이메일</th>
@@ -264,6 +274,7 @@ h2[id],div[data-section]{scroll-margin-top:64px}
     <table>
       <thead>
         <tr>
+          <th>환경</th>
           <th>심각도</th>
           <th>이벤트</th>
           <th>내용</th>
@@ -362,6 +373,7 @@ async function checkAuth() {
     }
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('dashboard').classList.remove('hidden');
+    updateEnvTabs();
     loadDashboard();
     initScrollSpy();
   } catch (e) {
@@ -404,6 +416,30 @@ async function loadStats() {
 }
 
 let rawLicenses = [], rawTrials = [], rawDownloads = [], rawPayments = [], rawErrors = [], rawTickets = [], rawWebhookEvents = [];
+// 환경 필터 (live / sandbox / all). sessionStorage에 저장되어 새로고침 시 유지
+let currentEnv = sessionStorage.getItem('bp_admin_env') || 'live';
+function envOf(row) { return (row && row.environment) || 'live'; }
+function envMatches(row) { return currentEnv === 'all' || envOf(row) === currentEnv; }
+function setEnvFilter(env) {
+  currentEnv = env;
+  try { sessionStorage.setItem('bp_admin_env', env); } catch (_) {}
+  updateEnvTabs();
+  // 모든 섹션 재렌더링
+  renderLicenses && renderLicenses();
+  renderTrials && renderTrials();
+  renderDownloads && renderDownloads();
+  renderPayments && renderPayments();
+  renderWebhookEvents && renderWebhookEvents();
+  renderErrors && renderErrors();
+  renderTickets && renderTickets();
+  loadStats && loadStats();
+}
+function updateEnvTabs() {
+  ['live','sandbox','all'].forEach(e => {
+    const el = document.getElementById('env-' + e);
+    if (el) el.classList.toggle('active', currentEnv === e);
+  });
+}
 
 function parseUA(ua) {
   ua = ua || '';
@@ -424,8 +460,8 @@ async function loadLicenses() {
     const res = await fetch(LICENSE_API + '/api/admin/licenses', { headers: { 'Authorization': 'Bearer ' + token } });
     const data = await res.json();
     rawLicenses = data.licenses || [];
-    document.getElementById('stat-licenses').textContent = rawLicenses.length;
-    document.getElementById('stat-active').textContent = rawLicenses.filter(l => l.active === 1).length;
+    document.getElementById('stat-licenses').textContent = rawLicenses.filter(envMatches).length;
+    document.getElementById('stat-active').textContent = rawLicenses.filter(l => envMatches(l) && l.active === 1).length;
     renderLicenses();
   } catch (e) {
     document.getElementById('license-table').innerHTML = '<tr><td colspan="6">불러오기 실패</td></tr>';
@@ -436,22 +472,25 @@ function renderLicenses() {
   const status = document.getElementById('f-license-status').value;
   const search = document.getElementById('f-license-search').value.toLowerCase();
   let list = rawLicenses.filter(l => {
+    if (!envMatches(l)) return false;
     if (status === 'active' && !l.active) return false;
     if (status === 'inactive' && l.active) return false;
     if (search && !(l.email || '').toLowerCase().includes(search) && !l.license_key.toLowerCase().includes(search)) return false;
     return true;
   });
   document.getElementById('f-license-count').textContent = list.length + ' / ' + rawLicenses.length + '건';
-  document.getElementById('license-table').innerHTML = list.map(l => `
-    <tr>
+  document.getElementById('license-table').innerHTML = list.map(l => {
+    const envBadge = envOf(l) === 'sandbox' ? '<span class="badge badge-sandbox">SBX</span>' : '<span class="badge badge-live">LIVE</span>';
+    return `<tr${envOf(l) === 'sandbox' ? ' class="row-sandbox"' : ''}>
+      <td>${envBadge}</td>
       <td style="font-family:monospace;font-size:.8rem">${esc(l.license_key)}</td>
       <td>${esc(l.email || '-')}</td>
       <td>${l.device_count || 0} / ${l.max_devices}</td>
       <td>${formatDate(l.created_at)}</td>
       <td><span class="badge ${l.active ? 'badge-active' : 'badge-inactive'}">${l.active ? '활성' : '비활성'}</span></td>
       <td>${l.active ? `<button class="btn btn-danger" onclick="deactivate('${esc(l.license_key)}')">비활성화</button>` : ''}</td>
-    </tr>
-  `).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--muted)">결과 없음</td></tr>';
+    </tr>`;
+  }).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--muted)">결과 없음</td></tr>';
 }
 
 async function deactivate(key) {
@@ -480,7 +519,7 @@ async function loadTrials() {
     const res = await fetch(LICENSE_API + '/api/admin/trials', { headers: { 'Authorization': 'Bearer ' + token } });
     const data = await res.json();
     rawTrials = data.trials || [];
-    document.getElementById('stat-trials').textContent = rawTrials.length;
+    document.getElementById('stat-trials').textContent = rawTrials.filter(envMatches).length;
     renderTrials();
   } catch (e) {
     document.getElementById('trial-table').innerHTML = '<tr><td colspan="6">불러오기 실패</td></tr>';
@@ -495,6 +534,7 @@ function renderTrials() {
     const daysLeft = Math.max(0, Math.ceil((14*24*60*60*1000 - (now - startMs)) / (24*60*60*1000)));
     return { ...t, daysLeft, expired: daysLeft <= 0 };
   }).filter(t => {
+    if (!envMatches(t)) return false;
     if (status === 'active' && t.expired) return false;
     if (status === 'expired' && !t.expired) return false;
     return true;
@@ -591,12 +631,13 @@ function renderPayments() {
     if (left >= 0) return { label: `가능 D-${left}`, cls: 'badge-active', eligible: true };
     return { label: `기간 초과 (+${-left}일)`, cls: 'badge-inactive', eligible: false };
   }
-  // stat 카드 업데이트
-  const completed = rawPayments.filter(p => p.status === 'completed' && !p.refunded);
+  // stat 카드 업데이트 (현재 환경 필터 적용)
+  const completed = rawPayments.filter(p => envMatches(p) && p.status === 'completed' && !p.refunded);
   const revenue = completed.reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
   document.getElementById('stat-payments').textContent = completed.length;
   document.getElementById('stat-revenue').textContent = '$' + revenue.toFixed(2);
   let list = rawPayments.filter(p => {
+    if (!envMatches(p)) return false;
     if (statusFilter && p.status !== statusFilter) return false;
     if (emailFilter && !(p.email || '').toLowerCase().includes(emailFilter)) return false;
     return true;
@@ -617,7 +658,11 @@ function renderPayments() {
     } else {
       refundCell = `<button class="btn btn-danger" style="opacity:.45" title="14일 정책 초과 — 강제 환불(예외 처리)" onclick="doRefund('${esc(p.paddle_txn_id || p.paypal_order_id)}','${esc(p.email)}','${esc(p.license_key)}',true)">예외환불</button>`;
     }
-    return `<tr>
+    const envBadge = p.environment === 'sandbox'
+      ? '<span class="badge badge-sandbox">SBX</span>'
+      : '<span class="badge badge-live">LIVE</span>';
+    return `<tr${p.environment === 'sandbox' ? ' class="row-sandbox"' : ''}>
+      <td>${envBadge}</td>
       <td style="font-family:monospace;font-size:.75rem">${esc(p.invoice_number || '-')}</td>
       <td style="font-family:monospace;font-size:.75rem">${esc(p.paddle_txn_id || p.paypal_order_id || '-')}</td>
       <td>${esc(p.email || '-')}</td>
@@ -629,7 +674,7 @@ function renderPayments() {
       <td>${refundCell}</td>
     </tr>`;
   }).join('');
-  document.getElementById('payment-table').innerHTML = html || '<tr><td colspan="9" style="text-align:center;color:var(--muted)">결과 없음</td></tr>';
+  document.getElementById('payment-table').innerHTML = html || '<tr><td colspan="10" style="text-align:center;color:var(--muted)">결과 없음</td></tr>';
 }
 
 async function doRefund(orderId, email, licenseKey, force) {
@@ -682,7 +727,7 @@ async function loadDownloads() {
     const res = await fetch(LICENSE_API + '/api/admin/downloads', { headers: { 'Authorization': 'Bearer ' + token } });
     const data = await res.json();
     rawDownloads = data.downloads || [];
-    document.getElementById('stat-downloads').textContent = rawDownloads.length.toLocaleString();
+    document.getElementById('stat-downloads').textContent = rawDownloads.filter(envMatches).length.toLocaleString();
     // 국가 드롭다운 동적 생성
     const countries = [...new Set(rawDownloads.map(d => d.country || '-'))].sort();
     const sel = document.getElementById('f-dl-country');
@@ -698,6 +743,7 @@ function renderDownloads() {
   const country = document.getElementById('f-dl-country').value;
   const ipFilter = document.getElementById('f-dl-ip').value.toLowerCase();
   let list = rawDownloads.filter(d => {
+    if (!envMatches(d)) return false;
     if (noBot && isBot(d.user_agent)) return false;
     if (country && (d.country || '-') !== country) return false;
     if (ipFilter && !d.ip.includes(ipFilter)) return false;
@@ -731,7 +777,7 @@ async function loadErrors() {
 
 function renderErrors() {
   const workerFilter = document.getElementById('f-err-worker').value;
-  let list = rawErrors.filter(e => !workerFilter || e.worker === workerFilter);
+  let list = rawErrors.filter(e => envMatches(e) && (!workerFilter || e.worker === workerFilter));
   document.getElementById('f-err-count').textContent = list.length + ' / ' + rawErrors.length + '건';
   document.getElementById('error-table').innerHTML = list.map(e => `<tr>
     <td>${esc(e.worker)}</td>
@@ -761,6 +807,7 @@ function renderWebhookEvents() {
   const sevFilter = document.getElementById('f-wh-severity').value;
   const typeFilter = document.getElementById('f-wh-type').value;
   let list = rawWebhookEvents.filter(e =>
+    envMatches(e) &&
     (!sevFilter || e.severity === sevFilter) &&
     (!typeFilter || e.event_type === typeFilter)
   );
@@ -768,13 +815,15 @@ function renderWebhookEvents() {
   document.getElementById('webhook-table').innerHTML = list.map(e => {
     const sev = e.severity || 'info';
     const badgeClass = sev === 'critical' ? 'badge-critical' : (sev === 'warn' ? 'badge-warn' : 'badge-info');
-    return `<tr>
+    const envBadge = envOf(e) === 'sandbox' ? '<span class="badge badge-sandbox">SBX</span>' : '<span class="badge badge-live">LIVE</span>';
+    return `<tr${envOf(e) === 'sandbox' ? ' class="row-sandbox"' : ''}>
+      <td>${envBadge}</td>
       <td><span class="badge ${badgeClass}">${esc(sev)}</span></td>
       <td style="font-family:monospace;font-size:.8rem">${esc(e.event_type)}</td>
       <td style="max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.75rem;color:var(--muted)">${esc(e.summary || '')}</td>
       <td>${formatDate(e.created_at)}</td>
     </tr>`;
-  }).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--muted)">이벤트 없음</td></tr>';
+  }).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted)">이벤트 없음</td></tr>';
 }
 
 function openGenerateModal() {
@@ -874,6 +923,7 @@ const LOCKOUT_MS = 30000;
       loginAttempts = 0;
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('dashboard').classList.remove('hidden');
+      updateEnvTabs();
       loadDashboard();
       initScrollSpy();
     } catch (e) {
