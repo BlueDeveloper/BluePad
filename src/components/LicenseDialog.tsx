@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useI18n } from "../i18n";
+import { CHECKOUT_URL } from "../lib/env";
 
 interface LicenseDialogProps {
   visible: boolean;
@@ -47,7 +48,7 @@ export function LicenseDialog({ visible, isPro, isTrial, licenseKey: currentKey,
           </div>
           {(!isPro || isTrial) && (
             <>
-              <button className="license-activate-btn" style={{ width: "100%", marginBottom: "12px" }} onClick={() => { import("@tauri-apps/plugin-shell").then(m => m.open(import.meta.env.DEV ? "https://bluepad.work/sandbox/buy" : "https://bluepad.work/buy")).catch(() => window.open(import.meta.env.DEV ? "https://bluepad.work/sandbox/buy" : "https://bluepad.work/buy", "_blank")); }}>
+              <button className="license-activate-btn" style={{ width: "100%", marginBottom: "12px" }} onClick={() => { import("@tauri-apps/plugin-shell").then(m => m.open(CHECKOUT_URL)).catch(() => window.open(CHECKOUT_URL, "_blank")); }}>
                 {t("trial.buyNow")}
               </button>
               <div className="license-input-group">

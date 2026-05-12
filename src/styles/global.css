@@ -1878,3 +1878,25 @@ body {
   color: var(--accent);
   font-weight: 600;
 }
+
+/* Sandbox build indicator */
+.sandbox-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+  background: #7c3aed;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 3px 12px;
+  border-bottom-right-radius: 6px;
+  pointer-events: none;
+  font-family: monospace;
+  user-select: none;
+}
+.sandbox-mode {
+  outline: 1px solid rgba(124, 58, 237, 0.4);
+  outline-offset: -1px;
+}

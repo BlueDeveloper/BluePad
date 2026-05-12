@@ -18,6 +18,7 @@ import { UpdateDialog } from "./components/UpdateDialog";
 import { useFileManager } from "./hooks/useFileManager";
 import { useLicense } from "./hooks/useLicense";
 import { useUpdater } from "./hooks/useUpdater";
+import { CHECKOUT_URL, IS_SANDBOX } from "./lib/env";
 import { I18nCtx, t as translate } from "./i18n";
 import type { Lang } from "./i18n";
 import type { EditorHandle } from "./types";
@@ -504,7 +505,8 @@ ${editorEl.innerHTML}
 
   return (
     <I18nCtx.Provider value={i18n}>
-      <div className={`app ${focusMode ? "focus-mode" : ""}`}>
+      <div className={`app ${focusMode ? "focus-mode" : ""} ${IS_SANDBOX ? "sandbox-mode" : ""}`}>
+        {IS_SANDBOX && <div className="sandbox-banner" title="Sandbox build — no real payments">SANDBOX</div>}
         {focusMode && (
           <div className="focus-exit-zone">
             <div className="focus-exit-bar">
@@ -676,7 +678,7 @@ ${editorEl.innerHTML}
           title={i18n.t("license.upgradeTitle")}
           message={license.trialDaysLeft > 0 ? i18n.t("trial.expiringSoon").replace("{days}", String(license.trialDaysLeft)) : i18n.t("trial.expired")}
           actionLabel={i18n.t("trial.buyNow")}
-          onAction={() => openExternal(import.meta.env.DEV ? "https://bluepad.work/sandbox/buy" : "https://bluepad.work/buy")}
+          onAction={() => openExternal(CHECKOUT_URL)}
           onClose={() => setTrialExpiredVisible(false)}
         />
       </div>

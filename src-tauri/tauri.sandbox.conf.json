@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nicosaurus/tauri-schema-generator/main/schema/2.0.0/schema.json",
+  "productName": "BluePad Sandbox",
+  "identifier": "brp.bluepad.sandbox.desktop",
+  "app": {
+    "windows": [
+      {
+        "title": "BluePad — SANDBOX",
+        "width": 1000,
+        "height": 700,
+        "minWidth": 600,
+        "minHeight": 400,
+        "resizable": true,
+        "decorations": true
+      }
+    ]
+  },
+  "bundle": {
+    "createUpdaterArtifacts": false
+  },
+  "plugins": {
+    "updater": {
+      "endpoints": [
+        "https://bluepad-download.blueehdwp.workers.dev/update.json"
+      ]
+    }
+  }
+}
