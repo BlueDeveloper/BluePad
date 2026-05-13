@@ -137,7 +137,17 @@ WHERE paddle_txn_id = 'txn_sandbox_xxx';
   DELETE FROM activations WHERE environment = 'sandbox';
   ```
 
-## 7. 알려진 한계
+## 7. 트러블슈팅
+
+### "Something went wrong" 오버레이 차단
+**원인**: Paddle Sandbox 대시보드의 Default Payment Link 미설정.
+**해결**: sandbox-vendors.paddle.com → Checkout → Checkout settings → Default payment link 에 `https://bluepad.work/sandbox/buy` 입력 후 Save.
+
+### admin Sandbox 토글에 sandbox 사용자가 안 보임
+**원인**: BluePad 앱이 X-Environment 헤더 미전송 → trial이 'live'로 기록됨.
+**해결**: sandbox MSI 최신 빌드인지 확인 (commit `1e13f2e` 이후). 기존 잘못 마킹된 데이터는 SQL UPDATE로 보정.
+
+## 8. 알려진 한계
 
 - Sandbox Paddle은 ICN colo 없음 → 일부 응답 시간 느림
 - Sandbox 자동 환불 승인은 10분 간격 (즉시 X)
