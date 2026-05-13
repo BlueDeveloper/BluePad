@@ -329,7 +329,7 @@ function processingPage(txnId, retry) {
 </div></body></html>`;
 }
 
-function lookupPage() {
+function lookupPage(basePath = "/buy") {
   return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>BluePad - 라이선스 조회</title>
 <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,system-ui,sans-serif;background:#09090b;color:#fafafa;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}.card{background:#18181b;border:1px solid #27272a;border-radius:16px;padding:40px;max-width:480px;width:100%;text-align:center}.icon{font-size:40px;margin-bottom:12px}h1{font-size:22px;font-weight:700;margin-bottom:8px}.sub{color:#a1a1aa;font-size:13.5px;margin-bottom:24px;line-height:1.6}form{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}input{padding:12px 14px;background:#09090b;border:1px solid #27272a;border-radius:9px;color:#fafafa;font-size:14px}input:focus{outline:none;border-color:#155dfc}button{padding:12px;background:#155dfc;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer}button:hover{background:#3b7dff}button:disabled{background:#27272a;cursor:not-allowed}.result{margin:16px 0;padding:16px;background:#09090b;border:1px solid #27272a;border-radius:9px;font-family:monospace;font-size:18px;color:#22c55e;word-break:break-all;display:none}.result.show{display:block}.msg{color:#a1a1aa;font-size:13px;margin-top:12px}.help{margin-top:20px;font-size:12px;color:#52525b;line-height:1.7}.help a{color:#a1a1aa}</style></head>
 <body><div class="card">
@@ -359,7 +359,7 @@ async function doLookup(e) {
   btn.disabled = true;
   btn.textContent = '조회 중...';
   try {
-    var res = await fetch('/buy/lookup', {
+    var res = await fetch('${basePath}/lookup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email })
@@ -639,7 +639,7 @@ export default {
 
         // _ptxn 없을 때: 자동 redirect 누락 케이스 → 이메일 조회 폼 표시
         if (!txnId) {
-          return page(lookupPage());
+          return page(lookupPage(cfg.basePath));
         }
 
         const payment = await env.DB.prepare(
