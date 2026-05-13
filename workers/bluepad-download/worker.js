@@ -1,3 +1,60 @@
+function mobileBlockedPage(lang) {
+  const t = {
+    ko: {
+      title: "BluePad는 Windows 전용입니다",
+      heading: "🖥️ Windows 전용 앱",
+      body: "BluePad는 Windows 데스크톱 전용 마크다운 에디터입니다. 모바일·태블릿에서는 실행할 수 없습니다.",
+      hint: "Windows PC에서 이 페이지에 다시 접속하시거나, 아래 링크를 PC 브라우저에서 열어주세요.",
+      link_url: "https://bluepad.work/",
+      link_label: "BluePad 홈페이지",
+      copy_label: "다운로드 링크 복사",
+      copied: "복사됨!",
+    },
+    ja: {
+      title: "BluePadはWindows専用です",
+      heading: "🖥️ Windows専用アプリ",
+      body: "BluePadはWindowsデスクトップ専用のマークダウンエディタです。モバイル・タブレットでは実行できません。",
+      hint: "Windows PCで再度アクセスするか、下記リンクをPCブラウザで開いてください。",
+      link_url: "https://bluepad.work/ja/",
+      link_label: "BluePadホームページ",
+      copy_label: "ダウンロードリンクをコピー",
+      copied: "コピーしました!",
+    },
+    en: {
+      title: "BluePad is Windows-only",
+      heading: "🖥️ Windows desktop only",
+      body: "BluePad is a Windows-only markdown editor. It cannot run on mobile or tablet devices.",
+      hint: "Please revisit this page on a Windows PC, or open the link below in a desktop browser.",
+      link_url: "https://bluepad.work/en/",
+      link_label: "BluePad homepage",
+      copy_label: "Copy download link",
+      copied: "Copied!",
+    },
+  }[lang] || null;
+  const x = t || {
+    title: "BluePad is Windows-only",
+    heading: "🖥️ Windows desktop only",
+    body: "BluePad is a Windows-only markdown editor.",
+    hint: "Please revisit on a Windows PC.",
+    link_url: "https://bluepad.work/",
+    link_label: "BluePad",
+    copy_label: "Copy link",
+    copied: "Copied!",
+  };
+  const dlUrl = "https://bluepad.work/";
+  return `<!DOCTYPE html><html lang="${lang}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${x.title}</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,system-ui,'Segoe UI',sans-serif;background:#09090b;color:#fafafa;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;line-height:1.6}.card{background:#18181b;border:1px solid #27272a;border-radius:16px;padding:36px 28px;max-width:440px;width:100%;text-align:center}.icon{font-size:48px;margin-bottom:16px}h1{font-size:20px;font-weight:700;margin-bottom:14px;color:#fafafa}p{font-size:14.5px;color:#a1a1aa;margin-bottom:14px}.hint{font-size:13px;color:#71717a;margin:20px 0 24px;padding:14px;background:#09090b;border-radius:9px;border:1px solid #27272a}.btn{display:block;padding:13px;background:#155dfc;color:#fff;border:none;border-radius:9px;font-size:14.5px;font-weight:600;text-decoration:none;margin-bottom:10px;cursor:pointer;width:100%}.btn.alt{background:#27272a;color:#a1a1aa}.btn:active{transform:translateY(1px)}#msg{font-size:13px;color:#22c55e;margin-top:8px;min-height:18px}</style></head>
+<body><div class="card">
+  <div class="icon">${x.heading.startsWith("🖥") ? "🖥️" : ""}</div>
+  <h1>${x.heading}</h1>
+  <p>${x.body}</p>
+  <div class="hint">${x.hint}</div>
+  <a href="${x.link_url}" class="btn">${x.link_label}</a>
+  <button class="btn alt" onclick="navigator.clipboard.writeText('${dlUrl}').then(()=>{document.getElementById('msg').textContent='${x.copied}'})">${x.copy_label}</button>
+  <div id="msg"></div>
+</div></body></html>`;
+}
+
 function getCorsHeaders(request) {
   const origin = request ? request.headers.get("Origin") : null;
   let allowOrigin = "";
@@ -108,13 +165,28 @@ export default {
       if (!fileName) {
         return new Response("Not Found", { status: 404, headers: corsHeaders });
       }
+
+      // 모바일/태블릿 차단 — Windows MSI는 데스크톱 전용. UA에 모바일 토큰 있고
+      // bot/crawler가 아니면 안내 페이지 반환 (직접 URL 입력 우회도 차단).
+      const ua = request.headers.get("User-Agent") || "";
+      const isMobile = /Mobile|Android|iPhone|iPad|iPod|Windows Phone|BlackBerry/i.test(ua);
+      const isBot = /bot|spider|crawler|HeadlessChrome|GPTBot|ClaudeBot|Applebot/i.test(ua);
+      if (isMobile && !isBot) {
+        const al = (request.headers.get("Accept-Language") || "").toLowerCase();
+        const lang = al.startsWith("ko") ? "ko" : (al.startsWith("ja") ? "ja" : "en");
+        return new Response(mobileBlockedPage(lang), {
+          status: 200,
+          headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" },
+        });
+      }
+
       const object = await env.BUCKET.get(fileName);
       if (!object) {
         return new Response("File not found", { status: 404, headers: corsHeaders });
       }
 
       const ip = request.headers.get("CF-Connecting-IP") || "unknown";
-      const userAgent = request.headers.get("User-Agent") || "unknown";
+      const userAgent = ua || "unknown";
       const country = request.headers.get("CF-IPCountry") || "unknown";
       await env.DB.prepare(
         "INSERT INTO downloads (file_name, ip, user_agent, country) VALUES (?, ?, ?, ?)"
