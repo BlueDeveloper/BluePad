@@ -25,25 +25,25 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/legal/privacy.html</loc>
+    <loc>https://bluepad.work/legal/privacy</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/legal/eula.html</loc>
+    <loc>https://bluepad.work/legal/eula</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/legal/opensource.html</loc>
+    <loc>https://bluepad.work/legal/opensource</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/legal/refund.html</loc>
+    <loc>https://bluepad.work/legal/refund</loc>
     <lastmod>2026-05-09</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -55,37 +55,37 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/blog/best-markdown-editors-2026.html</loc>
+    <loc>https://bluepad.work/blog/best-markdown-editors-2026</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/blog/typora-free-alternative.html</loc>
+    <loc>https://bluepad.work/blog/typora-free-alternative</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/blog/markdown-writing-tips.html</loc>
+    <loc>https://bluepad.work/blog/markdown-writing-tips</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/blog/lightweight-note-app-windows.html</loc>
+    <loc>https://bluepad.work/blog/lightweight-note-app-windows</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/blog/focus-mode-distraction-free-writing.html</loc>
+    <loc>https://bluepad.work/blog/focus-mode-distraction-free-writing</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/blog/markdown-editor-for-developers.html</loc>
+    <loc>https://bluepad.work/blog/markdown-editor-for-developers</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -97,37 +97,37 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/en/blog/best-markdown-editors-2026.html</loc>
+    <loc>https://bluepad.work/en/blog/best-markdown-editors-2026</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/en/blog/typora-free-alternative.html</loc>
+    <loc>https://bluepad.work/en/blog/typora-free-alternative</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/en/blog/markdown-writing-tips.html</loc>
+    <loc>https://bluepad.work/en/blog/markdown-writing-tips</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/en/blog/lightweight-note-app-windows.html</loc>
+    <loc>https://bluepad.work/en/blog/lightweight-note-app-windows</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/en/blog/focus-mode-distraction-free-writing.html</loc>
+    <loc>https://bluepad.work/en/blog/focus-mode-distraction-free-writing</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/en/blog/markdown-editor-for-developers.html</loc>
+    <loc>https://bluepad.work/en/blog/markdown-editor-for-developers</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -139,37 +139,37 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/ko/blog/best-markdown-editors-2026.html</loc>
+    <loc>https://bluepad.work/ko/blog/best-markdown-editors-2026</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/ko/blog/typora-free-alternative.html</loc>
+    <loc>https://bluepad.work/ko/blog/typora-free-alternative</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/ko/blog/markdown-writing-tips.html</loc>
+    <loc>https://bluepad.work/ko/blog/markdown-writing-tips</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/ko/blog/lightweight-note-app-windows.html</loc>
+    <loc>https://bluepad.work/ko/blog/lightweight-note-app-windows</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/ko/blog/focus-mode-distraction-free-writing.html</loc>
+    <loc>https://bluepad.work/ko/blog/focus-mode-distraction-free-writing</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/ko/blog/markdown-editor-for-developers.html</loc>
+    <loc>https://bluepad.work/ko/blog/markdown-editor-for-developers</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -181,37 +181,37 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/ja/blog/best-markdown-editors-2026.html</loc>
+    <loc>https://bluepad.work/ja/blog/best-markdown-editors-2026</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/ja/blog/typora-free-alternative.html</loc>
+    <loc>https://bluepad.work/ja/blog/typora-free-alternative</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/ja/blog/markdown-writing-tips.html</loc>
+    <loc>https://bluepad.work/ja/blog/markdown-writing-tips</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/ja/blog/lightweight-note-app-windows.html</loc>
+    <loc>https://bluepad.work/ja/blog/lightweight-note-app-windows</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/ja/blog/focus-mode-distraction-free-writing.html</loc>
+    <loc>https://bluepad.work/ja/blog/focus-mode-distraction-free-writing</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://bluepad.work/ja/blog/markdown-editor-for-developers.html</loc>
+    <loc>https://bluepad.work/ja/blog/markdown-editor-for-developers</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
