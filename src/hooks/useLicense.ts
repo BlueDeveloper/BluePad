@@ -1,5 +1,9 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { APP_ENV } from "../lib/env";
+
+// 모든 license API fetch에 환경 헤더 첨부 (Live/Sandbox 분리)
+const ENV_HEADERS = { "Content-Type": "application/json", "X-Environment": APP_ENV } as const;
 
 const LICENSE_KEY = "bluepad_license_key";
 const LICENSE_STATUS_KEY = "bluepad_license_status";
@@ -125,7 +129,7 @@ async function syncTrialWithServer(deviceId: string): Promise<{ isTrial: boolean
     const deviceName = await getDeviceName();
     const res = await fetch(`${API_URL}/api/trial`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: ENV_HEADERS,
       body: JSON.stringify({ device_id: deviceId, device_name: deviceName }),
     });
     const data = await res.json();
@@ -167,7 +171,12 @@ export function useLicense() {
 
   const activate = useCallback(async (key: string): Promise<boolean> => {
     const trimmed = key.trim().toUpperCase();
-    if (!/^BP-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(trimmed)) {
+    if (!/^(BP|BPSB)-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(trimmed)) {
+      return false;
+    }
+    // 환경 일치 검증 — Live 앱에서 BPSB- 키 / Sandbox 앱에서 BP- 키 모두 차단
+    const keyEnv = trimmed.startsWith("BPSB-") ? "sandbox" : "live";
+    if (keyEnv !== APP_ENV) {
       return false;
     }
 
@@ -177,7 +186,7 @@ export function useLicense() {
 
       const res = await fetch(`${API_URL}/api/validate`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: ENV_HEADERS,
         body: JSON.stringify({
           license_key: trimmed,
           device_id: deviceId,
@@ -231,7 +240,7 @@ export function useLicense() {
       try {
         await fetch(`${API_URL}/api/deactivate`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: ENV_HEADERS,
           body: JSON.stringify({ license_key: key, device_id: deviceId }),
         });
       } catch {
