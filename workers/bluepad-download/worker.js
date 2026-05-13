@@ -71,6 +71,37 @@ export default {
       });
     }
 
+    // Sandbox MSI download — Admin 인증 필수 (?key=ADMIN_SECRET 또는 Authorization Bearer)
+    // 일반 사용자는 받을 수 없도록 차단. 관리자 대시보드의 다운로드 버튼만 사용.
+    if (url.pathname === "/sandbox/download") {
+      const tokenFromHeader = (request.headers.get("Authorization") || "").replace(/^Bearer\s+/, "");
+      const tokenFromQuery = url.searchParams.get("key") || "";
+      const provided = tokenFromHeader || tokenFromQuery;
+      if (!env.ADMIN_SECRET || provided !== env.ADMIN_SECRET) {
+        return new Response("Forbidden", { status: 403, headers: corsHeaders });
+      }
+      const fileName = "sandbox/BluePad-Sandbox-latest.msi";
+      const object = await env.BUCKET.get(fileName);
+      if (!object) {
+        return new Response("Sandbox MSI not yet uploaded", { status: 404, headers: corsHeaders });
+      }
+      const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+      const userAgent = request.headers.get("User-Agent") || "unknown";
+      const country = request.headers.get("CF-IPCountry") || "unknown";
+      try {
+        await env.DB.prepare(
+          "INSERT INTO downloads (file_name, ip, user_agent, country, environment) VALUES (?, ?, ?, ?, 'sandbox')"
+        ).bind(fileName, ip, userAgent, country).run();
+      } catch (_) {}
+      const headers = new Headers(corsHeaders);
+      headers.set("Content-Type", "application/octet-stream");
+      headers.set("Content-Disposition", `attachment; filename="BluePad-Sandbox-latest.msi"`);
+      if (object.size) {
+        headers.set("Content-Length", object.size.toString());
+      }
+      return new Response(object.body, { headers });
+    }
+
     // File download (public)
     if (url.pathname.startsWith("/download/")) {
       const fileName = url.pathname.replace("/download/", "");

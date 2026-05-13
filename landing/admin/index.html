@@ -203,6 +203,17 @@ h2[id],div[data-section]{scroll-margin-top:64px}
     </table>
   </div>
 
+  <div id="sandbox-download-bar" style="display:none;margin:1rem 0;padding:1rem;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.3);border-radius:10px">
+    <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+      <span style="font-size:1.4rem">🧪</span>
+      <div style="flex:1;min-width:200px">
+        <div style="font-weight:600;margin-bottom:.2rem">Sandbox BluePad 인스톨러</div>
+        <div style="font-size:.75rem;color:var(--muted)">관리자 전용. BPSB- 키 테스트 가능한 별도 빌드.</div>
+      </div>
+      <button class="btn btn-primary" onclick="downloadSandboxMsi()" style="background:#7c3aed;border:none">⬇ Sandbox MSI 다운로드</button>
+    </div>
+  </div>
+
   <h2 id="sec-downloads" style="font-size:1.1rem;margin:1.5rem 0 1rem">다운로드 내역</h2>
   <div class="filter-bar">
     <label><input type="checkbox" id="f-dl-nobot" onchange="renderDownloads()"> 봇 제외</label>
@@ -439,6 +450,31 @@ function updateEnvTabs() {
     const el = document.getElementById('env-' + e);
     if (el) el.classList.toggle('active', currentEnv === e);
   });
+  // Sandbox 다운로드 카드는 sandbox 토글에서만 노출
+  const bar = document.getElementById('sandbox-download-bar');
+  if (bar) bar.style.display = (currentEnv === 'sandbox' || currentEnv === 'all') ? 'block' : 'none';
+}
+
+function downloadSandboxMsi() {
+  const token = getToken();
+  if (!token) { alert('로그인이 필요합니다.'); return; }
+  // 인증 헤더로 다운로드 — 토큰이 URL에 노출되지 않도록 fetch + blob 방식
+  fetch(DOWNLOAD_API + '/sandbox/download', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  }).then(async (res) => {
+    if (res.status === 403) { alert('인증 실패 (관리자 권한 없음)'); return; }
+    if (res.status === 404) { alert('Sandbox MSI가 아직 업로드되지 않았습니다.'); return; }
+    if (!res.ok) { alert('다운로드 실패: ' + res.status); return; }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'BluePad-Sandbox-latest.msi';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }).catch(e => alert('연결 오류: ' + e.message));
 }
 
 function parseUA(ua) {

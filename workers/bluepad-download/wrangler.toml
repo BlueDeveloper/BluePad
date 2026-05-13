@@ -10,3 +10,6 @@ bucket_name = "bluepad-downloads"
 binding = "DB"
 database_name = "bluepad-licenses"
 database_id = "6e9776a9-f68a-45b9-b3f7-00cbd6bda70c"
+
+# Secrets (wrangler secret put 으로 설정):
+# ADMIN_SECRET — bluepad-license-api와 동일 값 (sandbox MSI 다운로드 인증용)
