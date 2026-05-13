@@ -46,8 +46,11 @@ async function verifyPaddleWebhook(rawBody, sigHeader, secret) {
   return hex === h1;
 }
 
-async function getPaddleCustomerEmail(customerId, apiKey) {
-  const res = await fetch(`https://api.paddle.com/customers/${customerId}`, {
+async function getPaddleCustomerEmail(customerId, apiKey, environment = "live") {
+  const base = environment === "sandbox"
+    ? "https://sandbox-api.paddle.com"
+    : "https://api.paddle.com";
+  const res = await fetch(`${base}/customers/${customerId}`, {
     headers: { Authorization: `Bearer ${apiKey}` },
   });
   const data = await res.json();
@@ -553,12 +556,12 @@ export default {
           return new Response("OK", { status: 200 });
         }
 
-        // 고객 이메일 조회
+        // 고객 이메일 조회 (Sandbox는 sandbox-api.paddle.com 사용)
         let email = "unknown";
         try {
           if (txn.customer_id) {
             email =
-              (await getPaddleCustomerEmail(txn.customer_id, cfg.apiKey)) ||
+              (await getPaddleCustomerEmail(txn.customer_id, cfg.apiKey, environment)) ||
               "unknown";
           }
         } catch (_) {}
