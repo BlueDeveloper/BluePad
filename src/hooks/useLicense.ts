@@ -317,6 +317,19 @@ export function useLicense() {
     return () => clearInterval(timer);
   }, []);
 
+  // 백그라운드 라이선스 재검증 (1시간 간격) — 환불/비활성화가 다음 재시작 전에도 반영되도록
+  // activate()는 서버가 명시적으로 invalid_key를 반환하면 localStorage 정리하고 Free로 강등.
+  // 네트워크 오류 시엔 offline grace period(30일) 내에서 Pro 유지(시계 역행 검증 포함).
+  useEffect(() => {
+    if (!hasLicense) return;
+    const REVALIDATE_INTERVAL_MS = 60 * 60 * 1000;
+    const timer = setInterval(() => {
+      const stored = localStorage.getItem(LICENSE_KEY);
+      if (stored) activate(stored);
+    }, REVALIDATE_INTERVAL_MS);
+    return () => clearInterval(timer);
+  }, [hasLicense, activate]);
+
   return {
     isPro,
     isTrial,
