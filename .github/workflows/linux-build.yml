@@ -70,6 +70,9 @@ jobs:
       - name: Install npm dependencies
         run: npm ci
 
+      - name: Clean previous bundle (cargo cache가 이전 산출물을 남기는 문제 방지)
+        run: rm -rf src-tauri/target/release/bundle
+
       - name: Build Tauri (Linux)
         # Linux는 자동 업데이트 미사용 (.deb/.rpm/.AppImage는 패키지 매니저 또는 사용자 수동 업데이트)
         # → createUpdaterArtifacts=false로 서명 키 요구 회피
@@ -114,9 +117,10 @@ jobs:
           VER=${{ steps.pkg.outputs.version }}
           BASE=src-tauri/target/release/bundle
           npm install -g wrangler
-          APPIMAGE=$(find "$BASE/appimage" -maxdepth 1 -name '*.AppImage' | head -1)
-          DEB=$(find "$BASE/deb" -maxdepth 1 -name '*.deb' | head -1)
-          RPM=$(find "$BASE/rpm" -maxdepth 1 -name '*.rpm' | head -1)
+          # 정확한 ${VER} 명명만 매칭 (이전 빌드 잔존물 회피)
+          APPIMAGE=$(find "$BASE/appimage" -maxdepth 1 -name "BluePad_${VER}_amd64.AppImage" | head -1)
+          DEB=$(find "$BASE/deb" -maxdepth 1 -name "BluePad_${VER}_amd64.deb" | head -1)
+          RPM=$(find "$BASE/rpm" -maxdepth 1 -name "BluePad-${VER}-1.x86_64.rpm" | head -1)
           if [ -n "$APPIMAGE" ]; then
             wrangler r2 object put "bluepad-downloads/BluePad_${VER}_amd64.AppImage" \
               --file="$APPIMAGE" --content-type="application/octet-stream" --remote
@@ -143,9 +147,9 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           files: |
-            src-tauri/target/release/bundle/deb/*.deb
-            src-tauri/target/release/bundle/rpm/*.rpm
-            src-tauri/target/release/bundle/appimage/*.AppImage
+            src-tauri/target/release/bundle/deb/BluePad_${{ steps.pkg.outputs.version }}_amd64.deb
+            src-tauri/target/release/bundle/rpm/BluePad-${{ steps.pkg.outputs.version }}-1.x86_64.rpm
+            src-tauri/target/release/bundle/appimage/BluePad_${{ steps.pkg.outputs.version }}_amd64.AppImage
 
       - name: Create GitHub Release (draft, manual)
         if: ${{ inputs.create_release && !startsWith(github.ref, 'refs/tags/v') }}
