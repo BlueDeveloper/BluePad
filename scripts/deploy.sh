@@ -8,10 +8,15 @@ set -e
 # ── 인자 확인 ──
 VERSION="$1"
 NOTES="$2"
+WITH_LINUX="0"
+for arg in "$@"; do
+  if [ "$arg" = "--with-linux" ]; then WITH_LINUX="1"; fi
+done
 
 if [ -z "$VERSION" ] || [ -z "$NOTES" ]; then
-  echo "사용법: ./scripts/deploy.sh <version> \"<release notes>\""
+  echo "사용법: ./scripts/deploy.sh <version> \"<release notes>\" [--with-linux]"
   echo "예시:   ./scripts/deploy.sh 1.2.0 \"PDF 내보내기, 성능 개선\""
+  echo "예시:   ./scripts/deploy.sh 1.9.0 \"신기능\" --with-linux  # Linux 산출물도 함께 업로드"
   exit 1
 fi
 
@@ -102,14 +107,61 @@ npx wrangler r2 object put "bluepad-downloads/update.json" \
 echo "   MSI ✓"
 echo "   update.json ✓"
 
-# ── 5. 랜딩 다운로드 URL 업데이트 ──
+# ── 5. 랜딩 다운로드 URL + Linux 산출물 업로드 ──
 echo ""
 echo "🌐 [4/6] 랜딩 다운로드 URL 업데이트..."
 OLD_MSI="BluePad_${CURRENT_VERSION}_x64.msi"
 NEW_MSI="BluePad_${VERSION}_x64.msi"
+OLD_APPIMAGE="BluePad_${CURRENT_VERSION}_amd64.AppImage"
+NEW_APPIMAGE="BluePad_${VERSION}_amd64.AppImage"
+OLD_DEB="BluePad_${CURRENT_VERSION}_amd64.deb"
+NEW_DEB="BluePad_${VERSION}_amd64.deb"
+OLD_RPM="BluePad-${CURRENT_VERSION}-1.x86_64.rpm"
+NEW_RPM="BluePad-${VERSION}-1.x86_64.rpm"
 COUNT=$(grep -rl "$OLD_MSI" landing/ 2>/dev/null | wc -l)
-find landing -name "*.html" -exec sed -i "s/${OLD_MSI}/${NEW_MSI}/g" {} +
+find landing -name "*.html" -exec sed -i \
+  -e "s/${OLD_MSI}/${NEW_MSI}/g" \
+  -e "s/${OLD_APPIMAGE}/${NEW_APPIMAGE}/g" \
+  -e "s/${OLD_DEB}/${NEW_DEB}/g" \
+  -e "s/${OLD_RPM}/${NEW_RPM}/g" \
+  -e "s/Download v${CURRENT_VERSION}/Download v${VERSION}/g" \
+  -e "s/\"softwareVersion\": \"${CURRENT_VERSION}\"/\"softwareVersion\": \"${VERSION}\"/g" {} +
 echo "   ${COUNT}개 파일 업데이트 ✓"
+
+# sitemap lastmod 갱신
+SITEMAP="${PROJECT_ROOT}/landing/sitemap.xml"
+TODAY_ISO=$(date +"%Y-%m-%d")
+sed -i "s|<lastmod>[0-9-]*</lastmod>|<lastmod>${TODAY_ISO}</lastmod>|g" "$SITEMAP"
+echo "   sitemap lastmod → ${TODAY_ISO} ✓"
+
+# Linux 산출물 R2 업로드 (--with-linux)
+if [ "$WITH_LINUX" = "1" ]; then
+  echo ""
+  echo "🐧 Linux 산출물 R2 업로드..."
+  ARTIFACT_DIR=$(ls -td "${PROJECT_ROOT}"/linux-artifacts/bluepad-linux-*/ 2>/dev/null | head -1)
+  if [ -z "$ARTIFACT_DIR" ]; then
+    echo "   ⚠️  linux-artifacts/ 폴더가 없습니다. Linux 빌드 산출물을 먼저 받아두세요."
+  else
+    APPIMAGE_FILE=$(find "$ARTIFACT_DIR" -name "BluePad_${VERSION}_amd64.AppImage" | head -1)
+    DEB_FILE=$(find "$ARTIFACT_DIR" -name "BluePad_${VERSION}_amd64.deb" | head -1)
+    RPM_FILE=$(find "$ARTIFACT_DIR" -name "BluePad-${VERSION}-1.x86_64.rpm" | head -1)
+    if [ -n "$APPIMAGE_FILE" ]; then
+      npx wrangler r2 object put "bluepad-downloads/${NEW_APPIMAGE}" \
+        --file="$APPIMAGE_FILE" --content-type="application/octet-stream" --remote 2>&1 | tail -1
+      echo "   AppImage ✓"
+    fi
+    if [ -n "$DEB_FILE" ]; then
+      npx wrangler r2 object put "bluepad-downloads/${NEW_DEB}" \
+        --file="$DEB_FILE" --content-type="application/vnd.debian.binary-package" --remote 2>&1 | tail -1
+      echo "   .deb ✓"
+    fi
+    if [ -n "$RPM_FILE" ]; then
+      npx wrangler r2 object put "bluepad-downloads/${NEW_RPM}" \
+        --file="$RPM_FILE" --content-type="application/x-rpm" --remote 2>&1 | tail -1
+      echo "   .rpm ✓"
+    fi
+  fi
+fi
 
 # ── 6. 릴리즈 노트 자동 추가 ──
 echo ""
@@ -149,7 +201,7 @@ echo "🔍 [8/8] IndexNow 제출..."
 INDEXNOW_KEY="52cbe3af562eb1c50d5dfb86fc922388"
 INDEXNOW_CODE=$(curl -s -o /dev/null -w '%{http_code}' -X POST "https://api.indexnow.org/indexnow" \
   -H "Content-Type: application/json; charset=utf-8" \
-  -d "{\"host\":\"bluepad.work\",\"key\":\"${INDEXNOW_KEY}\",\"keyLocation\":\"https://bluepad.work/${INDEXNOW_KEY}.txt\",\"urlList\":[\"https://bluepad.work/changelog/\",\"https://bluepad.work/ko/\",\"https://bluepad.work/en/\",\"https://bluepad.work/ja/\"]}")
+  -d "{\"host\":\"bluepad.work\",\"key\":\"${INDEXNOW_KEY}\",\"keyLocation\":\"https://bluepad.work/${INDEXNOW_KEY}.txt\",\"urlList\":[\"https://bluepad.work/changelog/\",\"https://bluepad.work/ko/\",\"https://bluepad.work/en/\",\"https://bluepad.work/ja/\",\"https://bluepad.work/ko/download/\",\"https://bluepad.work/en/download/\",\"https://bluepad.work/ja/download/\"]}")
 echo "   IndexNow: ${INDEXNOW_CODE}"
 
 if [ "$HTTP_CODE" = "200" ] && [ "$UPDATE_VER" = "$VERSION" ]; then

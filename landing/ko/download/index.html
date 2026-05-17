@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BluePad 다운로드 — Windows · Linux</title>
+  <meta name="description" content="BluePad를 Windows 또는 Linux에 설치하세요. Windows는 MSI, Linux는 AppImage / deb / rpm 패키지를 제공합니다.">
+  <link rel="canonical" href="https://bluepad.work/ko/download/">
+  <link rel="alternate" hreflang="en" href="https://bluepad.work/en/download/">
+  <link rel="alternate" hreflang="ko" href="https://bluepad.work/ko/download/">
+  <link rel="alternate" hreflang="ja" href="https://bluepad.work/ja/download/">
+  <link rel="alternate" hreflang="x-default" href="https://bluepad.work/ko/download/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="BluePad 다운로드 — Windows · Linux">
+  <meta property="og:description" content="Windows MSI · Linux AppImage / deb / rpm 패키지 제공.">
+  <meta property="og:url" content="https://bluepad.work/ko/download/">
+  <meta property="og:site_name" content="BluePad">
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <meta name="naver-site-verification" content="9b479417f022befdffd0b837c015469b604758d3" />
+  <script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wkokfmayny");</script>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --c-bg: #09090b;
+      --c-bg-raised: #111113;
+      --c-bg-card: #18181b;
+      --c-border: #27272a;
+      --c-border-subtle: #1c1c1f;
+      --c-text: #fafafa;
+      --c-text-2: #a1a1aa;
+      --c-text-3: #52525b;
+      --c-accent: #155dfc;
+      --c-accent-hover: #3b7dff;
+      --font: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { font-family: var(--font); background: var(--c-bg); color: var(--c-text); overflow-x: hidden; line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+
+    /* NAV */
+    .nav { position: sticky; top: 0; z-index: 100; background: rgba(9,9,11,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--c-border-subtle); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .nav-logo { font-size: 16px; font-weight: 700; letter-spacing: -0.02em; }
+    .nav-logo .accent { color: var(--c-accent); }
+    .nav-links { display: flex; gap: 28px; list-style: none; font-size: 14px; color: var(--c-text-2); align-items: center; }
+    .nav-links a:hover { color: var(--c-text); }
+
+    /* HERO */
+    .hero { padding: 80px 0 40px; text-align: center; }
+    .hero-eyebrow { display: inline-block; font-size: 12px; font-weight: 600; color: var(--c-accent); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 16px; }
+    .hero h1 { font-size: 48px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 18px; }
+    .hero h1 .accent { color: var(--c-accent); }
+    .hero p { font-size: 17px; color: var(--c-text-2); max-width: 560px; margin: 0 auto; }
+    .detected { display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; padding: 8px 16px; background: rgba(21,93,252,0.08); border: 1px solid rgba(21,93,252,0.25); border-radius: 999px; font-size: 13px; color: var(--c-text-2); }
+    .detected strong { color: var(--c-text); font-weight: 600; }
+
+    /* DL CARDS */
+    .dl-section { padding: 50px 0 80px; }
+    .dl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+    @media (max-width: 720px) { .dl-grid { grid-template-columns: 1fr; } }
+
+    .dl-card { background: var(--c-bg-card); border: 1px solid var(--c-border); border-radius: 16px; padding: 32px; position: relative; transition: border-color .2s; }
+    .dl-card.recommended { border-color: var(--c-accent); box-shadow: 0 0 0 4px rgba(21,93,252,0.08); }
+    .dl-card .badge { position: absolute; top: -10px; right: 24px; padding: 4px 10px; background: var(--c-accent); border-radius: 999px; font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    .dl-os { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .dl-os svg { width: 36px; height: 36px; flex-shrink: 0; }
+    .dl-os-name { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+    .dl-os-meta { font-size: 13px; color: var(--c-text-3); }
+
+    .dl-desc { font-size: 14px; color: var(--c-text-2); margin-bottom: 22px; }
+
+    .dl-primary { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 18px; background: var(--c-accent); color: #fff; border-radius: 10px; font-size: 15px; font-weight: 600; transition: background .15s; width: 100%; }
+    .dl-primary:hover { background: var(--c-accent-hover); }
+    .dl-primary .filesize { opacity: 0.7; font-weight: 500; }
+
+    .dl-secondary { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .dl-secondary a { flex: 1; min-width: 100px; padding: 10px 14px; text-align: center; border: 1px solid var(--c-border); border-radius: 8px; font-size: 13px; color: var(--c-text-2); transition: border-color .15s, color .15s; }
+    .dl-secondary a:hover { border-color: var(--c-text-2); color: var(--c-text); }
+
+    /* MAC NOTICE */
+    .mac-notice { background: var(--c-bg-raised); border: 1px solid var(--c-border-subtle); border-radius: 12px; padding: 20px 24px; display: flex; align-items: center; gap: 16px; }
+    .mac-notice svg { width: 28px; height: 28px; flex-shrink: 0; color: var(--c-text-3); }
+    .mac-notice-text { font-size: 14px; color: var(--c-text-2); }
+    .mac-notice-text strong { color: var(--c-text); font-weight: 600; }
+
+    /* INSTALL GUIDE */
+    .install { padding: 60px 0; border-top: 1px solid var(--c-border-subtle); }
+    .install h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 32px; text-align: center; }
+    .install-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    @media (max-width: 720px) { .install-grid { grid-template-columns: 1fr; } }
+    .install-block { background: var(--c-bg-card); border: 1px solid var(--c-border); border-radius: 14px; padding: 26px; }
+    .install-block h3 { font-size: 16px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .install-block ol { padding-left: 20px; font-size: 14px; color: var(--c-text-2); }
+    .install-block li { margin-bottom: 8px; }
+    .install-block code { font-family: var(--font-mono); background: var(--c-bg); padding: 2px 6px; border-radius: 4px; font-size: 12.5px; border: 1px solid var(--c-border-subtle); }
+    .install-block .note { margin-top: 14px; padding: 12px 14px; background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); border-radius: 8px; font-size: 12.5px; color: #fbbf24; }
+
+    /* FOOTER */
+    .foot { padding: 50px 0 60px; border-top: 1px solid var(--c-border-subtle); font-size: 13px; color: var(--c-text-3); }
+    .foot-inner { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; }
+    .foot-links { list-style: none; display: flex; flex-wrap: wrap; gap: 18px; }
+    .foot-links a:hover { color: var(--c-text); }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "BluePad",
+    "operatingSystem": ["Windows 10", "Windows 11", "Linux"],
+    "applicationCategory": "DeveloperApplication",
+    "applicationSubCategory": "Markdown Editor",
+    "description": "Windows와 Linux에서 동작하는 WYSIWYG 마크다운 에디터. MSI / AppImage / deb / rpm 패키지 제공.",
+    "softwareVersion": "1.8.0",
+    "inLanguage": "ko",
+    "url": "https://bluepad.work/ko/download/",
+    "downloadUrl": "https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.8.0_x64.msi",
+    "offers": [
+      { "@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free", "availability": "https://schema.org/InStock" }
+    ],
+    "author": { "@type": "Organization", "name": "BRP (BlueRedPolarity)", "url": "https://bluepad.work" }
+  }
+  </script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a href="/ko/" class="nav-logo">Blue<span class="accent">Pad</span></a>
+      <ul class="nav-links">
+        <li><a href="/ko/">홈</a></li>
+        <li><a href="/ko/blog/">블로그</a></li>
+        <li><a href="/changelog/">업데이트</a></li>
+        <li><a href="/help/">도움말</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="wrap">
+      <span class="hero-eyebrow">Download v1.8.0</span>
+      <h1>BluePad를 <span class="accent">설치하세요</span></h1>
+      <p>Windows와 Linux를 지원합니다. 운영체제를 자동 감지해 권장 패키지를 강조합니다.</p>
+      <div id="detected" class="detected" hidden>
+        <span>감지된 OS:</span> <strong id="detected-os">—</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="dl-section">
+    <div class="wrap">
+      <div class="dl-grid">
+
+        <!-- Windows -->
+        <div class="dl-card" id="card-windows">
+          <span class="badge" id="badge-windows" hidden>권장</span>
+          <div class="dl-os">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M0 3.449L9.75 2.1v9.451H0V3.449zm10.949-1.5L24 0v11.4H10.949V1.949zM0 12.6h9.75v9.451L0 20.699V12.6zm10.949 0H24V24l-13.051-1.949V12.6z"/></svg>
+            <div>
+              <div class="dl-os-name">Windows</div>
+              <div class="dl-os-meta">Windows 10 / 11 · 64-bit</div>
+            </div>
+          </div>
+          <div class="dl-desc">코드 서명이 없어 SmartScreen 경고가 표시될 수 있습니다. "추가 정보 → 실행"으로 진행하세요.</div>
+          <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.8.0_x64.msi" class="dl-primary" data-os="windows">
+            <span>MSI 다운로드</span>
+            <span class="filesize">· 7 MB</span>
+          </a>
+        </div>
+
+        <!-- Linux -->
+        <div class="dl-card" id="card-linux">
+          <span class="badge" id="badge-linux" hidden>권장</span>
+          <div class="dl-os">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 00-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.6.058.399.116.798-.027 1.234-.45 1.135-.464 1.916.137 2.297.27.176.59.293.92.367.328.073.665.108 1.005.108 1.025 0 2.058-.235 3.114-.235.998 0 1.971.235 2.984.235.31 0 .624-.034.94-.104.31-.07.626-.18.92-.346.286-.165.572-.39.745-.673.173-.281.247-.62.241-.94 0-.305-.062-.59-.149-.864-.084-.272-.198-.534-.222-.806-.024-.272.011-.534.115-.812.105-.282.273-.583.439-.927.106-.218.211-.434.286-.66.075-.227.121-.456.121-.71.001-.255-.066-.522-.21-.762a1.69 1.69 0 00-.587-.572c-.218-.131-.453-.227-.66-.327-.105-.05-.207-.1-.265-.151-.058-.05-.092-.082-.114-.114-.022-.034-.034-.07-.044-.116-.01-.046-.018-.105-.018-.18 0-.082.012-.176.034-.282.022-.106.055-.225.099-.358.044-.133.099-.28.165-.44.066-.16.143-.337.232-.529.089-.193.187-.402.293-.629.106-.226.222-.471.345-.733.123-.262.255-.541.395-.838.14-.298.288-.612.444-.945a59.43 59.43 0 00.486-1.046c.166-.366.34-.747.519-1.146.18-.398.366-.812.557-1.241.192-.43.39-.873.594-1.332.203-.459.413-.932.626-1.418.213-.486.43-.984.65-1.495.22-.51.443-1.032.668-1.566.226-.534.454-1.08.685-1.638.231-.557.464-1.127.7-1.708.235-.581.473-1.174.713-1.78.24-.604.482-1.222.726-1.85.244-.629.491-1.27.74-1.92.249-.652.5-1.314.754-1.987.254-.673.51-1.357.768-2.05.258-.694.518-1.397.78-2.11.262-.713.526-1.435.79-2.166.265-.731.532-1.471.8-2.219.267-.748.535-1.504.804-2.27.27-.764.54-1.537.812-2.317.272-.78.546-1.568.82-2.363.275-.795.55-1.598.827-2.408.276-.81.554-1.626.83-2.45.278-.825.557-1.656.836-2.494.279-.838.559-1.683.84-2.534"/></svg>
+            <div>
+              <div class="dl-os-name">Linux</div>
+              <div class="dl-os-meta">x86_64 · AppImage / deb / rpm</div>
+            </div>
+          </div>
+          <div class="dl-desc">AppImage는 별도 설치 없이 실행 가능합니다. Debian/Ubuntu는 deb, Fedora/RHEL은 rpm을 권장합니다.</div>
+          <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.8.0_amd64.AppImage" class="dl-primary" data-os="linux">
+            <span>AppImage 다운로드</span>
+            <span class="filesize">· 80 MB</span>
+          </a>
+          <div class="dl-secondary">
+            <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.8.0_amd64.deb">.deb (Debian/Ubuntu)</a>
+            <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad-1.8.0-1.x86_64.rpm">.rpm (Fedora/RHEL)</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- macOS notice -->
+      <div class="mac-notice">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        <div class="mac-notice-text"><strong>macOS는 아직 지원되지 않습니다.</strong> 향후 지원 예정 — 알림을 원하시면 <a href="/feedback/" style="color:var(--c-accent);text-decoration:underline">피드백</a>으로 알려주세요.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="install">
+    <div class="wrap">
+      <h2>설치 안내</h2>
+      <div class="install-grid">
+
+        <div class="install-block">
+          <h3>🖥️ Windows</h3>
+          <ol>
+            <li>다운로드한 <code>BluePad_1.8.0_x64.msi</code> 실행</li>
+            <li>SmartScreen 경고 시 <strong>추가 정보 → 실행</strong></li>
+            <li>설치 마법사 따라 진행</li>
+            <li>시작 메뉴에서 BluePad 실행</li>
+          </ol>
+          <div class="note">코드 서명이 없어 SmartScreen 경고가 표시됩니다. 운영 방침으로 수용 — 신뢰할 수 있습니다.</div>
+        </div>
+
+        <div class="install-block">
+          <h3>🐧 Linux</h3>
+          <ol>
+            <li><strong>AppImage</strong>: <code>chmod +x BluePad_1.8.0_amd64.AppImage</code> 후 실행</li>
+            <li><strong>.deb</strong>: <code>sudo apt install ./BluePad_1.8.0_amd64.deb</code></li>
+            <li><strong>.rpm</strong>: <code>sudo dnf install ./BluePad-1.8.0-1.x86_64.rpm</code></li>
+            <li>또는 <code>sudo rpm -i</code> 사용</li>
+          </ol>
+          <div class="note">Linux판은 자동 업데이트가 아직 지원되지 않습니다. 새 버전이 나오면 이 페이지에서 다시 받아주세요.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <div>&copy; 2026 <strong>비알피(BRP)</strong> · 대표: 윤동제 · 사업자등록번호: 511-32-01572</div>
+      <ul class="foot-links">
+        <li><a href="/ko/">홈</a></li>
+        <li><a href="/help/">도움말</a></li>
+        <li><a href="/support/">환불/문의</a></li>
+        <li><a href="/feedback/">피드백</a></li>
+        <li><a href="/legal/privacy">개인정보처리방침</a></li>
+        <li><a href="/legal/eula">이용약관</a></li>
+        <li><a href="/legal/refund">환불정책</a></li>
+        <li><a href="/legal/opensource">오픈소스</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var ua = navigator.userAgent || '';
+      var platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
+      var lower = (ua + ' ' + platform).toLowerCase();
+
+      var os = 'unknown';
+      var label = '알 수 없음';
+      if (/iphone|ipad|ipod|android|mobile|tablet/.test(lower)) { os = 'mobile'; label = '모바일/태블릿 (지원 안 함)'; }
+      else if (/win/.test(lower)) { os = 'windows'; label = 'Windows'; }
+      else if (/linux|x11/.test(lower) && !/android/.test(lower)) { os = 'linux'; label = 'Linux'; }
+      else if (/mac/.test(lower)) { os = 'mac'; label = 'macOS (지원 예정)'; }
+
+      var detEl = document.getElementById('detected');
+      var osEl = document.getElementById('detected-os');
+      if (osEl) { osEl.textContent = label; }
+      if (detEl) { detEl.hidden = false; }
+
+      if (os === 'windows') {
+        var bw = document.getElementById('badge-windows');
+        var cw = document.getElementById('card-windows');
+        if (bw) bw.hidden = false;
+        if (cw) cw.classList.add('recommended');
+      } else if (os === 'linux') {
+        var bl = document.getElementById('badge-linux');
+        var cl = document.getElementById('card-linux');
+        if (bl) bl.hidden = false;
+        if (cl) cl.classList.add('recommended');
+      }
+    })();
+  </script>
+
+</body>
+</html>

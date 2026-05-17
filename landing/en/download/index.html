@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download BluePad — Windows · Linux</title>
+  <meta name="description" content="Install BluePad on Windows or Linux. MSI installer for Windows, plus AppImage / deb / rpm packages for Linux.">
+  <link rel="canonical" href="https://bluepad.work/en/download/">
+  <link rel="alternate" hreflang="en" href="https://bluepad.work/en/download/">
+  <link rel="alternate" hreflang="ko" href="https://bluepad.work/ko/download/">
+  <link rel="alternate" hreflang="ja" href="https://bluepad.work/ja/download/">
+  <link rel="alternate" hreflang="x-default" href="https://bluepad.work/ko/download/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Download BluePad — Windows · Linux">
+  <meta property="og:description" content="MSI for Windows · AppImage / deb / rpm for Linux.">
+  <meta property="og:url" content="https://bluepad.work/en/download/">
+  <meta property="og:site_name" content="BluePad">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <meta name="naver-site-verification" content="9b479417f022befdffd0b837c015469b604758d3" />
+  <script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wkokfmayny");</script>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --c-bg: #09090b;
+      --c-bg-raised: #111113;
+      --c-bg-card: #18181b;
+      --c-border: #27272a;
+      --c-border-subtle: #1c1c1f;
+      --c-text: #fafafa;
+      --c-text-2: #a1a1aa;
+      --c-text-3: #52525b;
+      --c-accent: #155dfc;
+      --c-accent-hover: #3b7dff;
+      --font: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { font-family: var(--font); background: var(--c-bg); color: var(--c-text); overflow-x: hidden; line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+    .nav { position: sticky; top: 0; z-index: 100; background: rgba(9,9,11,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--c-border-subtle); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .nav-logo { font-size: 16px; font-weight: 700; letter-spacing: -0.02em; }
+    .nav-logo .accent { color: var(--c-accent); }
+    .nav-links { display: flex; gap: 28px; list-style: none; font-size: 14px; color: var(--c-text-2); align-items: center; }
+    .nav-links a:hover { color: var(--c-text); }
+    .hero { padding: 80px 0 40px; text-align: center; }
+    .hero-eyebrow { display: inline-block; font-size: 12px; font-weight: 600; color: var(--c-accent); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 16px; }
+    .hero h1 { font-size: 48px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 18px; }
+    .hero h1 .accent { color: var(--c-accent); }
+    .hero p { font-size: 17px; color: var(--c-text-2); max-width: 560px; margin: 0 auto; }
+    .detected { display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; padding: 8px 16px; background: rgba(21,93,252,0.08); border: 1px solid rgba(21,93,252,0.25); border-radius: 999px; font-size: 13px; color: var(--c-text-2); }
+    .detected strong { color: var(--c-text); font-weight: 600; }
+    .dl-section { padding: 50px 0 80px; }
+    .dl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+    @media (max-width: 720px) { .dl-grid { grid-template-columns: 1fr; } }
+    .dl-card { background: var(--c-bg-card); border: 1px solid var(--c-border); border-radius: 16px; padding: 32px; position: relative; transition: border-color .2s; }
+    .dl-card.recommended { border-color: var(--c-accent); box-shadow: 0 0 0 4px rgba(21,93,252,0.08); }
+    .dl-card .badge { position: absolute; top: -10px; right: 24px; padding: 4px 10px; background: var(--c-accent); border-radius: 999px; font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.06em; }
+    .dl-os { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .dl-os svg { width: 36px; height: 36px; flex-shrink: 0; }
+    .dl-os-name { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+    .dl-os-meta { font-size: 13px; color: var(--c-text-3); }
+    .dl-desc { font-size: 14px; color: var(--c-text-2); margin-bottom: 22px; }
+    .dl-primary { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 18px; background: var(--c-accent); color: #fff; border-radius: 10px; font-size: 15px; font-weight: 600; transition: background .15s; width: 100%; }
+    .dl-primary:hover { background: var(--c-accent-hover); }
+    .dl-primary .filesize { opacity: 0.7; font-weight: 500; }
+    .dl-secondary { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .dl-secondary a { flex: 1; min-width: 100px; padding: 10px 14px; text-align: center; border: 1px solid var(--c-border); border-radius: 8px; font-size: 13px; color: var(--c-text-2); transition: border-color .15s, color .15s; }
+    .dl-secondary a:hover { border-color: var(--c-text-2); color: var(--c-text); }
+    .mac-notice { background: var(--c-bg-raised); border: 1px solid var(--c-border-subtle); border-radius: 12px; padding: 20px 24px; display: flex; align-items: center; gap: 16px; }
+    .mac-notice svg { width: 28px; height: 28px; flex-shrink: 0; color: var(--c-text-3); }
+    .mac-notice-text { font-size: 14px; color: var(--c-text-2); }
+    .mac-notice-text strong { color: var(--c-text); font-weight: 600; }
+    .install { padding: 60px 0; border-top: 1px solid var(--c-border-subtle); }
+    .install h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 32px; text-align: center; }
+    .install-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    @media (max-width: 720px) { .install-grid { grid-template-columns: 1fr; } }
+    .install-block { background: var(--c-bg-card); border: 1px solid var(--c-border); border-radius: 14px; padding: 26px; }
+    .install-block h3 { font-size: 16px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .install-block ol { padding-left: 20px; font-size: 14px; color: var(--c-text-2); }
+    .install-block li { margin-bottom: 8px; }
+    .install-block code { font-family: var(--font-mono); background: var(--c-bg); padding: 2px 6px; border-radius: 4px; font-size: 12.5px; border: 1px solid var(--c-border-subtle); }
+    .install-block .note { margin-top: 14px; padding: 12px 14px; background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); border-radius: 8px; font-size: 12.5px; color: #fbbf24; }
+    .foot { padding: 50px 0 60px; border-top: 1px solid var(--c-border-subtle); font-size: 13px; color: var(--c-text-3); }
+    .foot-inner { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; }
+    .foot-links { list-style: none; display: flex; flex-wrap: wrap; gap: 18px; }
+    .foot-links a:hover { color: var(--c-text); }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "BluePad",
+    "operatingSystem": ["Windows 10", "Windows 11", "Linux"],
+    "applicationCategory": "DeveloperApplication",
+    "applicationSubCategory": "Markdown Editor",
+    "description": "A fast Markdown editor for Windows and Linux. MSI, AppImage, deb, and rpm packages available.",
+    "softwareVersion": "1.8.0",
+    "inLanguage": "en",
+    "url": "https://bluepad.work/en/download/",
+    "downloadUrl": "https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.8.0_x64.msi",
+    "offers": [
+      { "@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free", "availability": "https://schema.org/InStock" }
+    ],
+    "author": { "@type": "Organization", "name": "BRP (BlueRedPolarity)", "url": "https://bluepad.work" }
+  }
+  </script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a href="/en/" class="nav-logo">Blue<span class="accent">Pad</span></a>
+      <ul class="nav-links">
+        <li><a href="/en/">Home</a></li>
+        <li><a href="/en/blog/">Blog</a></li>
+        <li><a href="/changelog/">Changelog</a></li>
+        <li><a href="/help/">Help</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="wrap">
+      <span class="hero-eyebrow">Download v1.8.0</span>
+      <h1>Get <span class="accent">BluePad</span></h1>
+      <p>Available on Windows and Linux. We auto-detect your OS and highlight the recommended package.</p>
+      <div id="detected" class="detected" hidden>
+        <span>Detected OS:</span> <strong id="detected-os">—</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="dl-section">
+    <div class="wrap">
+      <div class="dl-grid">
+
+        <div class="dl-card" id="card-windows">
+          <span class="badge" id="badge-windows" hidden>Recommended</span>
+          <div class="dl-os">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M0 3.449L9.75 2.1v9.451H0V3.449zm10.949-1.5L24 0v11.4H10.949V1.949zM0 12.6h9.75v9.451L0 20.699V12.6zm10.949 0H24V24l-13.051-1.949V12.6z"/></svg>
+            <div>
+              <div class="dl-os-name">Windows</div>
+              <div class="dl-os-meta">Windows 10 / 11 · 64-bit</div>
+            </div>
+          </div>
+          <div class="dl-desc">Unsigned binary — SmartScreen may show a warning. Click "More info → Run anyway" to proceed.</div>
+          <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.8.0_x64.msi" class="dl-primary" data-os="windows">
+            <span>Download MSI</span>
+            <span class="filesize">· 7 MB</span>
+          </a>
+        </div>
+
+        <div class="dl-card" id="card-linux">
+          <span class="badge" id="badge-linux" hidden>Recommended</span>
+          <div class="dl-os">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+            <div>
+              <div class="dl-os-name">Linux</div>
+              <div class="dl-os-meta">x86_64 · AppImage / deb / rpm</div>
+            </div>
+          </div>
+          <div class="dl-desc">AppImage runs without installation. Use deb for Debian/Ubuntu, rpm for Fedora/RHEL.</div>
+          <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.8.0_amd64.AppImage" class="dl-primary" data-os="linux">
+            <span>Download AppImage</span>
+            <span class="filesize">· 80 MB</span>
+          </a>
+          <div class="dl-secondary">
+            <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.8.0_amd64.deb">.deb (Debian/Ubuntu)</a>
+            <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad-1.8.0-1.x86_64.rpm">.rpm (Fedora/RHEL)</a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mac-notice">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        <div class="mac-notice-text"><strong>macOS is not yet supported.</strong> Planned for a future release — drop a note in <a href="/feedback/" style="color:var(--c-accent);text-decoration:underline">feedback</a> if you'd like to be notified.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="install">
+    <div class="wrap">
+      <h2>Installation</h2>
+      <div class="install-grid">
+
+        <div class="install-block">
+          <h3>🖥️ Windows</h3>
+          <ol>
+            <li>Run the downloaded <code>BluePad_1.8.0_x64.msi</code></li>
+            <li>If SmartScreen warns, click <strong>More info → Run anyway</strong></li>
+            <li>Follow the installer wizard</li>
+            <li>Launch BluePad from the Start menu</li>
+          </ol>
+          <div class="note">Not code-signed yet — SmartScreen will warn. This is intentional during early operations; the binary is safe.</div>
+        </div>
+
+        <div class="install-block">
+          <h3>🐧 Linux</h3>
+          <ol>
+            <li><strong>AppImage</strong>: <code>chmod +x BluePad_1.8.0_amd64.AppImage</code>, then run</li>
+            <li><strong>.deb</strong>: <code>sudo apt install ./BluePad_1.8.0_amd64.deb</code></li>
+            <li><strong>.rpm</strong>: <code>sudo dnf install ./BluePad-1.8.0-1.x86_64.rpm</code></li>
+            <li>Or use <code>sudo rpm -i</code></li>
+          </ol>
+          <div class="note">Auto-updates are not yet available on Linux. Check this page when a new version ships.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <div>&copy; 2026 <strong>BRP (BlueRedPolarity)</strong> · Owner: Dongje Yoon · Business Reg: 511-32-01572</div>
+      <ul class="foot-links">
+        <li><a href="/en/">Home</a></li>
+        <li><a href="/help/">Help</a></li>
+        <li><a href="/support/">Refund/Support</a></li>
+        <li><a href="/feedback/">Feedback</a></li>
+        <li><a href="/legal/privacy">Privacy</a></li>
+        <li><a href="/legal/eula">EULA</a></li>
+        <li><a href="/legal/refund">Refund Policy</a></li>
+        <li><a href="/legal/opensource">Open Source</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var ua = navigator.userAgent || '';
+      var platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
+      var lower = (ua + ' ' + platform).toLowerCase();
+      var os = 'unknown';
+      var label = 'Unknown';
+      if (/iphone|ipad|ipod|android|mobile|tablet/.test(lower)) { os = 'mobile'; label = 'Mobile/Tablet (not supported)'; }
+      else if (/win/.test(lower)) { os = 'windows'; label = 'Windows'; }
+      else if (/linux|x11/.test(lower) && !/android/.test(lower)) { os = 'linux'; label = 'Linux'; }
+      else if (/mac/.test(lower)) { os = 'mac'; label = 'macOS (coming soon)'; }
+      var detEl = document.getElementById('detected');
+      var osEl = document.getElementById('detected-os');
+      if (osEl) { osEl.textContent = label; }
+      if (detEl) { detEl.hidden = false; }
+      if (os === 'windows') {
+        var bw = document.getElementById('badge-windows');
+        var cw = document.getElementById('card-windows');
+        if (bw) bw.hidden = false;
+        if (cw) cw.classList.add('recommended');
+      } else if (os === 'linux') {
+        var bl = document.getElementById('badge-linux');
+        var cl = document.getElementById('card-linux');
+        if (bl) bl.hidden = false;
+        if (cl) cl.classList.add('recommended');
+      }
+    })();
+  </script>
+
+</body>
+</html>

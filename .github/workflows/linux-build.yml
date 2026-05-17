@@ -6,10 +6,17 @@ name: Linux Build
 # - 산출물은 Actions Artifact로 보관 (30일), release=true 시 GitHub Release 생성
 
 on:
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
       create_release:
         description: 'GitHub Release 초안 생성 (true=초안, false=Artifact만)'
+        type: boolean
+        default: false
+      upload_r2:
+        description: 'Cloudflare R2 업로드 (true=업로드, false=Artifact만)'
         type: boolean
         default: false
 
@@ -87,12 +94,54 @@ jobs:
           retention-days: 30
 
       - name: Read package.json version
-        if: ${{ inputs.create_release }}
         id: pkg
-        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            VER="${GITHUB_REF#refs/tags/v}"
+          else
+            VER=$(node -p "require('./package.json').version")
+          fi
+          echo "version=${VER}" >> $GITHUB_OUTPUT
+          echo "Resolved version: ${VER}"
 
-      - name: Create GitHub Release (draft)
-        if: ${{ inputs.create_release }}
+      - name: Upload to Cloudflare R2
+        # tag push 또는 workflow_dispatch + upload_r2=true 일 때 실행
+        if: startsWith(github.ref, 'refs/tags/v') || inputs.upload_r2
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          VER=${{ steps.pkg.outputs.version }}
+          BASE=src-tauri/target/release/bundle
+          npm install -g wrangler
+          APPIMAGE=$(find "$BASE/appimage" -maxdepth 1 -name '*.AppImage' | head -1)
+          DEB=$(find "$BASE/deb" -maxdepth 1 -name '*.deb' | head -1)
+          RPM=$(find "$BASE/rpm" -maxdepth 1 -name '*.rpm' | head -1)
+          if [ -n "$APPIMAGE" ]; then
+            wrangler r2 object put "bluepad-downloads/BluePad_${VER}_amd64.AppImage" \
+              --file="$APPIMAGE" --content-type="application/octet-stream" --remote
+          fi
+          if [ -n "$DEB" ]; then
+            wrangler r2 object put "bluepad-downloads/BluePad_${VER}_amd64.deb" \
+              --file="$DEB" --content-type="application/vnd.debian.binary-package" --remote
+          fi
+          if [ -n "$RPM" ]; then
+            wrangler r2 object put "bluepad-downloads/BluePad-${VER}-1.x86_64.rpm" \
+              --file="$RPM" --content-type="application/x-rpm" --remote
+          fi
+
+      - name: Attach to existing GitHub Release (tag push)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: |
+            src-tauri/target/release/bundle/deb/*.deb
+            src-tauri/target/release/bundle/rpm/*.rpm
+            src-tauri/target/release/bundle/appimage/*.AppImage
+
+      - name: Create GitHub Release (draft, manual)
+        if: ${{ inputs.create_release && !startsWith(github.ref, 'refs/tags/v') }}
         uses: softprops/action-gh-release@v2
         with:
           tag_name: linux-v${{ steps.pkg.outputs.version }}-${{ github.run_number }}

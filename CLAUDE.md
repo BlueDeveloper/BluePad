@@ -1,7 +1,20 @@
 # BluePad — 프로젝트 컨텍스트 가이드
 
-> **최종 업데이트**: 2026-05-08
+> **최종 업데이트**: 2026-05-15
 > **글로벌 인프라 참조**: [INFRASTRUCTURE_GLOBAL_REFERENCE.md](C:\Users\bluee\.claude\INFRASTRUCTURE_GLOBAL_REFERENCE.md)
+
+---
+
+## ⚡ 세션 시작 즉시 실행 (자동 트리거 — 사용자 지시 불필요)
+
+**세션이 시작되면 다른 작업보다 먼저 운영 모니터링 루프를 시작한다.**
+
+1. 메모리 파일 `C:\Users\bluee\.claude\projects\C--BLUE-Project-blue-SAAS-BluePad\memory\feedback_session_monitoring.md` 를 읽어 출력 형식·필터·긴급 조건을 확인
+2. D1(`6e9776a9-f68a-45b9-b3f7-00cbd6bda70c`)에 베이스라인 쿼리 실행 (결제/라이선스/트라이얼/티켓/에러/다운로드)
+3. 첫 모니터링 출력 후 `CronCreate`로 5시간 주기 등록 (cron: `7 */5 * * *`, durable: true, prompt: "모니터링"). `CronList` 로 이미 등록된 cron이 있으면 신규 등록 생략. ScheduleWakeup은 max 3600초라 5시간 표현 불가.
+4. 사용자가 "모니터링 중지" 라고 명시할 때까지 루프 유지
+
+> ⚠️ 이 항목은 사용자 명령 없이 세션 시작 첫 응답에 반드시 수행한다. 누락 시 사용자가 재지시해야 하는 마찰 발생.
 
 ---
 
