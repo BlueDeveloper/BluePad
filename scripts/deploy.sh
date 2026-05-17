@@ -122,13 +122,20 @@ NEW_DEB="BluePad_${VERSION}_amd64.deb"
 OLD_RPM="BluePad-${CURRENT_VERSION}-1.x86_64.rpm"
 NEW_RPM="BluePad-${VERSION}-1.x86_64.rpm"
 COUNT=$(grep -rl "$OLD_MSI" landing/ 2>/dev/null | wc -l)
-find landing -name "*.html" -exec sed -i \
+# changelog는 historical reference라 BluePad_X.X.X 명명 변경에서 제외
+# (latest alias 명명은 메인/다운로드 페이지가 사용하므로 sed 매칭 안 됨 — 정상)
+find landing -name "*.html" -not -path 'landing/changelog/*' -exec sed -i \
   -e "s/${OLD_MSI}/${NEW_MSI}/g" \
   -e "s/${OLD_APPIMAGE}/${NEW_APPIMAGE}/g" \
   -e "s/${OLD_DEB}/${NEW_DEB}/g" \
   -e "s/${OLD_RPM}/${NEW_RPM}/g" \
   -e "s/Download v${CURRENT_VERSION}/Download v${VERSION}/g" \
   -e "s/\"softwareVersion\": \"${CURRENT_VERSION}\"/\"softwareVersion\": \"${VERSION}\"/g" {} +
+# changelog는 softwareVersion/Download text만 갱신 (historical msi href 보존)
+sed -i \
+  -e "s/Download v${CURRENT_VERSION}/Download v${VERSION}/g" \
+  -e "s/\"softwareVersion\": \"${CURRENT_VERSION}\"/\"softwareVersion\": \"${VERSION}\"/g" \
+  landing/changelog/index.html
 echo "   ${COUNT}개 파일 업데이트 ✓"
 
 # sitemap lastmod 갱신
@@ -181,9 +188,8 @@ NEW_RELEASE="<div class=\"release\">\n    <div class=\"release-header\">\n      
 # 이전 Latest 태그 → Stable로 변경
 sed -i 's/tag-latest">Latest/tag-stable">Stable/g' "$CHANGELOG_FILE"
 # 새 릴리즈 블록 삽입 (첫 번째 release div 앞에)
-sed -i "0,/<div class=\"release\">/{s/<div class=\"release\">/${NEW_RELEASE}<div class=\"release\">/}" "$CHANGELOG_FILE"
-# 다운로드 버전 업데이트
-sed -i "s/Download v${CURRENT_VERSION}/Download v${CURRENT_VERSION}/g" "$CHANGELOG_FILE"
+# s 구분자를 | 로 사용해 NOTES 내 슬래시 충돌 방지
+sed -i "0,/<div class=\"release\">/{s|<div class=\"release\">|${NEW_RELEASE}<div class=\"release\">|}" "$CHANGELOG_FILE"
 echo "   changelog 업데이트 ✓"
 
 # ── 7. 커밋 & 푸시 ──

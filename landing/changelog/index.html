@@ -61,8 +61,23 @@ footer a{color:#52525b}
 
   <div class="release">
     <div class="release-header">
-      <span class="version">v1.8.0</span>
+      <span class="version">v1.9.0</span>
       <span class="tag tag-latest">Latest</span>
+      <span class="date">2026-05-17</span>
+    </div>
+    <h3>Changes</h3>
+    <ul>
+      <li>Linux 풀 배포 (AppImage, .deb, .rpm)</li>
+      <li>OS별 다운로드 페이지 신설 (Windows/Linux 자동 감지)</li>
+      <li>자동 업데이트 안정성 및 UX 개선 (Linux 분기 처리)</li>
+    </ul>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad-latest_x64.msi" class="dl-btn" id="t-dl">Download v1.9.0</a>
+  </div>
+
+  <div class="release">
+    <div class="release-header">
+      <span class="version">v1.8.0</span>
+      <span class="tag tag-stable">Stable</span>
       <span class="date">2026-05-08</span>
     </div>
     <h3 id="t-new">New Features</h3>
@@ -94,7 +109,7 @@ footer a{color:#52525b}
       <li class="fix" id="r180-19">Transaction logging for refund tracking</li>
       <li class="fix" id="r180-20">License generation failure recovery</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.8.0_x64.msi" class="dl-btn" id="t-dl">Download v1.8.0</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.8.0_x64.msi" class="dl-btn">Download v1.8.0</a>
   </div>
 
   <div class="release">
@@ -133,13 +148,13 @@ footer a{color:#52525b}
 
 <script>
 const i18n = {
-  ko: { title:'업데이트 내역', sub:'BluePad 릴리즈 노트 및 버전 히스토리', new:'새 기능', improved:'개선', security:'보안', dl:'v1.8.0 다운로드',
+  ko: { title:'업데이트 내역', sub:'BluePad 릴리즈 노트 및 버전 히스토리', new:'새 기능', improved:'개선', security:'보안', dl:'v1.9.0 다운로드',
     'r180-1':'다크 테마 (전체 사용자 무료)', 'r180-2':'JSON / YAML 편집 — 구문 강조 + 자동 정렬 (Ctrl+Shift+F)', 'r180-3':'항상 위에 — 다른 창 위에 고정', 'r180-4':'선택 글자수 상태바 표시', 'r180-5':'읽기 시간 추정 상태바 표시', 'r180-6':'YAML Front Matter 표시', 'r180-7':'[toc] 지시어 — 목차 자동 생성', 'r180-8':'하이라이트 CSS 지원', 'r180-9':'피드백 페이지 — 개발자에게 의견 전송',
     'r180-10':'앱 재시작 시 탭 복원 (이전에는 초기화됨)', 'r180-11':'파일 트리 폴더 유지', 'r180-12':'소스 모드, 사이드바, 자동 저장 설정 유지', 'r180-13':'탭 닫기: 저장하고 닫기 / 닫기 (이전 혼란 해소)', 'r180-14':'체크박스 / 체크리스트 렌더링 개선', 'r180-15':'코드 블록 구문 강조 (17종 토큰)', 'r180-16':'취소선, 이미지, 테이블, 인용구 스타일 개선',
     'r180-17':'결제 리플레이 방지 (중요 보안 수정)', 'r180-18':'결제 후 금액 검증', 'r180-19':'환불 추적을 위한 결제 기록', 'r180-20':'라이선스 생성 실패 시 복구'
   },
-  en: { title:'Changelog', sub:'Release notes and version history', new:'New Features', improved:'Improved', security:'Security', dl:'Download v1.8.0' },
-  ja: { title:'更新履歴', sub:'リリースノートとバージョン履歴', new:'新機能', improved:'改善', security:'セキュリティ', dl:'v1.8.0 ダウンロード',
+  en: { title:'Changelog', sub:'Release notes and version history', new:'New Features', improved:'Improved', security:'Security', dl:'Download v1.9.0' },
+  ja: { title:'更新履歴', sub:'リリースノートとバージョン履歴', new:'新機能', improved:'改善', security:'セキュリティ', dl:'v1.9.0 ダウンロード',
     'r180-1':'ダークテーマ（全ユーザー無料）', 'r180-2':'JSON / YAML 編集 — シンタックスハイライト + 自動整形', 'r180-3':'常に最前面 — ウィンドウを固定', 'r180-4':'選択文字数をステータスバーに表示', 'r180-5':'読了時間の推定表示', 'r180-6':'YAML Front Matter 表示', 'r180-7':'[toc] 指示子 — 目次自動生成', 'r180-8':'ハイライトCSS対応', 'r180-9':'フィードバックページ — 開発者に意見を送信',
     'r180-10':'アプリ再起動時にタブを復元', 'r180-11':'ファイルツリーのフォルダを維持', 'r180-12':'ソースモード、サイドバー、自動保存設定を維持', 'r180-13':'タブ閉じるダイアログの改善', 'r180-14':'チェックボックスのレンダリング改善', 'r180-15':'コードブロックのシンタックスハイライト', 'r180-16':'取り消し線、画像、テーブルのスタイル改善',
     'r180-17':'決済リプレイ防止（重要セキュリティ修正）', 'r180-18':'決済後の金額検証', 'r180-19':'返金追跡のための決済記録', 'r180-20':'ライセンス生成失敗時の復旧'
