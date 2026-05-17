@@ -2,7 +2,12 @@ import { useState, useCallback, useRef } from "react";
 import { check, type Update } from "@tauri-apps/plugin-updater";
 import { relaunch } from "@tauri-apps/plugin-process";
 
-export type UpdateStatus = "idle" | "checking" | "available" | "downloading" | "done" | "error" | "latest";
+export type UpdateStatus = "idle" | "checking" | "available" | "downloading" | "done" | "error" | "latest" | "unsupported";
+
+function isUpdaterUnsupportedPlatform(): boolean {
+  const ua = (navigator.userAgent || "").toLowerCase();
+  return ua.includes("linux") && !ua.includes("android");
+}
 
 export function useUpdater() {
   const [status, setStatus] = useState<UpdateStatus>("idle");
@@ -13,6 +18,10 @@ export function useUpdater() {
   const pendingUpdate = useRef<Update | null>(null);
 
   const checkForUpdate = useCallback(async () => {
+    if (isUpdaterUnsupportedPlatform()) {
+      setStatus("unsupported");
+      return;
+    }
     setStatus("checking");
     setError("");
     try {

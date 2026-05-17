@@ -140,6 +140,8 @@ export const ja = {
   "update.restart": "再起動",
   "update.later": "後で",
   "update.error": "アップデートの確認中にエラーが発生しました。",
+  "update.unsupported": "このプラットフォームでは自動アップデートに対応していません。ウェブサイトから最新版を直接ダウンロードしてください。",
+  "update.openDownload": "ダウンロードページを開く",
   "menu.checkUpdate": "アップデート確認",
   "update.whatsNewTitle": "v{version} にアップデート完了",
   "update.whatsNewMessage": "BluePadがv{version}にアップデートされました。\n新機能と改善点をご確認ください！",

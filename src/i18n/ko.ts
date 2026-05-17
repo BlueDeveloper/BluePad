@@ -140,6 +140,8 @@ export const ko = {
   "update.restart": "재시작",
   "update.later": "나중에",
   "update.error": "업데이트 확인 중 오류가 발생했습니다.",
+  "update.unsupported": "이 플랫폼에서는 자동 업데이트가 지원되지 않습니다. 웹사이트에서 최신 버전을 직접 받아주세요.",
+  "update.openDownload": "다운로드 페이지 열기",
   "menu.checkUpdate": "업데이트 확인",
   "update.whatsNewTitle": "v{version} 업데이트 완료",
   "update.whatsNewMessage": "BluePad가 v{version}으로 업데이트되었습니다.\n새로운 기능과 개선사항을 확인해보세요!",

@@ -41,7 +41,7 @@ function mobileBlockedPage(lang) {
     copy_label: "Copy link",
     copied: "Copied!",
   };
-  const dlUrl = "https://bluepad.work/en/download/";
+  const dlUrl = x.link_url;
   return `<!DOCTYPE html><html lang="${lang}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${x.title}</title>
 <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,system-ui,'Segoe UI',sans-serif;background:#09090b;color:#fafafa;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;line-height:1.6}.card{background:#18181b;border:1px solid #27272a;border-radius:16px;padding:36px 28px;max-width:440px;width:100%;text-align:center}.icon{font-size:48px;margin-bottom:16px}h1{font-size:20px;font-weight:700;margin-bottom:14px;color:#fafafa}p{font-size:14.5px;color:#a1a1aa;margin-bottom:14px}.hint{font-size:13px;color:#71717a;margin:20px 0 24px;padding:14px;background:#09090b;border-radius:9px;border:1px solid #27272a}.btn{display:block;padding:13px;background:#155dfc;color:#fff;border:none;border-radius:9px;font-size:14.5px;font-weight:600;text-decoration:none;margin-bottom:10px;cursor:pointer;width:100%}.btn.alt{background:#27272a;color:#a1a1aa}.btn:active{transform:translateY(1px)}#msg{font-size:13px;color:#22c55e;margin-top:8px;min-height:18px}</style></head>
 <body><div class="card">

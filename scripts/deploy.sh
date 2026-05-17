@@ -84,6 +84,9 @@ echo ""
 echo "☁️  [3/6] R2 업로드..."
 npx wrangler r2 object put "bluepad-downloads/${R2_MSI_NAME}" \
   --file="$MSI_PATH" --content-type="application/x-msi" --remote 2>&1 | tail -1
+# latest alias — 다운로드 페이지가 이 키 사용 (race condition 회피)
+npx wrangler r2 object put "bluepad-downloads/BluePad-latest_x64.msi" \
+  --file="$MSI_PATH" --content-type="application/x-msi" --remote 2>&1 | tail -1
 
 SIG_CONTENT=$(cat "$SIG_PATH")
 PUB_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
@@ -148,17 +151,23 @@ if [ "$WITH_LINUX" = "1" ]; then
     if [ -n "$APPIMAGE_FILE" ]; then
       npx wrangler r2 object put "bluepad-downloads/${NEW_APPIMAGE}" \
         --file="$APPIMAGE_FILE" --content-type="application/octet-stream" --remote 2>&1 | tail -1
-      echo "   AppImage ✓"
+      npx wrangler r2 object put "bluepad-downloads/BluePad-latest_amd64.AppImage" \
+        --file="$APPIMAGE_FILE" --content-type="application/octet-stream" --remote 2>&1 | tail -1
+      echo "   AppImage (versioned + latest) ✓"
     fi
     if [ -n "$DEB_FILE" ]; then
       npx wrangler r2 object put "bluepad-downloads/${NEW_DEB}" \
         --file="$DEB_FILE" --content-type="application/vnd.debian.binary-package" --remote 2>&1 | tail -1
-      echo "   .deb ✓"
+      npx wrangler r2 object put "bluepad-downloads/BluePad-latest_amd64.deb" \
+        --file="$DEB_FILE" --content-type="application/vnd.debian.binary-package" --remote 2>&1 | tail -1
+      echo "   .deb (versioned + latest) ✓"
     fi
     if [ -n "$RPM_FILE" ]; then
       npx wrangler r2 object put "bluepad-downloads/${NEW_RPM}" \
         --file="$RPM_FILE" --content-type="application/x-rpm" --remote 2>&1 | tail -1
-      echo "   .rpm ✓"
+      npx wrangler r2 object put "bluepad-downloads/BluePad-latest-1.x86_64.rpm" \
+        --file="$RPM_FILE" --content-type="application/x-rpm" --remote 2>&1 | tail -1
+      echo "   .rpm (versioned + latest) ✓"
     fi
   fi
 fi

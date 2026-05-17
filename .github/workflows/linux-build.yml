@@ -120,13 +120,20 @@ jobs:
           if [ -n "$APPIMAGE" ]; then
             wrangler r2 object put "bluepad-downloads/BluePad_${VER}_amd64.AppImage" \
               --file="$APPIMAGE" --content-type="application/octet-stream" --remote
+            # latest alias — 다운로드 페이지가 이 키를 사용 (race condition 회피)
+            wrangler r2 object put "bluepad-downloads/BluePad-latest_amd64.AppImage" \
+              --file="$APPIMAGE" --content-type="application/octet-stream" --remote
           fi
           if [ -n "$DEB" ]; then
             wrangler r2 object put "bluepad-downloads/BluePad_${VER}_amd64.deb" \
               --file="$DEB" --content-type="application/vnd.debian.binary-package" --remote
+            wrangler r2 object put "bluepad-downloads/BluePad-latest_amd64.deb" \
+              --file="$DEB" --content-type="application/vnd.debian.binary-package" --remote
           fi
           if [ -n "$RPM" ]; then
             wrangler r2 object put "bluepad-downloads/BluePad-${VER}-1.x86_64.rpm" \
+              --file="$RPM" --content-type="application/x-rpm" --remote
+            wrangler r2 object put "bluepad-downloads/BluePad-latest-1.x86_64.rpm" \
               --file="$RPM" --content-type="application/x-rpm" --remote
           fi
 

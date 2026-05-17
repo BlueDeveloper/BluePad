@@ -140,6 +140,8 @@ export const en = {
   "update.restart": "Restart",
   "update.later": "Later",
   "update.error": "An error occurred while checking for updates.",
+  "update.unsupported": "Automatic updates are not supported on this platform. Please download the latest version from the website.",
+  "update.openDownload": "Open download page",
   "menu.checkUpdate": "Check for Updates",
   "update.whatsNewTitle": "Updated to v{version}",
   "update.whatsNewMessage": "BluePad has been updated to v{version}.\nCheck out the new features and improvements!",

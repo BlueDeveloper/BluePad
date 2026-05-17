@@ -100,6 +100,24 @@ export function UpdateDialog({
               </div>
             </>
           )}
+
+          {status === "unsupported" && (
+            <>
+              <p className="pro-gate-msg">{t("update.unsupported")}</p>
+              <div className="pro-gate-actions">
+                <button className="license-deactivate-btn" onClick={onClose}>{t("dialog.close")}</button>
+                <button
+                  className="license-activate-btn"
+                  onClick={() => {
+                    const lang = (navigator.language || "ko").toLowerCase();
+                    const path = lang.startsWith("ja") ? "/ja/download/" : lang.startsWith("en") ? "/en/download/" : "/ko/download/";
+                    const url = `https://bluepad.work${path}`;
+                    import("@tauri-apps/plugin-shell").then((m) => m.open(url)).catch(() => window.open(url, "_blank"));
+                  }}
+                >{t("update.openDownload")}</button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
