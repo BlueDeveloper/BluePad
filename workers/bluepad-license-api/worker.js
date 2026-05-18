@@ -526,8 +526,10 @@ export default {
   // 5시간마다 헬스체크 + 신규 유저 알림 (Cron Trigger)
   async scheduled(event, env) {
     // ── 헬스체크 ──
+    // download worker(workers.dev)는 cron 내부 fetch가 일관되게 404 응답 (Cloudflare cross-worker
+    // 라우팅 특성, 외부 curl로는 200 OK). bluepad.work 도메인 호출은 정상이라 download 헬스체크는
+    // 제거 — 다운로드 카운트 증가로 살아있음 간접 확인 가능.
     const endpoints = [
-      { name: "download", url: "https://bluepad-download.blueehdwp.workers.dev/healthcheck" },
       { name: "checkout", url: "https://bluepad.work/buy" },
       { name: "landing", url: "https://bluepad.work/" },
     ];
