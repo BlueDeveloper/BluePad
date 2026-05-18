@@ -527,7 +527,7 @@ export default {
   async scheduled(event, env) {
     // ── 헬스체크 ──
     const endpoints = [
-      { name: "download", url: "https://bluepad-download.blueehdwp.workers.dev/api/stats" },
+      { name: "download", url: "https://bluepad-download.blueehdwp.workers.dev/healthcheck" },
       { name: "checkout", url: "https://bluepad.work/buy" },
       { name: "landing", url: "https://bluepad.work/" },
     ];

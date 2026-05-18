@@ -89,6 +89,11 @@ export default {
       return new Response(null, { status: 204, headers: corsHeaders });
     }
 
+    // Healthcheck endpoint — license-api cron이 이 path만 호출 (단순/안정)
+    if (url.pathname === "/healthcheck") {
+      return new Response("OK", { status: 200, headers: { ...corsHeaders, "Cache-Control": "no-cache" } });
+    }
+
     // Update check endpoint
     if (url.pathname === "/update.json") {
       const object = await env.BUCKET.get("update.json");
