@@ -85,7 +85,7 @@ h2[id],div[data-section]{scroll-margin-top:64px}
 
   <div class="cards">
     <div class="card">
-      <div class="card-label">총 다운로드</div>
+      <div class="card-label">실사용자 다운로드 (봇 제외)</div>
       <div class="card-value" id="stat-downloads">--</div>
     </div>
     <div class="card">
@@ -216,7 +216,7 @@ h2[id],div[data-section]{scroll-margin-top:64px}
 
   <h2 id="sec-downloads" style="font-size:1.1rem;margin:1.5rem 0 1rem">다운로드 내역</h2>
   <div class="filter-bar">
-    <label><input type="checkbox" id="f-dl-nobot" onchange="renderDownloads()"> 봇 제외</label>
+    <label><input type="checkbox" id="f-dl-nobot" checked onchange="renderDownloads()"> 봇 제외</label>
     <select id="f-dl-country" onchange="renderDownloads()"><option value="">전체 국가</option></select>
     <input type="text" id="f-dl-ip" placeholder="IP 검색" oninput="renderDownloads()" style="min-width:120px">
     <span class="filter-count" id="f-dl-count"></span>
@@ -763,7 +763,8 @@ async function loadDownloads() {
     const res = await fetch(LICENSE_API + '/api/admin/downloads', { headers: { 'Authorization': 'Bearer ' + token } });
     const data = await res.json();
     rawDownloads = data.downloads || [];
-    document.getElementById('stat-downloads').textContent = rawDownloads.filter(envMatches).length.toLocaleString();
+    // 카드 카운트 = 실사용자(봇 제외, 현재 환경)
+    document.getElementById('stat-downloads').textContent = rawDownloads.filter(d => envMatches(d) && !isBot(d.user_agent)).length.toLocaleString();
     // 국가 드롭다운 동적 생성
     const countries = [...new Set(rawDownloads.map(d => d.country || '-'))].sort();
     const sel = document.getElementById('f-dl-country');
