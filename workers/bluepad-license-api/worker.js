@@ -533,7 +533,8 @@ export default {
     ];
     for (const ep of endpoints) {
       try {
-        const res = await fetch(ep.url, { method: "HEAD" });
+        // GET 사용 — cross-worker fetch의 HEAD가 일관되게 404 반환하는 이슈 회피
+        const res = await fetch(ep.url, { method: "GET" });
         if (!res.ok) {
           await env.DB.prepare("INSERT INTO error_logs (worker, path, error, ip) VALUES (?, ?, ?, ?)")
             .bind("healthcheck", ep.name, `HTTP ${res.status}`, "cron").run();
