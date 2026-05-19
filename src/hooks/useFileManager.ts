@@ -10,6 +10,14 @@ async function readTextNormalized(path: string): Promise<string> {
   return text.replace(/\r\n?/g, "\n");
 }
 
+// 경로 비교용 정규화: backslash → slash + Windows 대소문자 무시.
+// 같은 파일이 Tauri dialog(C:\path)와 파일트리(C:/path) 등 다른 형식으로 들어와도
+// 중복 탭을 막을 수 있다.
+function pathKey(p: string | null | undefined): string {
+  if (!p) return "";
+  return p.replace(/\\/g, "/").toLowerCase();
+}
+
 interface DialogLabels {
   unsavedChanges: string;
   saveClose: string;
@@ -110,6 +118,8 @@ export function useFileManager() {
   const contentRef = useRef("");
   const activeTabIdRef = useRef(activeTabId);
   activeTabIdRef.current = activeTabId;
+  const tabsRef = useRef<Tab[]>(tabs);
+  tabsRef.current = tabs;
 
   const dialogLabelsRef = useRef<DialogLabels>({
     unsavedChanges: "에 저장하지 않은 변경사항이 있습니다.\n저장하시겠습니까?",
@@ -177,13 +187,24 @@ export function useFileManager() {
 
   const loadFileFromPath = useCallback(
     async (path: string) => {
-      const text = await readTextNormalized(path);
-      const name = extractName(path);
-      const fType = detectFileType(path);
+      // 입력 경로를 forward-slash로 통일 (저장 형태 일관성)
+      const normalizedPath = path.replace(/\\/g, "/");
+      const key = pathKey(normalizedPath);
+
+      // 이미 같은 파일이 열려 있으면 그 탭으로 전환 (파일 read 자체 skip)
+      const alreadyOpen = tabsRef.current.find((t) => pathKey(t.filePath) === key);
+      if (alreadyOpen) {
+        setActiveTabId(alreadyOpen.id);
+        return;
+      }
+
+      const text = await readTextNormalized(normalizedPath);
+      const name = extractName(normalizedPath);
+      const fType = detectFileType(normalizedPath);
 
       setTabs((prev) => {
-        // Check if file is already open in a tab
-        const existing = prev.find((t) => t.filePath === path);
+        // 비동기 read 동안 동시 호출로 중복 탭 생성될 수 있어 한 번 더 확인
+        const existing = prev.find((t) => pathKey(t.filePath) === key);
         if (existing) {
           setActiveTabId(existing.id);
           return prev;
@@ -196,12 +217,12 @@ export function useFileManager() {
           // Reuse current empty tab
           return prev.map((t) =>
             t.id === active.id
-              ? { ...t, filePath: path, fileName: name, content: text, savedContent: text, fileType: fType, isModified: false, fileVersion: t.fileVersion + 1 }
+              ? { ...t, filePath: normalizedPath, fileName: name, content: text, savedContent: text, fileType: fType, isModified: false, fileVersion: t.fileVersion + 1 }
               : t
           );
         } else {
           // Create new tab
-          const tab = createTab({ filePath: path, fileName: name, content: text, savedContent: text, fileType: fType, fileVersion: 1 });
+          const tab = createTab({ filePath: normalizedPath, fileName: name, content: text, savedContent: text, fileType: fType, fileVersion: 1 });
           setActiveTabId(tab.id);
           return [...prev, tab];
         }
@@ -229,8 +250,6 @@ export function useFileManager() {
     }
   }, [loadFileFromPath]);
 
-  const tabsRef = useRef(tabs);
-  tabsRef.current = tabs;
 
   const saveFile = useCallback(async () => {
     const tab = tabsRef.current.find((t) => t.id === activeTabIdRef.current);
