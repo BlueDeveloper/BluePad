@@ -107,6 +107,12 @@ export function FileTree({ visible, onOpenFile }: FileTreeProps) {
           &#128193;
         </button>
       </div>
+      {rootPath && (
+        <div className="file-tree-rootpath" title={rootPath.replace(/\\/g, "/")}>
+          <span className="file-tree-rootpath-icon">&#128194;</span>
+          <span className="file-tree-rootpath-text">{rootPath.replace(/\\/g, "/")}</span>
+        </div>
+      )}
       <div className="file-tree-content">
         {!rootPath ? (
           <div className="file-tree-empty" onClick={openFolder}>

@@ -1193,6 +1193,35 @@ body {
   background: var(--bg-hover);
 }
 
+/* 현재 열린 폴더 경로 — 헤더 아래 별도 row, RTL 트림으로 끝(폴더명) 항상 보이도록 */
+.file-tree-rootpath {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px 6px;
+  font-size: 11px;
+  font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-light);
+  cursor: default;
+  min-width: 0;
+}
+.file-tree-rootpath-icon {
+  flex-shrink: 0;
+  font-size: 12px;
+  opacity: 0.7;
+}
+.file-tree-rootpath-text {
+  direction: rtl;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1 1 auto;
+  min-width: 0;
+  unicode-bidi: plaintext;
+}
+
 .file-tree-content {
   flex: 1;
   overflow-y: auto;
