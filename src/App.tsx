@@ -450,6 +450,22 @@ ${editorEl.innerHTML}
     return () => { if (unlisten) unlisten(); };
   }, [fileManager]);
 
+  // 드래그앤드롭: Windows 탐색기에서 BluePad 창으로 파일 드래그 시 새 탭으로 열림.
+  // tauri.conf.json의 dragDropEnabled: true 필요.
+  useEffect(() => {
+    let unlisten: (() => void) | undefined;
+    import("@tauri-apps/api/webviewWindow").then(({ getCurrentWebviewWindow }) => {
+      getCurrentWebviewWindow().onDragDropEvent((event) => {
+        if (event.payload.type === "drop") {
+          for (const p of event.payload.paths) {
+            fileManager.loadFileFromPath(p).catch(() => {});
+          }
+        }
+      }).then((un) => { unlisten = un; });
+    });
+    return () => { if (unlisten) unlisten(); };
+  }, [fileManager]);
+
   const changeFontSize = useCallback((delta: number) => {
     setFontSize((s) => Math.max(10, Math.min(28, s + delta)));
   }, []);

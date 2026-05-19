@@ -85,7 +85,9 @@ jobs:
           ls -la src-tauri/target/release/bundle/rpm/ 2>/dev/null || echo "(no rpm)"
           ls -la src-tauri/target/release/bundle/appimage/ 2>/dev/null || echo "(no appimage)"
 
-      - name: Upload build artifacts
+      - name: Upload build artifacts (디버깅용 단기 보관)
+        # GitHub 무료 plan Artifacts quota=500MB. R2+Release에 이미 영구 보관되므로
+        # Actions Artifact는 24시간만 보관(디버깅 용도). retention-days를 짧게 둘 것.
         uses: actions/upload-artifact@v4
         with:
           name: bluepad-linux-${{ github.sha }}
@@ -94,7 +96,7 @@ jobs:
             src-tauri/target/release/bundle/rpm/*.rpm
             src-tauri/target/release/bundle/appimage/*.AppImage
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 1
 
       - name: Read package.json version
         id: pkg

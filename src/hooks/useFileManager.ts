@@ -1,14 +1,22 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { open, save, ask } from "@tauri-apps/plugin-dialog";
-import { readTextFile as readTextFileRaw, writeTextFile } from "@tauri-apps/plugin-fs";
+import { readTextFile as readTextFileRaw, writeTextFile, stat } from "@tauri-apps/plugin-fs";
 import { invoke } from "@tauri-apps/api/core";
 
 // Milkdown/ProseMirror가 CRLF를 일부 노드에서 처리 못 해 렌더링 깨짐 (Windows에서
 // 자동 생성된 markdown은 CRLF인 경우 多). 모든 파일 읽기에서 LF로 정규화.
 async function readTextNormalized(path: string): Promise<string> {
-  const text = await readTextFileRaw(path);
+  let text = await readTextFileRaw(path);
+  // UTF-8 BOM (Windows Notepad 등) 제거 — 첫 문자에 있으면 Milkdown 첫 헤딩 파싱 깨짐
+  if (text.charCodeAt(0) === 0xFEFF) {
+    text = text.slice(1);
+  }
+  // CRLF/CR → LF (Milkdown은 LF만 안전 처리)
   return text.replace(/\r\n?/g, "\n");
 }
+
+// 큰 파일 경고 임계값 (5 MB). 그 이상은 Milkdown 라운드트립이 매우 느려짐.
+const LARGE_FILE_BYTES = 5 * 1024 * 1024;
 
 // 경로 비교용 정규화: backslash → slash + Windows 대소문자 무시.
 // 같은 파일이 Tauri dialog(C:\path)와 파일트리(C:/path) 등 다른 형식으로 들어와도
@@ -195,6 +203,19 @@ export function useFileManager() {
         setActiveTabId(alreadyOpen.id);
         return;
       }
+
+      // 큰 파일 경고 — Milkdown은 5MB+ 부터 라운드트립이 느려짐. 사용자 확인 후 진행
+      try {
+        const info = await stat(normalizedPath);
+        if (info.size > LARGE_FILE_BYTES) {
+          const mb = (info.size / 1024 / 1024).toFixed(1);
+          const proceed = await ask(
+            `이 파일은 ${mb} MB 입니다. 에디터가 매우 느려질 수 있습니다.\n그래도 열까요?`,
+            { title: "큰 파일 경고", kind: "warning" }
+          );
+          if (!proceed) return;
+        }
+      } catch { /* stat 실패해도 진행 */ }
 
       const text = await readTextNormalized(normalizedPath);
       const name = extractName(normalizedPath);
