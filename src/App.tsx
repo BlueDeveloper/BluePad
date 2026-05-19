@@ -450,6 +450,14 @@ ${editorEl.innerHTML}
     return () => { if (unlisten) unlisten(); };
   }, [fileManager]);
 
+  // 외부 파일 변경 감지 — window focus 시 활성 탭의 디스크 mtime 비교.
+  // cron 등 외부 도구가 같은 파일을 갱신했을 때 사용자가 다시 읽을지 선택.
+  useEffect(() => {
+    const handler = () => { fileManager.reloadActiveTabIfChanged(); };
+    window.addEventListener("focus", handler);
+    return () => window.removeEventListener("focus", handler);
+  }, [fileManager]);
+
   // 드래그앤드롭: Windows 탐색기에서 BluePad 창으로 파일 드래그 시 새 탭으로 열림.
   // tauri.conf.json의 dragDropEnabled: true 필요.
   useEffect(() => {

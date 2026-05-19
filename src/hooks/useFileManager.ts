@@ -5,14 +5,19 @@ import { invoke } from "@tauri-apps/api/core";
 
 // Milkdown/ProseMirror가 CRLF를 일부 노드에서 처리 못 해 렌더링 깨짐 (Windows에서
 // 자동 생성된 markdown은 CRLF인 경우 多). 모든 파일 읽기에서 LF로 정규화.
-async function readTextNormalized(path: string): Promise<string> {
+async function readTextNormalized(path: string): Promise<{ text: string; encodingWarning: boolean }> {
   let text = await readTextFileRaw(path);
   // UTF-8 BOM (Windows Notepad 등) 제거 — 첫 문자에 있으면 Milkdown 첫 헤딩 파싱 깨짐
   if (text.charCodeAt(0) === 0xFEFF) {
     text = text.slice(1);
   }
+  // 인코딩 추측: U+FFFD(replacement character)가 자주 나타나면 UTF-8 아닐 가능성 큼
+  // (Shift_JIS, EUC-KR, CP949 등). Tauri readTextFile은 UTF-8로 디코드하므로
+  // 다른 인코딩이면 깨진 문자가 �로 표시됨. 5개 이상이면 경고.
+  const replacementCount = (text.match(/�/g) || []).length;
+  const encodingWarning = replacementCount >= 5;
   // CRLF/CR → LF (Milkdown은 LF만 안전 처리)
-  return text.replace(/\r\n?/g, "\n");
+  return { text: text.replace(/\r\n?/g, "\n"), encodingWarning };
 }
 
 // 큰 파일 경고 임계값 (5 MB). 그 이상은 Milkdown 라운드트립이 매우 느려짐.
@@ -45,6 +50,8 @@ export interface Tab {
   isModified: boolean;
   fileVersion: number;
   fileType: FileType;
+  // 외부 파일 변경 감지용 — 마지막으로 read한 시점의 디스크 mtime(ms epoch)
+  lastReadMtime?: number;
 }
 
 function detectFileType(filePath: string | null): FileType {
@@ -152,7 +159,7 @@ export function useFileManager() {
     invoke<string | null>("get_cli_file_path").then(async (path) => {
       if (path) {
         try {
-          const text = await readTextNormalized(path);
+          const { text } = await readTextNormalized(path);
           const name = extractName(path);
           const fType = detectFileType(path);
           // Replace the initial empty tab
@@ -204,9 +211,11 @@ export function useFileManager() {
         return;
       }
 
-      // 큰 파일 경고 — Milkdown은 5MB+ 부터 라운드트립이 느려짐. 사용자 확인 후 진행
+      // 큰 파일 경고 + mtime 수집 (외부 변경 감지용)
+      let fileMtime: number | undefined;
       try {
         const info = await stat(normalizedPath);
+        fileMtime = info.mtime ? new Date(info.mtime).getTime() : undefined;
         if (info.size > LARGE_FILE_BYTES) {
           const mb = (info.size / 1024 / 1024).toFixed(1);
           const proceed = await ask(
@@ -217,7 +226,14 @@ export function useFileManager() {
         }
       } catch { /* stat 실패해도 진행 */ }
 
-      const text = await readTextNormalized(normalizedPath);
+      const { text, encodingWarning } = await readTextNormalized(normalizedPath);
+      if (encodingWarning) {
+        const proceed = await ask(
+          "이 파일은 UTF-8 인코딩이 아닐 수 있습니다. 일부 문자가 깨져 보일 수 있습니다.\n그래도 열까요?",
+          { title: "인코딩 경고", kind: "warning" }
+        );
+        if (!proceed) return;
+      }
       const name = extractName(normalizedPath);
       const fType = detectFileType(normalizedPath);
 
@@ -236,12 +252,12 @@ export function useFileManager() {
           // Reuse current empty tab
           return prev.map((t) =>
             t.id === active.id
-              ? { ...t, filePath: normalizedPath, fileName: name, content: text, savedContent: text, fileType: fType, isModified: false, fileVersion: t.fileVersion + 1 }
+              ? { ...t, filePath: normalizedPath, fileName: name, content: text, savedContent: text, fileType: fType, isModified: false, fileVersion: t.fileVersion + 1, lastReadMtime: fileMtime }
               : t
           );
         } else {
           // Create new tab
-          const tab = createTab({ filePath: normalizedPath, fileName: name, content: text, savedContent: text, fileType: fType, fileVersion: 1 });
+          const tab = createTab({ filePath: normalizedPath, fileName: name, content: text, savedContent: text, fileType: fType, fileVersion: 1, lastReadMtime: fileMtime });
           setActiveTabId(tab.id);
           return [...prev, tab];
         }
@@ -276,7 +292,7 @@ export function useFileManager() {
 
     if (tab.filePath) {
       await writeTextFile(tab.filePath, tab.content);
-      updateTab(tab.id, { savedContent: tab.content, isModified: false });
+      updateTab(tab.id, { savedContent: tab.content, isModified: false, lastReadMtime: Date.now() });
     } else {
       const selected = await save({
         filters: [
@@ -294,6 +310,7 @@ export function useFileManager() {
           savedContent: tab.content,
           isModified: false,
           fileType: detectFileType(selected),
+          lastReadMtime: Date.now(),
         });
       }
     }
@@ -319,6 +336,7 @@ export function useFileManager() {
         savedContent: tab.content,
         isModified: false,
         fileType: detectFileType(selected),
+        lastReadMtime: Date.now(),
       });
     }
   }, [updateTab]);
@@ -358,7 +376,7 @@ export function useFileManager() {
           // 저장 후 닫기
           if (tab.filePath) {
             await writeTextFile(tab.filePath, tab.content);
-            updateTab(tab.id, { savedContent: tab.content, isModified: false });
+            updateTab(tab.id, { savedContent: tab.content, isModified: false, lastReadMtime: Date.now() });
           } else {
             const selected = await save({
               filters: [
@@ -387,7 +405,7 @@ export function useFileManager() {
     for (const tab of current) {
       if (tab.isModified && tab.filePath) {
         await writeTextFile(tab.filePath, tab.content);
-        updateTab(tab.id, { savedContent: tab.content, isModified: false });
+        updateTab(tab.id, { savedContent: tab.content, isModified: false, lastReadMtime: Date.now() });
       }
     }
   }, [updateTab]);
@@ -426,11 +444,16 @@ export function useFileManager() {
       for (const tab of tabs) {
         if (tab.filePath && !tab.content) {
           try {
-            const text = await readTextNormalized(tab.filePath);
+            const { text } = await readTextNormalized(tab.filePath);
+            let restoredMtime: number | undefined;
+            try {
+              const info = await stat(tab.filePath);
+              restoredMtime = info.mtime ? new Date(info.mtime).getTime() : undefined;
+            } catch { /* ignore */ }
             setTabs((prev) =>
               prev.map((t) =>
                 t.id === tab.id
-                  ? { ...t, content: text, savedContent: text, fileVersion: t.fileVersion + 1 }
+                  ? { ...t, content: text, savedContent: text, fileVersion: t.fileVersion + 1, lastReadMtime: restoredMtime }
                   : t
               )
             );
@@ -452,6 +475,39 @@ export function useFileManager() {
     }
   }, []);
 
+  // 외부 파일 변경 감지 — window focus 시 호출. 활성 탭의 디스크 mtime이 마지막 read 시점보다
+  // 1초+ 더 새것이면 외부에서 수정된 것이므로 사용자에게 reload 여부 묻기.
+  const reloadActiveTabIfChanged = useCallback(async () => {
+    const tab = tabsRef.current.find((t) => t.id === activeTabIdRef.current);
+    if (!tab || !tab.filePath || !tab.lastReadMtime) return;
+    let diskMtime = 0;
+    try {
+      const info = await stat(tab.filePath);
+      diskMtime = info.mtime ? new Date(info.mtime).getTime() : 0;
+    } catch { return; /* 파일 삭제됐을 수 있음 */ }
+    if (diskMtime <= tab.lastReadMtime + 1000) return; // 변경 없음 (1초 tolerance)
+
+    const msg = tab.isModified
+      ? `"${tab.fileName}" 파일이 외부에서 수정되었습니다.\n현재 수정 중인 내용은 사라집니다.\n그래도 다시 읽을까요?`
+      : `"${tab.fileName}" 파일이 외부에서 수정되었습니다.\n다시 읽을까요?`;
+    const reload = await ask(msg, { title: "외부 변경 감지", kind: "warning" });
+    if (!reload) {
+      // 사용자가 무시 — lastReadMtime을 disk값으로 갱신해서 같은 변경을 또 묻지 않게
+      updateTab(tab.id, { lastReadMtime: diskMtime });
+      return;
+    }
+    try {
+      const { text } = await readTextNormalized(tab.filePath);
+      updateTab(tab.id, {
+        content: text,
+        savedContent: text,
+        isModified: false,
+        lastReadMtime: diskMtime,
+        fileVersion: tab.fileVersion + 1,
+      });
+    } catch { /* ignore */ }
+  }, [updateTab]);
+
   return {
     // Active tab properties (backward compatible)
     filePath: activeTab.filePath,
@@ -466,6 +522,7 @@ export function useFileManager() {
     saveFileAs,
     loadFileFromPath,
     saveAllModified,
+    reloadActiveTabIfChanged,
     // Tab management
     tabs,
     activeTabId,
