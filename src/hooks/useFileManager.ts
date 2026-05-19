@@ -1,7 +1,14 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { open, save, ask } from "@tauri-apps/plugin-dialog";
-import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import { readTextFile as readTextFileRaw, writeTextFile } from "@tauri-apps/plugin-fs";
 import { invoke } from "@tauri-apps/api/core";
+
+// Milkdown/ProseMirror가 CRLF를 일부 노드에서 처리 못 해 렌더링 깨짐 (Windows에서
+// 자동 생성된 markdown은 CRLF인 경우 多). 모든 파일 읽기에서 LF로 정규화.
+async function readTextNormalized(path: string): Promise<string> {
+  const text = await readTextFileRaw(path);
+  return text.replace(/\r\n?/g, "\n");
+}
 
 interface DialogLabels {
   unsavedChanges: string;
@@ -127,7 +134,7 @@ export function useFileManager() {
     invoke<string | null>("get_cli_file_path").then(async (path) => {
       if (path) {
         try {
-          const text = await readTextFile(path);
+          const text = await readTextNormalized(path);
           const name = extractName(path);
           const fType = detectFileType(path);
           // Replace the initial empty tab
@@ -150,11 +157,13 @@ export function useFileManager() {
     (newContent: string) => {
       contentRef.current = newContent;
       setTabs((prev) =>
-        prev.map((t) =>
-          t.id === activeTabIdRef.current
-            ? { ...t, content: newContent, isModified: newContent !== t.savedContent }
-            : t
-        )
+        prev.map((t) => {
+          if (t.id !== activeTabIdRef.current) return t;
+          // Milkdown 라운드트립으로 인한 trailing 공백/줄바꿈 차이는 dirty로 보지 않음 (안전망)
+          const norm = (s: string) => s.replace(/\r\n?/g, "\n").replace(/[ \t]+$/gm, "").replace(/\n+$/, "");
+          const dirty = norm(newContent) !== norm(t.savedContent);
+          return { ...t, content: newContent, isModified: dirty };
+        })
       );
     },
     []
@@ -168,7 +177,7 @@ export function useFileManager() {
 
   const loadFileFromPath = useCallback(
     async (path: string) => {
-      const text = await readTextFile(path);
+      const text = await readTextNormalized(path);
       const name = extractName(path);
       const fType = detectFileType(path);
 
@@ -379,7 +388,7 @@ export function useFileManager() {
       for (const tab of tabs) {
         if (tab.filePath && !tab.content) {
           try {
-            const text = await readTextFile(tab.filePath);
+            const text = await readTextNormalized(tab.filePath);
             setTabs((prev) =>
               prev.map((t) =>
                 t.id === tab.id

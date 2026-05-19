@@ -156,6 +156,10 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
       milkdownRef.current = null;
       el.innerHTML = "";
 
+      // Milkdown이 markdown → ProseMirror → markdown 라운드트립 시 미세 차이(공백/줄바꿈)
+      // 발생 → 초기 markdownUpdated 호출은 사용자 입력이 아니므로 skip해야 isModified가
+      // 잘못 true 되지 않음. fileVersion 변경(파일 재로드/탭 전환)마다 플래그 초기화.
+      let initialMarkdownUpdate = true;
       MilkdownEditor.make()
         .config((ctx) => {
           ctx.set(rootCtx, el);
@@ -163,6 +167,11 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
           ctx.set(prismConfig.key, { configureRefractor: () => refractor });
           ctx.get(listenerCtx).markdownUpdated((_ctx, markdown) => {
             contentRef.current = markdown;
+            if (initialMarkdownUpdate) {
+              initialMarkdownUpdate = false;
+              setTimeout(postRender, 100);
+              return;
+            }
             onChange(markdown);
             setTimeout(postRender, 100);
           });
