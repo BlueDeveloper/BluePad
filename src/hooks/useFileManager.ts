@@ -167,13 +167,11 @@ export function useFileManager() {
     (newContent: string) => {
       contentRef.current = newContent;
       setTabs((prev) =>
-        prev.map((t) => {
-          if (t.id !== activeTabIdRef.current) return t;
-          // Milkdown 라운드트립으로 인한 trailing 공백/줄바꿈 차이는 dirty로 보지 않음 (안전망)
-          const norm = (s: string) => s.replace(/\r\n?/g, "\n").replace(/[ \t]+$/gm, "").replace(/\n+$/, "");
-          const dirty = norm(newContent) !== norm(t.savedContent);
-          return { ...t, content: newContent, isModified: dirty };
-        })
+        prev.map((t) =>
+          t.id === activeTabIdRef.current
+            ? { ...t, content: newContent, isModified: newContent !== t.savedContent }
+            : t
+        )
       );
     },
     []
