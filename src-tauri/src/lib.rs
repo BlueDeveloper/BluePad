@@ -1,4 +1,4 @@
-use tauri::Manager;
+use tauri::{Emitter, Manager};
 
 #[tauri::command]
 fn get_cli_file_path() -> Option<String> {
@@ -22,6 +22,20 @@ fn get_hostname() -> String {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        // 두 번째 인스턴스 실행 시도 시 → 첫 인스턴스 포커스 + CLI args를 frontend로 emit
+        .plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
+            if let Some(window) = app.get_webview_window("main") {
+                let _ = window.show();
+                let _ = window.unminimize();
+                let _ = window.set_focus();
+            }
+            if args.len() > 1 {
+                let path = &args[1];
+                if std::path::Path::new(path).exists() {
+                    let _ = app.emit("open-file", path.clone());
+                }
+            }
+        }))
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_shell::init())

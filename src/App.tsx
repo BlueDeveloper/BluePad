@@ -437,6 +437,19 @@ ${editorEl.innerHTML}
     [fileManager]
   );
 
+  // Single-instance: 두 번째 BluePad 실행 시도(파일 더블클릭 등) → Rust가 "open-file"
+  // emit → 기존 인스턴스가 받아서 새 탭으로 연다. 중복 파일은 useFileManager가 막아줌.
+  useEffect(() => {
+    let unlisten: (() => void) | undefined;
+    import("@tauri-apps/api/event").then(({ listen }) => {
+      listen<string>("open-file", (event) => {
+        const path = event.payload;
+        if (path) fileManager.loadFileFromPath(path).catch(() => {});
+      }).then((un) => { unlisten = un; });
+    });
+    return () => { if (unlisten) unlisten(); };
+  }, [fileManager]);
+
   const changeFontSize = useCallback((delta: number) => {
     setFontSize((s) => Math.max(10, Math.min(28, s + delta)));
   }, []);
