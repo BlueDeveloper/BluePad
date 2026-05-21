@@ -55,9 +55,9 @@
 ### 분석/SEO
 - Microsoft Clarity ID: `wkokfmayny`
 - Naver 인증 메타: `9b479417f022befdffd0b837c015469b604758d3`
-- Google Search Console: URL 접두어 방식으로 등록
-- sitemap: https://bluepad.work/sitemap.xml (35개 URL)
-- **SC API 자동 조회**: 본인 ADC(`secrets/login-google.ps1` 재인증 1회 + `webmasters.readonly` scope 포함)로 색인 상태·검색 쿼리·sitemap 상태 호출 가능. 상세 사용법은 글로벌 메모리 [[reference_ga4_clarity_setup]] (`Search Console API 빠른 시작` 섹션). BluePad siteUrl 인코딩: `https%3A%2F%2Fbluepad.work%2F`
+- Google Search Console: **도메인 속성**(`sc-domain:bluepad.work`)으로 등록
+- sitemap: https://bluepad.work/sitemap.xml (42개 URL — 2026-05-21 root `/` 제거)
+- **SC API 자동 조회**: 본인 ADC(`secrets/login-google.ps1` 재인증 1회 + `webmasters.readonly` scope 포함)로 색인 상태·검색 쿼리·sitemap 상태 호출 가능. 상세 사용법은 글로벌 메모리 [[reference_ga4_clarity_setup]] (`Search Console API 빠른 시작` 섹션). BluePad siteUrl 인코딩: `sc-domain%3Abluepad.work` (도메인 속성)
 
 ---
 
