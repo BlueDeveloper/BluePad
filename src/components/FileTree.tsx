@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { readDir } from "@tauri-apps/plugin-fs";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useI18n } from "../i18n";
@@ -16,9 +16,21 @@ interface FileEntry {
   expanded?: boolean;
 }
 
-const SUPPORTED_EXTENSIONS = [".md", ".markdown", ".mdx", ".txt", ".log", ".json", ".jsonc", ".yaml", ".yml"];
+const SUPPORTED_EXTENSIONS = [
+  ".md", ".markdown", ".mdx",
+  ".txt", ".log",
+  ".json", ".jsonc",
+  ".yaml", ".yml",
+  ".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx",
+  ".html", ".htm", ".xhtml",
+  ".css", ".scss", ".sass", ".less",
+];
 
 const FILETREE_ROOT_KEY = "bluepad_filetree_root";
+const FILETREE_WIDTH_KEY = "bluepad_filetree_width";
+const MIN_WIDTH = 180;
+const MAX_WIDTH = 600;
+const DEFAULT_WIDTH = 220;
 
 export function FileTree({ visible, onOpenFile }: FileTreeProps) {
   const { t } = useI18n();
@@ -26,6 +38,34 @@ export function FileTree({ visible, onOpenFile }: FileTreeProps) {
     try { return localStorage.getItem(FILETREE_ROOT_KEY); } catch { return null; }
   });
   const [entries, setEntries] = useState<FileEntry[]>([]);
+  const [width, setWidth] = useState<number>(() => {
+    try {
+      const saved = parseInt(localStorage.getItem(FILETREE_WIDTH_KEY) || "", 10);
+      if (Number.isFinite(saved)) return Math.min(Math.max(saved, MIN_WIDTH), MAX_WIDTH);
+    } catch { /* ignore */ }
+    return DEFAULT_WIDTH;
+  });
+  const widthRef = useRef(width);
+  widthRef.current = width;
+
+  const startResize = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startW = widthRef.current;
+    const onMove = (ev: MouseEvent) => {
+      const next = Math.min(Math.max(startW + (ev.clientX - startX), MIN_WIDTH), MAX_WIDTH);
+      setWidth(next);
+    };
+    const onUp = () => {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+      document.body.style.cursor = "";
+      try { localStorage.setItem(FILETREE_WIDTH_KEY, String(widthRef.current)); } catch { /* ignore */ }
+    };
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+    document.body.style.cursor = "ew-resize";
+  }, []);
 
   const loadDir = useCallback(async (dirPath: string): Promise<FileEntry[]> => {
     try {
@@ -100,7 +140,8 @@ export function FileTree({ visible, onOpenFile }: FileTreeProps) {
   if (!visible) return null;
 
   return (
-    <div className="file-tree">
+    <div className="file-tree" style={{ width, minWidth: width, flexShrink: 0 }}>
+      <div className="file-tree-resize-handle" onMouseDown={startResize} title="드래그하여 너비 조정" />
       <div className="file-tree-header">
         <span>{t("fileTree.files")}</span>
         <button className="file-tree-open" onClick={openFolder} title={t("fileTree.openFolder")}>
