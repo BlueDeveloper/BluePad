@@ -360,10 +360,10 @@ export default {
           "INSERT INTO support_tickets (type, email, message, license_key) VALUES (?, ?, ?, ?)"
         ).bind(type, email, message, license_key || null).run();
 
-        // 이메일 알림 (best-effort)
+        // 이메일 알림 (best-effort) — 실패 시 error_logs 기록 (관리자가 티켓 누락 파악 가능)
         const typeMap = { refund: "환불 요청", bug: "버그 신고", feature: "기능 요청", feedback: "피드백", other: "기타 문의" };
         try {
-          await fetch("https://api.mailchannels.net/tx/v1/send", {
+          const mailRes = await fetch("https://api.mailchannels.net/tx/v1/send", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -376,7 +376,20 @@ export default {
               }],
             }),
           });
-        } catch {}
+          if (!mailRes.ok) {
+            try {
+              await env.DB.prepare(
+                "INSERT INTO error_logs (worker, path, error, ip) VALUES (?, ?, ?, ?)"
+              ).bind("license-api", "/api/support", `mailchannels HTTP ${mailRes.status}: ticket=${type}/${email}`, ip).run();
+            } catch (_) {}
+          }
+        } catch (e) {
+          try {
+            await env.DB.prepare(
+              "INSERT INTO error_logs (worker, path, error, ip) VALUES (?, ?, ?, ?)"
+            ).bind("license-api", "/api/support", `mailchannels exception: ${String(e).slice(0, 200)} ticket=${type}/${email}`, ip).run();
+          } catch (_) {}
+        }
         return json({ success: true }, 200, request);
       }
 

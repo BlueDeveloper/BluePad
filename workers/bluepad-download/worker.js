@@ -190,9 +190,27 @@ export default {
       const ip = request.headers.get("CF-Connecting-IP") || "unknown";
       const userAgent = ua || "unknown";
       const country = request.headers.get("CF-IPCountry") || "unknown";
-      await env.DB.prepare(
-        "INSERT INTO downloads (file_name, ip, user_agent, country) VALUES (?, ?, ?, ?)"
-      ).bind(fileName, ip, userAgent, country).run();
+
+      // 다운로드 카운트 왜곡 방지:
+      //  (1) 봇/크롤러 UA는 INSERT 제외
+      //  (2) 같은 IP에서 최근 1시간 내 3회 이상이면 INSERT 제외 (다운로드 자체는 허용)
+      const isCountableBot = /bot|spider|crawler|HeadlessChrome|GPTBot|ClaudeBot|Googlebot|Applebot|SemrushBot|YandexBot|Bingbot|DuckDuckBot|Baiduspider|fetch|curl|wget|python-requests|node-fetch/i.test(userAgent);
+      let shouldCount = !isCountableBot;
+      if (shouldCount && ip !== "unknown") {
+        try {
+          const recent = await env.DB.prepare(
+            "SELECT COUNT(*) as c FROM downloads WHERE ip = ? AND downloaded_at >= datetime('now','-1 hour')"
+          ).bind(ip).first();
+          if ((recent?.c || 0) >= 3) shouldCount = false;
+        } catch (_) { /* 통계 실패는 다운로드 차단 사유 아님 */ }
+      }
+      if (shouldCount) {
+        try {
+          await env.DB.prepare(
+            "INSERT INTO downloads (file_name, ip, user_agent, country) VALUES (?, ?, ?, ?)"
+          ).bind(fileName, ip, userAgent, country).run();
+        } catch (_) { /* ignore */ }
+      }
 
       const headers = new Headers(corsHeaders);
       headers.set("Content-Type", "application/octet-stream");
