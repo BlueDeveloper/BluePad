@@ -73,11 +73,13 @@ export function UpdateDialog({
 
           {status === "downloading" && (
             <>
-              <p className="pro-gate-msg">{t("update.downloading")}</p>
+              <div className="update-progress-row">
+                <span className="update-progress-label">{t("update.downloading")}</span>
+                <span className="update-progress-pct">{progress}%</span>
+              </div>
               <div className="update-progress-bar">
                 <div className="update-progress-fill" style={{ width: `${progress}%` }} />
               </div>
-              <p className="pro-gate-msg" style={{ textAlign: "center", fontSize: "0.85rem" }}>{progress}%</p>
             </>
           )}
 
@@ -94,7 +96,7 @@ export function UpdateDialog({
           {status === "error" && (
             <>
               <p className="pro-gate-msg">{t("update.error")}</p>
-              {error && <p className="license-error" style={{ wordBreak: "break-all" }}>{error}</p>}
+              {error && <p className="update-error">{error}</p>}
               <div className="pro-gate-actions">
                 <button className="license-deactivate-btn" onClick={onClose}>{t("dialog.close")}</button>
               </div>
