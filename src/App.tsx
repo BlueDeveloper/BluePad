@@ -177,16 +177,17 @@ function App() {
       trialDialogShown.current = true;
 
       if (!license.isPro && !license.isTrial && license.trialDaysLeft <= 0) {
-        const expiredShown = sessionStorage.getItem("bluepad_trial_expired_shown");
+        // localStorage로 이동 — 한 번 닫으면 영구 dismiss (앱 재시작마다 안 뜸)
+        const expiredShown = localStorage.getItem("bluepad_trial_expired_shown");
         if (!expiredShown) {
           setTrialExpiredVisible(true);
-          sessionStorage.setItem("bluepad_trial_expired_shown", "1");
+          try { localStorage.setItem("bluepad_trial_expired_shown", "1"); } catch { /* ignore */ }
         }
       } else if (license.isTrial && license.trialDaysLeft <= 3 && license.trialDaysLeft > 0) {
-        const soonShown = sessionStorage.getItem("bluepad_trial_expiring_shown");
+        const soonShown = localStorage.getItem("bluepad_trial_expiring_shown");
         if (!soonShown) {
           setTrialExpiredVisible(true);
-          sessionStorage.setItem("bluepad_trial_expiring_shown", "1");
+          try { localStorage.setItem("bluepad_trial_expiring_shown", "1"); } catch { /* ignore */ }
         }
       } else if (license.isTrial && license.trialDaysLeft > 3) {
         const welcomed = localStorage.getItem("bluepad_trial_welcomed");

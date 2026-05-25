@@ -305,6 +305,34 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
       };
     }, [fileVersion]);
 
+    // 하이퍼링크 Ctrl/Meta + 클릭 시 외부 브라우저로 열기 (WYSIWYG에서 링크 활성화)
+    useEffect(() => {
+      const el = editorRef.current;
+      if (!el) return;
+      const handler = (e: MouseEvent) => {
+        if (!(e.ctrlKey || e.metaKey)) return;
+        const target = e.target as HTMLElement | null;
+        const a = target?.closest("a") as HTMLAnchorElement | null;
+        if (!a) return;
+        const href = a.getAttribute("href");
+        if (!href) return;
+        // 외부 링크만 (mailto/tel/내부 앵커 제외)
+        if (/^(https?:|mailto:|tel:)/i.test(href)) {
+          e.preventDefault();
+          e.stopPropagation();
+          import("@tauri-apps/plugin-shell")
+            .then((m) => m.open(href))
+            .catch(() => window.open(href, "_blank"));
+        }
+      };
+      el.addEventListener("click", handler, true);
+      el.addEventListener("auxclick", handler, true);
+      return () => {
+        el.removeEventListener("click", handler, true);
+        el.removeEventListener("auxclick", handler, true);
+      };
+    }, [fileVersion]);
+
     // 글쓰기 모드: 타이핑라이터(현재 줄 중앙) + 하이라이트(현재 블록만 선명)
     useEffect(() => {
       const el = editorRef.current;
