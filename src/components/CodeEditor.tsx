@@ -5,6 +5,9 @@ import { defaultKeymap, indentWithTab, history, historyKeymap } from "@codemirro
 import { syntaxHighlighting, defaultHighlightStyle, bracketMatching, foldGutter, foldKeymap } from "@codemirror/language";
 import { json } from "@codemirror/lang-json";
 import { yaml } from "@codemirror/lang-yaml";
+import { javascript } from "@codemirror/lang-javascript";
+import { html } from "@codemirror/lang-html";
+import { css } from "@codemirror/lang-css";
 import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
 import * as jsYaml from "js-yaml";
 import type { FileType } from "../hooks/useFileManager";
@@ -65,6 +68,9 @@ function getLanguageExtension(fileType: FileType) {
   switch (fileType) {
     case "json": return json();
     case "yaml": return yaml();
+    case "javascript": return javascript({ jsx: true, typescript: true });
+    case "html": return html();
+    case "css": return css();
     default: return [];
   }
 }

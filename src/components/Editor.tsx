@@ -51,6 +51,24 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
       toggleLink: () => run(toggleLinkCommand as CmdPlugin, { href: "" }),
       insertImage: () => run(insertImageCommand as CmdPlugin, { src: "", alt: "" }),
       getMarkdown: () => contentRef.current,
+      copyAsPlainText: async () => {
+        const el = editorRef.current;
+        if (!el) return false;
+        const sel = window.getSelection()?.toString() ?? "";
+        let text = sel;
+        if (!text) {
+          const pm = el.querySelector(".ProseMirror") as HTMLElement | null;
+          text = pm?.innerText ?? pm?.textContent ?? "";
+        }
+        text = text.replace(/ /g, " ").trim();
+        if (!text) return false;
+        try {
+          await navigator.clipboard.writeText(text);
+          return true;
+        } catch {
+          return false;
+        }
+      },
     }));
 
     // Front Matter rendering

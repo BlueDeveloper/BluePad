@@ -31,6 +31,7 @@ interface MenuBarProps {
   onOpenRecent: (path: string) => void;
   onFind: () => void;
   onReplace: () => void;
+  onCopyPlainText: () => void;
   onFontIncrease: () => void;
   onFontDecrease: () => void;
   onFontReset: () => void;
@@ -89,6 +90,7 @@ export function MenuBar({
   onOpenRecent,
   onFind,
   onReplace,
+  onCopyPlainText,
   onFontIncrease,
   onFontDecrease,
   onFontReset,
@@ -146,6 +148,10 @@ export function MenuBar({
       items: [
         { label: t("menu.find"), shortcut: "Ctrl+F", action: onFind },
         { label: t("menu.replace"), shortcut: "Ctrl+H", action: onReplace },
+        ...(fileType === "markdown" ? [
+          { label: "", action: () => {}, divider: true },
+          { label: t("menu.copyPlainText"), shortcut: "Ctrl+Shift+C", action: onCopyPlainText },
+        ] as MenuItem[] : []),
         ...((fileType === "json" || fileType === "yaml") ? [
           { label: "", action: () => {}, divider: true },
           { label: t("menu.format"), shortcut: "Ctrl+Shift+F", action: onFormat },
@@ -200,6 +206,7 @@ export function MenuBar({
       else if (e.ctrlKey && e.key === "o") { e.preventDefault(); onOpen(); }
       else if (e.ctrlKey && e.shiftKey && e.key === "S") { e.preventDefault(); onSaveAs(); }
       else if (e.ctrlKey && e.shiftKey && e.key === "F") { e.preventDefault(); onFormat(); }
+      else if (e.ctrlKey && e.shiftKey && e.key === "C") { e.preventDefault(); onCopyPlainText(); }
       else if (e.ctrlKey && e.key === "s") { e.preventDefault(); onSave(); }
       else if (e.ctrlKey && e.key === "/") { e.preventDefault(); onToggleSource(); }
       else if (e.ctrlKey && e.shiftKey && e.key === "L") { e.preventDefault(); onToggleSidebar(); }
@@ -207,7 +214,7 @@ export function MenuBar({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onNew, onOpen, onSave, onSaveAs, onFormat, onToggleSource, onToggleSidebar, onToggleFocus]);
+  }, [onNew, onOpen, onSave, onSaveAs, onFormat, onCopyPlainText, onToggleSource, onToggleSidebar, onToggleFocus]);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {

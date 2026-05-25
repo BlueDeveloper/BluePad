@@ -39,7 +39,7 @@ interface DialogLabels {
   cancel?: string;
 }
 
-export type FileType = "markdown" | "json" | "yaml" | "text";
+export type FileType = "markdown" | "json" | "yaml" | "text" | "javascript" | "html" | "css";
 
 export interface Tab {
   id: string;
@@ -59,6 +59,9 @@ function detectFileType(filePath: string | null): FileType {
   const ext = filePath.replace(/\\/g, "/").split("/").pop()?.split(".").pop()?.toLowerCase() || "";
   if (["json", "jsonc"].includes(ext)) return "json";
   if (["yaml", "yml"].includes(ext)) return "yaml";
+  if (["js", "jsx", "mjs", "cjs", "ts", "tsx"].includes(ext)) return "javascript";
+  if (["html", "htm", "xhtml"].includes(ext)) return "html";
+  if (["css", "scss", "sass", "less"].includes(ext)) return "css";
   if (["txt", "log", "env", "ini", "conf", "cfg", "properties"].includes(ext)) return "text";
   return "markdown";
 }
@@ -273,6 +276,9 @@ export function useFileManager() {
         { name: "Markdown", extensions: ["md", "markdown", "mdx"] },
         { name: "JSON", extensions: ["json", "jsonc"] },
         { name: "YAML", extensions: ["yaml", "yml"] },
+        { name: "JavaScript/TypeScript", extensions: ["js", "jsx", "mjs", "cjs", "ts", "tsx"] },
+        { name: "HTML", extensions: ["html", "htm", "xhtml"] },
+        { name: "CSS", extensions: ["css", "scss", "sass", "less"] },
         { name: "Text", extensions: ["txt", "log"] },
         { name: "All Files", extensions: ["*"] },
       ],
@@ -299,6 +305,9 @@ export function useFileManager() {
           { name: "Markdown", extensions: ["md"] },
           { name: "JSON", extensions: ["json"] },
           { name: "YAML", extensions: ["yaml", "yml"] },
+          { name: "JavaScript/TypeScript", extensions: ["js", "ts"] },
+          { name: "HTML", extensions: ["html"] },
+          { name: "CSS", extensions: ["css"] },
           { name: "Text", extensions: ["txt"] },
         ],
       });
@@ -325,6 +334,9 @@ export function useFileManager() {
         { name: "Markdown", extensions: ["md"] },
         { name: "JSON", extensions: ["json"] },
         { name: "YAML", extensions: ["yaml", "yml"] },
+        { name: "JavaScript/TypeScript", extensions: ["js", "ts"] },
+        { name: "HTML", extensions: ["html"] },
+        { name: "CSS", extensions: ["css"] },
         { name: "Text", extensions: ["txt"] },
       ],
     });
@@ -383,6 +395,9 @@ export function useFileManager() {
                 { name: "Markdown", extensions: ["md"] },
                 { name: "JSON", extensions: ["json"] },
                 { name: "YAML", extensions: ["yaml", "yml"] },
+                { name: "JavaScript/TypeScript", extensions: ["js", "ts"] },
+                { name: "HTML", extensions: ["html"] },
+                { name: "CSS", extensions: ["css"] },
                 { name: "Text", extensions: ["txt"] },
               ],
             });

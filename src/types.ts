@@ -13,6 +13,7 @@ export interface EditorHandle {
   toggleLink: () => void;
   insertImage: () => void;
   getMarkdown: () => string;
+  copyAsPlainText: () => Promise<boolean>;
 }
 
 export interface HeadingItem {

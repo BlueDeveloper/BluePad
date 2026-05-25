@@ -133,6 +133,13 @@ function App() {
   const [updateDialogVisible, setUpdateDialogVisible] = useState(false);
   const [whatsNewVisible, setWhatsNewVisible] = useState(false);
   const [whatsNewVersion, setWhatsNewVersion] = useState("");
+  const [toast, setToast] = useState<string>("");
+  const toastTimerRef = useRef<number | null>(null);
+  const showToast = useCallback((msg: string) => {
+    setToast(msg);
+    if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = window.setTimeout(() => setToast(""), 1800);
+  }, []);
   const editorRef = useRef<EditorHandle>(null);
   const fileManager = useFileManager();
   const license = useLicense();
@@ -367,6 +374,12 @@ ${editorEl.innerHTML}
     fileManager.setContent(formatted);
   }, [fileManager]);
 
+  const handleCopyPlainText = useCallback(async () => {
+    if (fileManager.activeTab.fileType !== "markdown") return;
+    const ok = await editorRef.current?.copyAsPlainText();
+    showToast(i18n.t(ok ? "toast.copiedPlainText" : "toast.copyFailed"));
+  }, [fileManager.activeTab.fileType, showToast, i18n]);
+
   const handleToggleAlwaysOnTop = useCallback(async () => {
     const next = !alwaysOnTop;
     setAlwaysOnTop(next);
@@ -582,6 +595,7 @@ ${editorEl.innerHTML}
             onOpenRecent={handleOpenRecentFile}
             onFind={() => { setFindReplaceMode(false); setFindVisible(true); }}
             onReplace={() => { setFindReplaceMode(true); setFindVisible(true); }}
+            onCopyPlainText={handleCopyPlainText}
             onFontIncrease={() => changeFontSize(1)}
             onFontDecrease={() => changeFontSize(-1)}
             onFontReset={() => setFontSize(15)}
@@ -619,7 +633,7 @@ ${editorEl.innerHTML}
               replaceMode={findReplaceMode}
               onClose={() => setFindVisible(false)}
             />
-            {fileManager.activeTab.fileType === "json" || fileManager.activeTab.fileType === "yaml" ? (
+            {["json", "yaml", "javascript", "html", "css"].includes(fileManager.activeTab.fileType) ? (
               <CodeEditor
                 key={fileManager.activeTabId}
                 content={fileManager.content}
@@ -718,6 +732,7 @@ ${editorEl.innerHTML}
           onAction={() => openExternal(CHECKOUT_URL)}
           onClose={() => setTrialExpiredVisible(false)}
         />
+        {toast && <div className="app-toast" role="status">{toast}</div>}
       </div>
     </I18nCtx.Provider>
   );
