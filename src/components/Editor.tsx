@@ -9,6 +9,7 @@ import { indent } from "@milkdown/kit/plugin/indent";
 import { trailing } from "@milkdown/kit/plugin/trailing";
 import { listItemBlockComponent } from "@milkdown/components/list-item-block";
 import { math } from "@milkdown/plugin-math";
+import { stripMarkdownToPlain } from "../lib/strip-markdown";
 import { prism, prismConfig } from "@milkdown/plugin-prism";
 import { refractor } from "refractor";
 import "katex/dist/katex.min.css";
@@ -52,42 +53,17 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
       insertImage: () => run(insertImageCommand as CmdPlugin, { src: "", alt: "" }),
       getMarkdown: () => contentRef.current,
       copyAsPlainText: async () => {
-        const el = editorRef.current;
-        if (!el) return false;
+        // 선택 영역이 있으면 getSelection 사용(줄바꿈 유지). 없으면 원본 markdown에서
+        // 마크업만 제거. ProseMirror DOM 순회는 단일 <p> 케이스에서 줄바꿈 누락 문제 회피.
         const sel = window.getSelection()?.toString() ?? "";
-        let text = sel;
-        if (!text) {
-          // ProseMirror 직계 자식(블록)을 순회하여 줄바꿈 보존.
-          // pm.innerText 단독 사용은 일부 contenteditable 블록 사이 줄바꿈을 누락할 수 있음.
-          const pm = el.querySelector(".ProseMirror") as HTMLElement | null;
-          if (pm) {
-            const parts: string[] = [];
-            for (const child of Array.from(pm.children)) {
-              const tag = child.tagName.toLowerCase();
-              if (tag === "ul" || tag === "ol") {
-                for (const li of Array.from(child.querySelectorAll(":scope > li"))) {
-                  parts.push((li as HTMLElement).innerText.trim());
-                }
-              } else if (tag === "table") {
-                for (const tr of Array.from(child.querySelectorAll("tr"))) {
-                  const cells = Array.from(tr.children).map((c) => (c as HTMLElement).innerText.trim());
-                  parts.push(cells.join("\t"));
-                }
-              } else if (tag === "pre") {
-                parts.push((child as HTMLElement).innerText);
-              } else {
-                parts.push((child as HTMLElement).innerText || child.textContent || "");
-              }
-            }
-            text = parts.filter((p) => p.length > 0).join("\n\n");
-          } else {
-            text = "";
-          }
-        }
-        text = text.replace(/ /g, " ").trim();
+        let text = sel || stripMarkdownToPlain(contentRef.current);
+        text = text.replace(/\u00A0/g, " ").replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
         if (!text) return false;
+        // Windows 클립보드는 CRLF 권장 (메모장 등 단순 에디터 호환)
+        const isWindows = /Win/i.test(navigator.userAgent || "");
+        const finalText = isWindows ? text.replace(/\n/g, "\r\n") : text;
         try {
-          await navigator.clipboard.writeText(text);
+          await navigator.clipboard.writeText(finalText);
           return true;
         } catch {
           return false;
