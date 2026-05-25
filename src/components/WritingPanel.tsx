@@ -1,9 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useI18n } from "../i18n";
 import type { WritingStats } from "../hooks/useWritingStats";
+import { analyzeProse } from "../lib/prose-analysis";
 
 interface WritingPanelProps {
   stats: WritingStats;
+  markdown: string;
   visible: boolean;
   onClose: () => void;
   onEditGoal: () => void;
@@ -13,8 +15,10 @@ const SPRINT_PRESETS = [10, 15, 25, 45]; // minutes
 const SPRINT_DEFAULT_MIN = 15;
 const SPRINT_KEY = "bluepad_sprint_default";
 
-export function WritingPanel({ stats, visible, onClose, onEditGoal }: WritingPanelProps) {
+export function WritingPanel({ stats, markdown, visible, onClose, onEditGoal }: WritingPanelProps) {
   const { t } = useI18n();
+  // 분석은 visible 상태에서만 수행 + 1초 throttle (메모이즈로 충분)
+  const prose = useMemo(() => (visible ? analyzeProse(markdown) : null), [markdown, visible]);
   const [sprintMinutes, setSprintMinutes] = useState<number>(() => {
     try {
       const raw = localStorage.getItem(SPRINT_KEY);
@@ -148,6 +152,41 @@ export function WritingPanel({ stats, visible, onClose, onEditGoal }: WritingPan
           ))}
         </div>
       </section>
+
+      {/* 문장 분석 (Hemingway 스타일) */}
+      {prose && prose.sentences > 0 && (
+        <section className="writing-section">
+          <div className="writing-section-title">{t("writing.analysis")}</div>
+          <div className="writing-row">
+            <span className="writing-label">{t("writing.sentences")}</span>
+            <span className="writing-value">{prose.sentences}</span>
+          </div>
+          <div className="writing-row">
+            <span className="writing-label">{t("writing.avgSentence")}</span>
+            <span className="writing-value">{prose.avgSentenceLen}</span>
+          </div>
+          <div className="writing-row">
+            <span className="writing-label">{t("writing.longSentence")}</span>
+            <span className={`writing-value ${prose.longSentences > 0 ? "warn" : ""}`}>{prose.longSentences}</span>
+          </div>
+          <div className="writing-row">
+            <span className="writing-label">{t("writing.passive")}</span>
+            <span className={`writing-value ${prose.passiveHits > 3 ? "warn" : ""}`}>{prose.passiveHits}</span>
+          </div>
+          <div className="writing-row">
+            <span className="writing-label">{t("writing.adverb")}</span>
+            <span className={`writing-value ${prose.adverbHits > 10 ? "warn" : ""}`}>{prose.adverbHits}</span>
+          </div>
+          <div className="writing-row">
+            <span className="writing-label">{t("writing.filler")}</span>
+            <span className={`writing-value ${prose.fillerHits > 3 ? "warn" : ""}`}>{prose.fillerHits}</span>
+          </div>
+          <div className="writing-row">
+            <span className="writing-label">{t("writing.readability")}</span>
+            <span className="writing-value">{prose.readability}</span>
+          </div>
+        </section>
+      )}
 
       {/* 히트맵 (30일) */}
       <section className="writing-section">

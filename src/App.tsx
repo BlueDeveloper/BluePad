@@ -704,7 +704,7 @@ ${editorEl.innerHTML}
         )}
         <div className="main-area">
           <FileTree visible={fileTreeVisible && !focusMode} onOpenFile={handleOpenFileFromTree} />
-          <Sidebar visible={sidebarVisible && !focusMode} markdown={fileManager.content} />
+          <Sidebar visible={sidebarVisible && !focusMode} markdown={fileManager.content} onChange={fileManager.activeTab.fileType === "markdown" ? fileManager.setContent : undefined} />
           <div className="editor-wrapper" ref={editorWrapperRef}>
             <FindReplace
               visible={findVisible && !sourceMode}
@@ -737,6 +737,7 @@ ${editorEl.innerHTML}
           <WritingPanel
             visible={writingMode && !focusMode && fileManager.activeTab.fileType === "markdown"}
             stats={writingStats}
+            markdown={fileManager.content}
             onClose={() => setWritingMode(false)}
             onEditGoal={() => setWritingGoalDialogVisible(true)}
           />

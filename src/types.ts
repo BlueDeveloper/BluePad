@@ -20,4 +20,6 @@ export interface HeadingItem {
   level: number;
   text: string;
   id: string;
+  /** 헤딩 라인의 0-based 인덱스 (드래그 재배치용) */
+  lineStart: number;
 }
