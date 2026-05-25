@@ -11,12 +11,15 @@ const DEVICE_ID_KEY = "bluepad_device_id";
 const LICENSE_VALIDATED_AT_KEY = "bluepad_license_validated_at";
 const TRIAL_START_KEY = "bluepad_trial_start";
 const VALIDATION_HASH_KEY = "bluepad_vh";
+const LAST_SEEN_TIME_KEY = "bluepad_lst";
 const API_URL = "https://bluepad-license-api.blueehdwp.workers.dev";
 
 const OFFLINE_GRACE_DAYS = 30;
 const OFFLINE_GRACE_MS = OFFLINE_GRACE_DAYS * 24 * 60 * 60 * 1000;
 const TRIAL_DAYS = 14;
 const TRIAL_MS = TRIAL_DAYS * 24 * 60 * 60 * 1000;
+// 시계 변조 허용치: 활성화 이후 시계를 7일 넘게 과거로 돌리면 grace period 무효 처리.
+const CLOCK_TAMPER_TOLERANCE_MS = 7 * 24 * 60 * 60 * 1000;
 
 export type ProFeature = "unlimitedTabs" | "allThemes" | "exportHtml" | "focusMode";
 
@@ -28,11 +31,32 @@ async function computeValidationHash(licenseKey: string, deviceId: string): Prom
   return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 16);
 }
 
+/** Monotonically bump the "last seen" timestamp. Detects backward clock changes. */
+function bumpLastSeen(): void {
+  try {
+    const prev = Number(localStorage.getItem(LAST_SEEN_TIME_KEY) || "0");
+    const now = Date.now();
+    if (now > prev) localStorage.setItem(LAST_SEEN_TIME_KEY, String(now));
+  } catch { /* ignore */ }
+}
+
+/** Return true if the system clock has been moved backward more than the tolerance. */
+function isClockTampered(): boolean {
+  const lastSeen = Number(localStorage.getItem(LAST_SEEN_TIME_KEY) || "0");
+  if (lastSeen === 0) return false;
+  // 현재 시간이 마지막으로 본 시점보다 7일 이상 과거면 시계 역행으로 판단.
+  return Date.now() + CLOCK_TAMPER_TOLERANCE_MS < lastSeen;
+}
+
 /** Check if the last online validation timestamp is within the offline grace window */
 function isOfflineGracePeriodValid(): boolean {
+  if (isClockTampered()) return false;
   const ts = localStorage.getItem(LICENSE_VALIDATED_AT_KEY);
   if (!ts) return false;
-  const elapsed = Date.now() - Number(ts);
+  const validatedAt = Number(ts);
+  // 미래로 설정된 timestamp 거부 (역방향 검증)
+  if (validatedAt > Date.now() + CLOCK_TAMPER_TOLERANCE_MS) return false;
+  const elapsed = Date.now() - validatedAt;
   return elapsed >= 0 && elapsed < OFFLINE_GRACE_MS;
 }
 
@@ -200,6 +224,7 @@ export function useLicense() {
         try { localStorage.setItem(LICENSE_KEY, trimmed); } catch { /* ignore */ }
         try { localStorage.setItem(LICENSE_STATUS_KEY, "pro"); } catch { /* ignore */ }
         try { localStorage.setItem(LICENSE_VALIDATED_AT_KEY, String(Date.now())); } catch { /* ignore */ }
+        bumpLastSeen();
         const vh = await computeValidationHash(trimmed, deviceId);
         try { localStorage.setItem(VALIDATION_HASH_KEY, vh); } catch { /* ignore */ }
         setLicenseKey(trimmed);
@@ -216,12 +241,8 @@ export function useLicense() {
       setHasLicense(false);
       return false;
     } catch {
-      // Offline fallback: if previously validated within grace period, keep pro status.
-      // 시계 역행(validated_at > now) 감지 시 거부 — grace period 무한 갱신 우회 방어.
-      const validatedAt = Number(localStorage.getItem(LICENSE_VALIDATED_AT_KEY) || "0");
-      const clockTampered = validatedAt > Date.now();
+      // Offline fallback: 시계 역방향(미래 timestamp) + 역방향(시계 과거 이동) 모두 isOfflineGracePeriodValid()에서 차단.
       if (
-        !clockTampered &&
         localStorage.getItem(LICENSE_STATUS_KEY) === "pro" &&
         localStorage.getItem(LICENSE_KEY) === trimmed &&
         isOfflineGracePeriodValid()
@@ -309,9 +330,11 @@ export function useLicense() {
     }
   }, [activate]);
 
-  // Refresh trial state periodically (every minute)
+  // Refresh trial state periodically (every minute) + bump last-seen monotonic clock
   useEffect(() => {
+    bumpLastSeen();
     const timer = setInterval(() => {
+      bumpLastSeen();
       setTrialState(getLocalTrialState());
     }, 60000);
     return () => clearInterval(timer);

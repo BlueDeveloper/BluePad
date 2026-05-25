@@ -98,8 +98,9 @@ async function handleAdjustment(env, data, environment = "live") {
       await logWebhookEvent(env, "adjustment.created", `LATE REFUND (policy violation): txn=${txnId} days=${daysSincePurchase} window=${REFUND_WINDOW_DAYS} license=${payment.license_key}`, "critical", environment);
     }
 
-    // 라이선스는 보수적으로 즉시 비활성화 (rejected 시 adjustment.updated에서 복구)
-    await env.DB.prepare("UPDATE licenses SET active = 0 WHERE license_key = ?").bind(payment.license_key).run();
+    // 라이선스 즉시 비활성화 + 환불 플래그 (offline grace 라이선스 캐시도 재활성화 차단)
+    // rejected 시 adjustment.updated에서 refunded=0 + active=1로 복구
+    await env.DB.prepare("UPDATE licenses SET active = 0, refunded = 1 WHERE license_key = ?").bind(payment.license_key).run();
     await env.DB.prepare("DELETE FROM activations WHERE license_key = ?").bind(payment.license_key).run();
 
     // 결제 상태:
@@ -154,7 +155,7 @@ async function handleAdjustmentUpdated(env, data, environment = "live") {
   if (status === "rejected") {
     // 환불 거부 → 자금 이동 없음. 비활성화된 라이선스 복구 + 상태 원복.
     if (payment?.license_key) {
-      await env.DB.prepare("UPDATE licenses SET active = 1 WHERE license_key = ?").bind(payment.license_key).run();
+      await env.DB.prepare("UPDATE licenses SET active = 1, refunded = 0 WHERE license_key = ?").bind(payment.license_key).run();
     }
     await env.DB.prepare(
       "UPDATE payments SET refunded = 0, status = 'completed', refunded_at = NULL WHERE paddle_txn_id = ?"

@@ -58,9 +58,7 @@ function mobileBlockedPage(lang) {
 function getCorsHeaders(request) {
   const origin = request ? request.headers.get("Origin") : null;
   let allowOrigin = "";
-  if (!origin) {
-    allowOrigin = "*";
-  } else if (
+  if (origin && (
     /^https?:\/\/localhost(:\d+)?$/.test(origin) ||
     /^https?:\/\/127\.0\.0\.1(:\d+)?$/.test(origin) ||
     /^https:\/\/bluepad\.work$/.test(origin) ||
@@ -68,15 +66,14 @@ function getCorsHeaders(request) {
     /^https?:\/\/tauri\.localhost$/.test(origin) ||
     /^tauri:\/\/localhost$/.test(origin) ||
     /^wry:\/\/localhost$/.test(origin)
-  ) {
+  )) {
     allowOrigin = origin;
-  } else {
-    allowOrigin = "";
   }
   return {
     "Access-Control-Allow-Origin": allowOrigin,
     "Access-Control-Allow-Methods": "GET, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Environment",
+    "Vary": "Origin",
   };
 }
 

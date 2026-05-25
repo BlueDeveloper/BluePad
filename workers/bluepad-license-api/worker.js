@@ -41,12 +41,12 @@ async function timingSafeEqual(a, b) {
 }
 
 // ── CORS ──
+// Origin 화이트리스트 외에는 ACAO 헤더를 발급하지 않음.
+// 서버-서버 호출(Origin 없음) 케이스도 보안상 ACAO 미발급 (브라우저만 CORS 검사하므로 차단 영향 없음).
 function getCorsHeaders(request) {
   const origin = request.headers.get("Origin");
   let allowOrigin = "";
-  if (!origin) {
-    allowOrigin = "*";
-  } else if (
+  if (origin && (
     /^https?:\/\/localhost(:\d+)?$/.test(origin) ||
     /^https?:\/\/127\.0\.0\.1(:\d+)?$/.test(origin) ||
     /^https:\/\/bluepad\.work$/.test(origin) ||
@@ -54,13 +54,14 @@ function getCorsHeaders(request) {
     /^https?:\/\/tauri\.localhost$/.test(origin) ||
     /^tauri:\/\/localhost$/.test(origin) ||
     /^wry:\/\/localhost$/.test(origin)
-  ) {
+  )) {
     allowOrigin = origin;
   }
   return {
     "Access-Control-Allow-Origin": allowOrigin,
     "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Environment",
+    "Vary": "Origin",
   };
 }
 
@@ -135,7 +136,7 @@ export default {
         if (!validateDeviceName(device_name)) return json({ valid: false, error: "invalid_device_name" }, 400, request);
 
         const license = await env.DB.prepare(
-          "SELECT * FROM licenses WHERE license_key = ? AND active = 1"
+          "SELECT * FROM licenses WHERE license_key = ? AND active = 1 AND COALESCE(refunded, 0) = 0"
         ).bind(license_key).first();
         if (!license) return json({ valid: false, error: "invalid_key" }, 403, request);
 
@@ -233,7 +234,7 @@ export default {
         const { license_key } = await request.json();
         if (!license_key) return json({ error: "missing_license_key" }, 400, request);
 
-        await env.DB.prepare("UPDATE licenses SET active = 0 WHERE license_key = ?").bind(license_key).run();
+        await env.DB.prepare("UPDATE licenses SET active = 0, refunded = 1 WHERE license_key = ?").bind(license_key).run();
         await env.DB.prepare("DELETE FROM activations WHERE license_key = ?").bind(license_key).run();
         return json({ success: true }, 200, request);
       }
@@ -315,9 +316,9 @@ export default {
           }, 400, request);
         }
 
-        // 라이선스 비활성화
+        // 라이선스 비활성화 + 환불 플래그 (offline grace 캐싱된 라이선스 재활성화 차단)
         await env.DB.prepare(
-          "UPDATE licenses SET active = 0 WHERE license_key = ?"
+          "UPDATE licenses SET active = 0, refunded = 1 WHERE license_key = ?"
         ).bind(payment.license_key).run();
 
         // 활성화 기록 삭제
@@ -428,12 +429,24 @@ export default {
           return json({ trial_start: existing.trial_start, days_left: Math.max(daysLeft, 0), expired: daysLeft <= 0 }, 200, request);
         }
 
+        // 트라이얼 재가입 차단: 같은 IP에서 30일 내 다른 device_id로 등록된 trial이 있으면 거부.
+        // device seed 파일 + localStorage 삭제로 device_id를 재생성해도 IP 기반 fingerprint로 차단.
+        // 단 "unknown" IP는 검사 우회 가능하지만 일반 사용자에겐 발생하지 않음.
+        if (ip !== "unknown") {
+          const recent = await env.DB.prepare(
+            "SELECT device_id FROM trials WHERE ip = ? AND trial_start >= datetime('now', '-30 days')"
+          ).bind(ip).first();
+          if (recent && recent.device_id !== device_id) {
+            return json({ error: "trial_already_used", message: "This network already used a trial in the past 30 days." }, 403, request);
+          }
+        }
+
         // trials는 디바이스 단위로 한 번만 등록되므로 환경 컬럼은 디폴트 'live' 유지
         // (sandbox 검증용 트라이얼은 별도 API 호출자가 환경 명시한 경우만 sandbox로 마킹)
         const trialEnv = (request.headers.get("X-Environment") === "sandbox") ? "sandbox" : "live";
         await env.DB.prepare(
-          "INSERT INTO trials (device_id, device_name, environment) VALUES (?, ?, ?)"
-        ).bind(device_id, device_name || "Unknown", trialEnv).run();
+          "INSERT INTO trials (device_id, device_name, environment, ip) VALUES (?, ?, ?, ?)"
+        ).bind(device_id, device_name || "Unknown", trialEnv, ip).run();
         return json({ trial_start: new Date().toISOString(), days_left: 14, expired: false }, 200, request);
       }
 
