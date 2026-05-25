@@ -9,7 +9,6 @@ import { indent } from "@milkdown/kit/plugin/indent";
 import { trailing } from "@milkdown/kit/plugin/trailing";
 import { listItemBlockComponent } from "@milkdown/components/list-item-block";
 import { math } from "@milkdown/plugin-math";
-import { stripMarkdownToPlain } from "../lib/strip-markdown";
 import { prism, prismConfig } from "@milkdown/plugin-prism";
 import { refractor } from "refractor";
 import "katex/dist/katex.min.css";
@@ -17,6 +16,37 @@ import type { EditorHandle } from "../types";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type CmdPlugin = { run?: (payload?: any) => boolean };
+
+// 마크다운에서 마크업만 제거하고 줄바꿈은 유지 (인라인 헬퍼로 모듈 import 의존성 제거)
+function stripMd(md: string): string {
+  if (!md) return "";
+  let o = md;
+  o = o.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n*/, "");
+  o = o.replace(/```[a-zA-Z0-9_-]*\r?\n([\s\S]*?)\r?\n```/g, "$1");
+  o = o.replace(/!\[[^\]]*\]\([^)]*\)/g, "");
+  o = o.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1");
+  o = o.replace(/^#{1,6}\s+/gm, "");
+  o = o.replace(/\*\*([^*\n]+)\*\*/g, "$1");
+  o = o.replace(/__([^_\n]+)__/g, "$1");
+  o = o.replace(/\*([^*\n]+)\*/g, "$1");
+  o = o.replace(/(^|[^_])_([^_\n]+)_(?!_)/g, "$1$2");
+  o = o.replace(/~~([^~\n]+)~~/g, "$1");
+  o = o.replace(/==([^=\n]+)==/g, "$1");
+  o = o.replace(/`([^`\n]+)`/g, "$1");
+  o = o.replace(/^>\s?/gm, "");
+  o = o.replace(/^(\s*)[-*+]\s+\[[ xX]\]\s+/gm, "$1");
+  o = o.replace(/^(\s*)[-*+]\s+/gm, "$1");
+  o = o.replace(/^(\s*)\d+\.\s+/gm, "$1");
+  o = o.replace(/^(?:---+|\*\*\*+|___+)\s*$/gm, "");
+  o = o.replace(/^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)+\|?\s*$/gm, "");
+  o = o.replace(/^\|(.+)\|\s*$/gm, (_m, c) => String(c).split("|").map((x: string) => x.trim()).join("\t"));
+  o = o.replace(/^\[toc\]\s*$/gim, "");
+  o = o.replace(/\$\$[\s\S]*?\$\$/g, "");
+  o = o.replace(/<[^>]+>/g, "");
+  o = o.replace(/ /g, " ");
+  o = o.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n");
+  return o.trim();
+}
 
 interface EditorProps {
   content: string;
@@ -53,16 +83,21 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
       insertImage: () => run(insertImageCommand as CmdPlugin, { src: "", alt: "" }),
       getMarkdown: () => contentRef.current,
       copyAsPlainText: async () => {
-        // 선택 영역이 있으면 getSelection 사용(줄바꿈 유지). 없으면 원본 markdown에서
-        // 마크업만 제거. ProseMirror DOM 순회는 단일 <p> 케이스에서 줄바꿈 누락 문제 회피.
-        const sel = window.getSelection()?.toString() ?? "";
-        let text = sel || stripMarkdownToPlain(contentRef.current);
-        text = text.replace(/\u00A0/g, " ").replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
-        if (!text) return false;
-        // Windows 클립보드는 CRLF 권장 (메모장 등 단순 에디터 호환)
-        const isWindows = /Win/i.test(navigator.userAgent || "");
-        const finalText = isWindows ? text.replace(/\n/g, "\r\n") : text;
         try {
+          const sel = window.getSelection()?.toString() ?? "";
+          let text = sel;
+          if (!text) {
+            try {
+              text = stripMd(contentRef.current);
+            } catch {
+              text = contentRef.current || "";
+            }
+          }
+          text = text.replace(/ /g, " ").replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+          if (!text) text = contentRef.current || "";
+          if (!text) return false;
+          const isWindows = /Win/i.test(navigator.userAgent || "");
+          const finalText = isWindows ? text.replace(/\n/g, "\r\n") : text;
           await navigator.clipboard.writeText(finalText);
           return true;
         } catch {

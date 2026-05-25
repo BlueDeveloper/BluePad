@@ -375,10 +375,27 @@ ${editorEl.innerHTML}
   }, [fileManager]);
 
   const handleCopyPlainText = useCallback(async () => {
-    if (fileManager.activeTab.fileType !== "markdown") return;
-    const ok = await editorRef.current?.copyAsPlainText();
-    showToast(i18n.t(ok ? "toast.copiedPlainText" : "toast.copyFailed"));
-  }, [fileManager.activeTab.fileType, showToast, i18n]);
+    // markdown 외 파일에서도 동작하도록 가드 완화 — 텍스트/JSON/YAML/코드 모두 raw 클립보드 복사
+    const ft = fileManager.activeTab.fileType;
+    try {
+      if (ft === "markdown" && editorRef.current) {
+        const ok = await editorRef.current.copyAsPlainText();
+        if (ok) { showToast(i18n.t("toast.copiedPlainText")); return; }
+      }
+      // markdown 외 / Editor 실패 시 — 현재 활성 탭 content를 그대로 클립보드에
+      const raw = fileManager.content;
+      if (raw && raw.trim()) {
+        const isWindows = /Win/i.test(navigator.userAgent || "");
+        const final = isWindows ? raw.replace(/\r?\n/g, "\r\n") : raw;
+        await navigator.clipboard.writeText(final);
+        showToast(i18n.t("toast.copiedPlainText"));
+        return;
+      }
+      showToast(i18n.t("toast.copyFailed"));
+    } catch {
+      showToast(i18n.t("toast.copyFailed"));
+    }
+  }, [fileManager.activeTab.fileType, fileManager.content, showToast, i18n]);
 
   const handleToggleAlwaysOnTop = useCallback(async () => {
     const next = !alwaysOnTop;
