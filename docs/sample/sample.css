@@ -1,0 +1,121 @@
+/* BluePad 샘플 CSS — 구문 강조 데모 */
+
+:root {
+  --primary: #155dfc;
+  --primary-hover: #0f43c8;
+  --bg: #09090b;
+  --text: #fafafa;
+  --muted: #71717a;
+  --border: #27272a;
+  --radius: 8px;
+  --transition: 0.2s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+  background-color: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 헤더 */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(9, 9, 11, 0.85);
+  backdrop-filter: blur(10px);
+}
+
+.site-header h1 {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.site-header h1 em {
+  color: var(--primary);
+  font-style: normal;
+}
+
+.site-header nav {
+  display: flex;
+  gap: 24px;
+}
+
+.site-header nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color var(--transition);
+}
+
+.site-header nav a:hover,
+.site-header nav a[aria-current="page"] {
+  color: var(--text);
+}
+
+/* CTA 버튼 */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--primary);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background var(--transition), transform 0.1s;
+}
+
+.cta:hover {
+  background: var(--primary-hover);
+}
+
+.cta:active {
+  transform: scale(0.98);
+}
+
+/* 반응형 */
+@media (max-width: 640px) {
+  .site-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .site-header nav {
+    gap: 16px;
+    font-size: 13px;
+  }
+}
+
+/* 키프레임 애니메이션 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+#hero {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* 그리드 */
+#features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 48px 32px;
+}

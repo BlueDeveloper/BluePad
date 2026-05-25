@@ -1,0 +1,42 @@
+BluePad 샘플 텍스트 파일
+========================
+
+이 파일은 BluePad가 일반 텍스트(.txt) 파일을 어떻게 다루는지 보여주는
+샘플입니다. .txt 파일은 구문 강조 없이 단순 텍스트로 표시됩니다.
+
+지원되는 일반 텍스트 확장자:
+- .txt
+- .log
+- .env
+- .ini
+- .conf
+- .cfg
+- .properties
+
+
+기능 확인 체크리스트
+---------------------
+
+[1] 자동 저장 (30초 간격)
+[2] 멀티탭 (드래그 정렬)
+[3] 찾기 / 바꾸기 (Ctrl+F / Ctrl+H)
+[4] 글자수 / 단어수 / 줄수 상태바
+[5] 외부 파일 변경 감지
+
+샘플 로그 라인:
+
+2026-05-25 08:54:30 INFO  [deploy] v1.12.3 배포 시작
+2026-05-25 08:54:31 INFO  [deploy] tauri.conf.json + package.json 버전 갱신
+2026-05-25 08:55:42 INFO  [deploy] MSI 빌드 완료 (signed)
+2026-05-25 08:55:48 INFO  [deploy] R2 업로드 완료
+2026-05-25 08:55:50 INFO  [deploy] 랜딩 다운로드 URL 갱신
+2026-05-25 08:55:51 INFO  [deploy] git commit & push
+2026-05-25 08:55:54 INFO  [deploy] update.json 검증 OK
+2026-05-25 08:55:55 INFO  [deploy] IndexNow 제출 완료
+2026-05-25 08:55:56 INFO  [deploy] 완료
+
+
+연락처
+------
+홈페이지: https://bluepad.work
+문의: blueehdwp@gmail.com

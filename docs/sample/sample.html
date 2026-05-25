@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BluePad 샘플 HTML</title>
+  <meta name="description" content="BluePad에서 HTML 구문 강조를 확인하는 샘플 문서">
+  <link rel="stylesheet" href="sample.css">
+  <script defer src="sample.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <h1>BluePad <em>Pro</em></h1>
+    <nav>
+      <a href="/" aria-current="page">홈</a>
+      <a href="/features">기능</a>
+      <a href="/pricing">가격</a>
+      <a href="/download">다운로드</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="hero">
+      <h2>마크다운 에디터의 새로운 기준</h2>
+      <p>WYSIWYG 편집 · 자동 저장 · 5종 테마 · 멀티탭</p>
+      <button type="button" class="cta" data-action="download">
+        지금 다운로드
+      </button>
+    </section>
+
+    <section id="features">
+      <article>
+        <h3>실시간 미리보기</h3>
+        <p>마크다운을 입력하는 즉시 결과를 확인합니다.</p>
+      </article>
+      <article>
+        <h3>안전한 자동 저장</h3>
+        <p>30초마다 자동으로 저장되어 작업을 잃지 않습니다.</p>
+      </article>
+    </section>
+
+    <form id="signup">
+      <fieldset>
+        <legend>뉴스레터 구독</legend>
+        <label for="email">이메일</label>
+        <input type="email" id="email" name="email" required placeholder="you@example.com">
+        <input type="submit" value="구독하기">
+      </fieldset>
+    </form>
+  </main>
+
+  <footer>
+    <small>&copy; 2026 BRP (BlueRedPolarity). All rights reserved.</small>
+  </footer>
+</body>
+</html>

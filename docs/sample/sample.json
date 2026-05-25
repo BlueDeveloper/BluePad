@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "name": "BluePad",
+  "version": "1.12.3",
+  "description": "상용 마크다운 에디터 (Typora 대안)",
+  "homepage": "https://bluepad.work",
+  "license": "Proprietary",
+  "publisher": {
+    "name": "BRP (BlueRedPolarity)",
+    "email": "blueehdwp@gmail.com",
+    "business_id": "511-32-01572"
+  },
+  "platforms": [
+    {
+      "name": "Windows",
+      "architecture": "x86_64",
+      "format": "MSI",
+      "minimum_version": "Windows 10"
+    }
+  ],
+  "features": {
+    "free": ["wysiwyg", "auto_save", "tabs_3", "themes_2"],
+    "pro": ["wysiwyg", "auto_save", "tabs_unlimited", "themes_5", "focus_mode", "html_export", "pdf_export"]
+  },
+  "pricing": {
+    "currency": "USD",
+    "price": 10.99,
+    "type": "one_time",
+    "trial_days": 14,
+    "refund_window_days": 14,
+    "max_devices": 3
+  },
+  "supported_extensions": [
+    ".md", ".markdown", ".mdx",
+    ".txt", ".log",
+    ".json", ".jsonc",
+    ".yaml", ".yml",
+    ".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx",
+    ".html", ".htm", ".xhtml",
+    ".css", ".scss", ".sass", ".less"
+  ],
+  "i18n": {
+    "supported": ["ko", "en", "ja"],
+    "default": "ko"
+  },
+  "infrastructure": {
+    "frontend": "Tauri v2 + React + TypeScript",
+    "editor": "Milkdown + ProseMirror",
+    "code_editor": "CodeMirror 6",
+    "backend": "Cloudflare Workers + D1",
+    "payment": "Paddle"
+  },
+  "release": {
+    "tag": "v1.12.3",
+    "released_at": "2026-05-25T08:54:30Z",
+    "highlights": [
+      "파일 트리 신규 확장자 13종 추가",
+      "트리 너비 드래그 리사이즈",
+      "보안 강화 4건 (시계 변경 / 환불 race / CORS / 트라이얼 우회)"
+    ]
+  }
+}

@@ -1,0 +1,104 @@
+# BluePad 샘플 YAML 설정 파일
+# 다양한 YAML 구문 (스칼라, 시퀀스, 매핑, 앵커, 멀티라인) 데모
+
+app:
+  name: BluePad
+  version: 1.12.3
+  description: |
+    상용 마크다운 에디터.
+    Typora 대안으로 설계되었으며,
+    Windows MSI로 배포됩니다.
+  homepage: https://bluepad.work
+
+# 앵커 + 별칭 (재사용)
+defaults: &defaults
+  timeout: 30
+  retries: 3
+  user_agent: BluePad/1.12.3
+
+environments:
+  development:
+    <<: *defaults
+    api_url: http://localhost:8787
+    debug: true
+    log_level: debug
+
+  staging:
+    <<: *defaults
+    api_url: https://staging.bluepad.work
+    debug: false
+    log_level: info
+
+  production:
+    <<: *defaults
+    api_url: https://bluepad-license-api.blueehdwp.workers.dev
+    debug: false
+    log_level: warn
+    retries: 5
+
+# 시퀀스
+supported_extensions:
+  - .md
+  - .markdown
+  - .mdx
+  - .txt
+  - .log
+  - .json
+  - .yaml
+  - .js
+  - .ts
+  - .html
+  - .css
+
+themes:
+  - id: classic
+    label: Classic
+    tier: free
+  - id: dark
+    label: Dark
+    tier: free
+  - id: brp-blue
+    label: BRP Blue
+    tier: pro
+  - id: brp-red
+    label: BRP Red
+    tier: pro
+  - id: brp-polarity
+    label: BRP Polarity
+    tier: pro
+
+# 매핑 안의 매핑
+pricing:
+  currency: USD
+  price: 10.99
+  trial:
+    days: 14
+    expires_at: null
+  refund:
+    window_days: 14
+    policy: "Digital goods — refund allowed within window"
+
+# 멀티라인 (literal block)
+license_template: |
+  BluePad Software License
+  Copyright (c) 2026 BRP (BlueRedPolarity)
+
+  This software is licensed, not sold.
+  See LICENSE.txt for details.
+
+# 멀티라인 (folded)
+release_notes: >
+  v1.12.3 추가 변경 사항.
+  파일 트리 신규 확장자 표시 및 드래그 리사이즈 기능을
+  포함합니다. 보안 강화 4건도 함께 적용되었습니다.
+
+# 부울 / null
+features:
+  auto_save: true
+  spell_check: false
+  beta_features: null
+  max_tabs: ~  # null의 다른 표기
+
+# 인라인 컬렉션 (flow style)
+quick_keys: [Ctrl+N, Ctrl+O, Ctrl+S, Ctrl+F, Ctrl+H, Ctrl+Shift+C]
+window_size: { width: 1000, height: 700, resizable: true }

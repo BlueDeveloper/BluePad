@@ -1,0 +1,131 @@
+// BluePad 샘플 SCSS — Sass 구문 강조 데모
+
+// 변수
+$primary: #155dfc;
+$primary-hover: darken($primary, 10%);
+$bg: #09090b;
+$text: #fafafa;
+$muted: #71717a;
+$border: #27272a;
+$radius: 8px;
+$spacing: 8px;
+
+// 함수
+@function rem($px) {
+  @return ($px / 16) * 1rem;
+}
+
+// 믹스인
+@mixin button($bg-color: $primary) {
+  display: inline-flex;
+  align-items: center;
+  gap: rem(8);
+  padding: rem(12) rem(24);
+  font-size: rem(15);
+  font-weight: 600;
+  color: #fff;
+  background: $bg-color;
+  border: none;
+  border-radius: $radius;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s;
+
+  &:hover {
+    background: darken($bg-color, 8%);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@mixin breakpoint($size) {
+  @if $size == "mobile" {
+    @media (max-width: 640px) { @content; }
+  } @else if $size == "tablet" {
+    @media (max-width: 1024px) { @content; }
+  } @else if $size == "desktop" {
+    @media (min-width: 1280px) { @content; }
+  }
+}
+
+// 기본 스타일
+body {
+  font-family: -apple-system, sans-serif;
+  color: $text;
+  background: $bg;
+  margin: 0;
+  padding: 0;
+}
+
+// 중첩
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  padding: $spacing * 2 $spacing * 4;
+  border-bottom: 1px solid $border;
+
+  h1 {
+    font-size: rem(24);
+    font-weight: 800;
+
+    em {
+      color: $primary;
+      font-style: normal;
+    }
+  }
+
+  nav {
+    display: flex;
+    gap: $spacing * 3;
+
+    a {
+      color: $muted;
+      text-decoration: none;
+      transition: color 0.2s;
+
+      &:hover,
+      &.active {
+        color: $text;
+      }
+    }
+  }
+
+  @include breakpoint("mobile") {
+    flex-direction: column;
+    gap: $spacing * 2;
+  }
+}
+
+// 부모 참조
+.btn {
+  @include button;
+
+  &--secondary {
+    @include button($muted);
+  }
+
+  &--danger {
+    @include button(#ef3340);
+  }
+}
+
+// @each / @for / @if
+@each $name, $color in (success: #22c55e, warning: #f59e0b, error: #ef4444) {
+  .alert-#{$name} {
+    background: rgba($color, 0.1);
+    border-left: 3px solid $color;
+    padding: $spacing $spacing * 2;
+  }
+}
+
+@for $i from 1 through 6 {
+  .col-#{$i} {
+    width: ($i / 12) * 100%;
+  }
+}
