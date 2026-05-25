@@ -957,27 +957,33 @@ body {
   opacity: 0.7;
 }
 
-/* Scrollbar */
-.editor-content::-webkit-scrollbar {
-  width: 6px;
+/* Scrollbar — 항상 살짝 보이게, hover 시 진하게 */
+.editor-content::-webkit-scrollbar,
+.source-editor::-webkit-scrollbar {
+  width: 10px;
 }
 
-.editor-content::-webkit-scrollbar-track {
+.editor-content::-webkit-scrollbar-track,
+.source-editor::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.editor-content::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 3px;
-  transition: background 150ms ease;
-}
-
-.editor-content:hover::-webkit-scrollbar-thumb {
+.editor-content::-webkit-scrollbar-thumb,
+.source-editor::-webkit-scrollbar-thumb {
   background: var(--border);
+  border-radius: 5px;
+  transition: background 150ms ease;
+  min-height: 40px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
-.editor-content::-webkit-scrollbar-thumb:hover {
+.editor-content:hover::-webkit-scrollbar-thumb,
+.editor-content::-webkit-scrollbar-thumb:hover,
+.source-editor:hover::-webkit-scrollbar-thumb,
+.source-editor::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
+  background-clip: padding-box;
 }
 
 /* ========================================
