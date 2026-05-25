@@ -69,6 +69,28 @@ function App() {
     try { return localStorage.getItem(WRITING_MODE_KEY) === "1"; } catch { return false; }
   });
   const [writingGoalDialogVisible, setWritingGoalDialogVisible] = useState(false);
+  const editorWrapperRef = useRef<HTMLDivElement>(null);
+  const lastEditorScrollTop = useRef(0);
+
+  const handleToggleSource = useCallback(() => {
+    // 모드 전환 시 현재 스크롤 위치 캐시 → 새 마운트 후 복원
+    const cur = editorWrapperRef.current?.querySelector(".editor-content") as HTMLElement | null;
+    if (cur) lastEditorScrollTop.current = cur.scrollTop;
+    setSourceMode((s) => !s);
+  }, []);
+
+  useEffect(() => {
+    // 새 .editor-content가 마운트된 직후 scrollTop 복원 (RAF 두 번으로 ProseMirror/textarea 렌더 대기)
+    const restore = () => {
+      const cur = editorWrapperRef.current?.querySelector(".editor-content") as HTMLElement | null;
+      if (cur) cur.scrollTop = lastEditorScrollTop.current;
+    };
+    const f1 = requestAnimationFrame(() => {
+      const f2 = requestAnimationFrame(restore);
+      return () => cancelAnimationFrame(f2);
+    });
+    return () => cancelAnimationFrame(f1);
+  }, [sourceMode]);
   const [findVisible, setFindVisible] = useState(false);
   const [findReplaceMode, setFindReplaceMode] = useState(false);
   const [licenseDialogVisible, setLicenseDialogVisible] = useState(false);
@@ -624,7 +646,7 @@ ${editorEl.innerHTML}
             onExportPdf={handleExportPdf}
             onFormat={handleFormat}
             onSetWordTarget={handleSetWordTarget}
-            onToggleSource={() => setSourceMode((s) => !s)}
+            onToggleSource={handleToggleSource}
             onToggleSidebar={() => setSidebarVisible((s) => !s)}
             onToggleFocus={handleToggleFocus}
             onToggleFileTree={() => setFileTreeVisible((s) => !s)}
@@ -666,7 +688,7 @@ ${editorEl.innerHTML}
         <div className="main-area">
           <FileTree visible={fileTreeVisible && !focusMode} onOpenFile={handleOpenFileFromTree} />
           <Sidebar visible={sidebarVisible && !focusMode} markdown={fileManager.content} />
-          <div className="editor-wrapper">
+          <div className="editor-wrapper" ref={editorWrapperRef}>
             <FindReplace
               visible={findVisible && !sourceMode}
               replaceMode={findReplaceMode}

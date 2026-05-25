@@ -912,6 +912,11 @@ body {
   padding: 8px 12px;
   text-align: left;
   line-height: 1.5;
+  /* 한국어/숫자 단어 단위 줄바꿈 — "11" 같은 두 자리 숫자가 세로로 쪼개지지 않음.
+     매우 긴 단어/URL은 셀 폭에 맞춰 강제 줄바꿈. */
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  min-width: 2.5em;
 }
 
 .editor-content .ProseMirror th {
