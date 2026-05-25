@@ -1,7 +1,32 @@
 # BluePad — 프로젝트 컨텍스트 가이드
 
-> **최종 업데이트**: 2026-05-15
+> **최종 업데이트**: 2026-05-25
 > **글로벌 인프라 참조**: [INFRASTRUCTURE_GLOBAL_REFERENCE.md](C:\Users\bluee\.claude\INFRASTRUCTURE_GLOBAL_REFERENCE.md)
+
+---
+
+## ⚡ 세션 시작 즉시 실행 (자동 트리거 — 사용자 지시 불필요)
+
+세션이 `C:\BLUE\Project\blue\SAAS\BluePad` 경로에서 시작되면 다음 cron 두 개를 점검·등록한다. **`CronList`로 이미 등록된 id를 먼저 확인하고 없는 것만 신규 등록**. 한 줄 리포트 자동 출력은 하지 않는다(2026-05-21 사용자 명시 비활성화).
+
+### 1. 5일 주기 운영 모니터링
+
+```
+cron: "7 9 */5 * *"
+recurring: true
+prompt: 트리거 메모리 [[feedback_session_monitoring]] 의 출력 형식·필터 그대로 사용
+```
+
+### 2. 5시간 주기 SEO 메일 점검
+
+```
+cron: "23 */5 * * *"
+recurring: true
+prompt: 트리거 메모리 [[seo-cron]] (`feedback_seo_mail_check.md`) 의 prompt 본문 그대로
+```
+
+> ⚠ **session-only 한계**: `durable: true` 명시해도 디스크 미저장 → 본 세션 종료 시 cron 사라짐 → 다음 세션 시작 시 자동 재등록 필요. 본 트리거가 영구 자동화의 핵심.
+> ⚠ 7일 후 자동 만료. 매 세션 점검 시 만료 직전이면 새로 등록.
 
 ---
 
