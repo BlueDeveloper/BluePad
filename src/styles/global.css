@@ -2086,6 +2086,182 @@ body {
 .cm-content .tok-strikethrough { text-decoration: line-through; }
 .cm-content .tok-invalid { color: #ff5252; text-decoration: underline wavy; }
 
+/* ========================================
+   Writing Mode (글쓰기 모드)
+   ======================================== */
+
+/* 타이핑라이터: 에디터 상하단에 viewport 50% padding으로 caret을 중앙으로 보낼 여유 확보 */
+.editor-content.writing-mode .ProseMirror {
+  padding-top: 50vh;
+  padding-bottom: 50vh;
+}
+
+/* 하이라이트 모드: 모든 직계 블록을 흐리게, 현재 블록만 선명 */
+.editor-content.writing-mode .ProseMirror > * {
+  opacity: 0.35;
+  transition: opacity 0.2s ease;
+}
+.editor-content.writing-mode .ProseMirror > .current-block {
+  opacity: 1;
+}
+
+/* Writing Panel (우측 사이드바) */
+.writing-panel {
+  width: 260px;
+  min-width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.writing-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-light);
+}
+.writing-panel-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+.writing-panel-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 0 4px;
+}
+.writing-panel-close:hover { color: var(--text); }
+
+.writing-section {
+  padding: 14px;
+  border-bottom: 1px solid var(--border-light);
+}
+.writing-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.writing-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+.writing-label { color: var(--text-secondary); }
+.writing-value { color: var(--text); font-variant-numeric: tabular-nums; }
+.writing-value strong { font-weight: 700; }
+.writing-muted { color: var(--text-muted); }
+
+.writing-progress-bar {
+  height: 6px;
+  background: var(--bg-active);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 8px 0 6px;
+}
+.writing-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.writing-link-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 12px;
+  padding: 2px 0;
+  cursor: pointer;
+}
+.writing-link-btn:hover { text-decoration: underline; }
+
+.writing-sprint-timer {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  margin: 4px 0 10px;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+.writing-sprint-controls {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.writing-btn,
+.writing-btn-secondary {
+  flex: 1;
+  padding: 7px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+.writing-btn {
+  background: var(--accent);
+  color: #fff;
+}
+.writing-btn:hover { background: var(--accent-hover); }
+.writing-btn-secondary {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+.writing-btn-secondary:hover { background: var(--bg-active); }
+
+.writing-sprint-presets {
+  display: flex;
+  gap: 4px;
+}
+.writing-preset {
+  flex: 1;
+  padding: 5px 0;
+  background: var(--bg-hover);
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+}
+.writing-preset:hover { background: var(--bg-active); }
+.writing-preset.active {
+  background: transparent;
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.writing-heatmap {
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  gap: 3px;
+}
+.writing-heatmap-cell {
+  aspect-ratio: 1;
+  background: var(--bg-active);
+  border-radius: 2px;
+}
+.writing-heatmap-cell.level-1 { background: color-mix(in srgb, var(--accent) 25%, var(--bg-active)); }
+.writing-heatmap-cell.level-2 { background: color-mix(in srgb, var(--accent) 50%, var(--bg-active)); }
+.writing-heatmap-cell.level-3 { background: color-mix(in srgb, var(--accent) 75%, var(--bg-active)); }
+.writing-heatmap-cell.level-4 { background: var(--accent); }
+
 .app-toast {
   position: fixed;
   bottom: 48px;

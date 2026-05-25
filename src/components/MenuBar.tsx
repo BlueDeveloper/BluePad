@@ -32,6 +32,8 @@ interface MenuBarProps {
   onFind: () => void;
   onReplace: () => void;
   onCopyPlainText: () => void;
+  writingMode: boolean;
+  onToggleWritingMode: () => void;
   onFontIncrease: () => void;
   onFontDecrease: () => void;
   onFontReset: () => void;
@@ -91,6 +93,8 @@ export function MenuBar({
   onFind,
   onReplace,
   onCopyPlainText,
+  writingMode,
+  onToggleWritingMode,
   onFontIncrease,
   onFontDecrease,
   onFontReset,
@@ -165,6 +169,7 @@ export function MenuBar({
         { label: t("menu.outlineSidebar"), shortcut: "Ctrl+Shift+L", action: onToggleSidebar, checked: sidebarVisible },
         { label: t("menu.fileTree"), action: onToggleFileTree, checked: fileTreeVisible },
         { label: t("menu.focusMode"), shortcut: "F11", action: proAction(onToggleFocus), checked: focusMode, pro: !isPro },
+        { label: t("menu.writingMode"), shortcut: "Ctrl+Shift+W", action: proAction(onToggleWritingMode), checked: writingMode, pro: !isPro },
         { label: t("menu.alwaysOnTop"), action: onToggleAlwaysOnTop, checked: alwaysOnTop },
         { label: "", action: () => {}, divider: true },
         { label: t("menu.wordTarget"), action: onSetWordTarget },
@@ -207,6 +212,7 @@ export function MenuBar({
       else if (e.ctrlKey && e.shiftKey && e.key === "S") { e.preventDefault(); onSaveAs(); }
       else if (e.ctrlKey && e.shiftKey && e.key === "F") { e.preventDefault(); onFormat(); }
       else if (e.ctrlKey && e.shiftKey && e.key === "C") { e.preventDefault(); onCopyPlainText(); }
+      else if (e.ctrlKey && e.shiftKey && e.key === "W") { e.preventDefault(); onToggleWritingMode(); }
       else if (e.ctrlKey && e.key === "s") { e.preventDefault(); onSave(); }
       else if (e.ctrlKey && e.key === "/") { e.preventDefault(); onToggleSource(); }
       else if (e.ctrlKey && e.shiftKey && e.key === "L") { e.preventDefault(); onToggleSidebar(); }
@@ -214,7 +220,7 @@ export function MenuBar({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onNew, onOpen, onSave, onSaveAs, onFormat, onCopyPlainText, onToggleSource, onToggleSidebar, onToggleFocus]);
+  }, [onNew, onOpen, onSave, onSaveAs, onFormat, onCopyPlainText, onToggleSource, onToggleSidebar, onToggleFocus, onToggleWritingMode]);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {

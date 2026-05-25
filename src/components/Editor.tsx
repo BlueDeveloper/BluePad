@@ -53,10 +53,11 @@ interface EditorProps {
   fileVersion: number;
   fontSize: number;
   onChange: (markdown: string) => void;
+  writingMode?: boolean;
 }
 
 export const Editor = forwardRef<EditorHandle, EditorProps>(
-  ({ content, fileVersion, fontSize, onChange }, ref) => {
+  ({ content, fileVersion, fontSize, onChange, writingMode = false }, ref) => {
     const editorRef = useRef<HTMLDivElement>(null);
     const milkdownRef = useRef<MilkdownEditor | null>(null);
     const contentRef = useRef(content);
@@ -304,10 +305,72 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
       };
     }, [fileVersion]);
 
+    // 글쓰기 모드: 타이핑라이터(현재 줄 중앙) + 하이라이트(현재 블록만 선명)
+    useEffect(() => {
+      const el = editorRef.current;
+      if (!el) return;
+      const pm = el.querySelector(".ProseMirror") as HTMLElement | null;
+      if (!pm) return;
+
+      if (!writingMode) {
+        // 정리: 클래스 제거
+        pm.querySelectorAll(".current-block").forEach((n) => n.classList.remove("current-block"));
+        return;
+      }
+
+      let raf = 0;
+      const updateActiveBlock = () => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          const sel = window.getSelection();
+          if (!sel || sel.rangeCount === 0) return;
+          let node: Node | null = sel.anchorNode;
+          // ProseMirror 직계 자식까지 올라가기
+          while (node && node.parentElement && node.parentElement !== pm) {
+            node = node.parentElement;
+          }
+          const block = node instanceof HTMLElement ? node : null;
+          pm.querySelectorAll(".current-block").forEach((n) => {
+            if (n !== block) n.classList.remove("current-block");
+          });
+          if (block && !block.classList.contains("current-block")) {
+            block.classList.add("current-block");
+          }
+          // 타이핑라이터 — caret rect를 viewport 중앙으로
+          const range = sel.getRangeAt(0).cloneRange();
+          range.collapse(true);
+          const rect = range.getBoundingClientRect();
+          // caret이 안 보이는 경우(0,0) 무시
+          if (rect.top === 0 && rect.bottom === 0) return;
+          const wrapper = el.closest(".editor-wrapper") as HTMLElement | null;
+          const scroller = wrapper || el;
+          const viewportH = scroller.clientHeight || window.innerHeight;
+          const middle = viewportH / 2;
+          const offset = rect.top - middle;
+          if (Math.abs(offset) > 4) {
+            scroller.scrollBy({ top: offset, behavior: "smooth" });
+          }
+        });
+      };
+
+      document.addEventListener("selectionchange", updateActiveBlock);
+      pm.addEventListener("keyup", updateActiveBlock);
+      pm.addEventListener("click", updateActiveBlock);
+      // 최초 1회
+      updateActiveBlock();
+
+      return () => {
+        document.removeEventListener("selectionchange", updateActiveBlock);
+        pm.removeEventListener("keyup", updateActiveBlock);
+        pm.removeEventListener("click", updateActiveBlock);
+        cancelAnimationFrame(raf);
+      };
+    }, [writingMode, fileVersion]);
+
     return (
       <div
         ref={editorRef}
-        className="editor-content"
+        className={`editor-content${writingMode ? " writing-mode" : ""}`}
         style={{ fontSize: `${fontSize}px` }}
       />
     );

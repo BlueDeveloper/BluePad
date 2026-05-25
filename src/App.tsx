@@ -18,6 +18,8 @@ import { UpdateDialog } from "./components/UpdateDialog";
 import { useFileManager } from "./hooks/useFileManager";
 import { useLicense } from "./hooks/useLicense";
 import { useUpdater } from "./hooks/useUpdater";
+import { useWritingStats } from "./hooks/useWritingStats";
+import { WritingPanel } from "./components/WritingPanel";
 import { CHECKOUT_URL, IS_SANDBOX } from "./lib/env";
 import { I18nCtx, t as translate } from "./i18n";
 import type { Lang } from "./i18n";
@@ -39,6 +41,7 @@ const SIDEBAR_KEY = "bluepad_sidebar";
 const FILETREE_KEY = "bluepad_filetree";
 const AUTOSAVE_KEY = "bluepad_autosave";
 const ALWAYS_ON_TOP_KEY = "bluepad_always_on_top";
+const WRITING_MODE_KEY = "bluepad_writing_mode";
 const AUTO_SAVE_INTERVAL = 30000;
 const APP_VERSION = __APP_VERSION__;
 
@@ -62,6 +65,10 @@ function App() {
     try { return localStorage.getItem(FILETREE_KEY) === "1"; } catch { return false; }
   });
   const [focusMode, setFocusMode] = useState(false);
+  const [writingMode, setWritingMode] = useState<boolean>(() => {
+    try { return localStorage.getItem(WRITING_MODE_KEY) === "1"; } catch { return false; }
+  });
+  const [writingGoalDialogVisible, setWritingGoalDialogVisible] = useState(false);
   const [findVisible, setFindVisible] = useState(false);
   const [findReplaceMode, setFindReplaceMode] = useState(false);
   const [licenseDialogVisible, setLicenseDialogVisible] = useState(false);
@@ -116,6 +123,9 @@ function App() {
   useEffect(() => {
     try { localStorage.setItem(AUTOSAVE_KEY, autoSaveEnabled ? "1" : "0"); } catch {}
   }, [autoSaveEnabled]);
+  useEffect(() => {
+    try { localStorage.setItem(WRITING_MODE_KEY, writingMode ? "1" : "0"); } catch {}
+  }, [writingMode]);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -143,6 +153,7 @@ function App() {
   const editorRef = useRef<EditorHandle>(null);
   const fileManager = useFileManager();
   const license = useLicense();
+  const writingStats = useWritingStats(fileManager.content, writingMode && fileManager.activeTab.fileType === "markdown");
   const updater = useUpdater();
 
   // 업데이트 후 "새 소식" 알림
@@ -373,6 +384,14 @@ ${editorEl.innerHTML}
     if (error) return; // invalid syntax, do nothing
     fileManager.setContent(formatted);
   }, [fileManager]);
+
+  const handleToggleWritingMode = useCallback(() => {
+    if (!license.isPro) {
+      setProGateVisible(true);
+      return;
+    }
+    setWritingMode((v) => !v);
+  }, [license.isPro]);
 
   const handleCopyPlainText = useCallback(async () => {
     // markdown 외 파일에서도 동작하도록 가드 완화 — 텍스트/JSON/YAML/코드 모두 raw 클립보드 복사
@@ -613,6 +632,8 @@ ${editorEl.innerHTML}
             onFind={() => { setFindReplaceMode(false); setFindVisible(true); }}
             onReplace={() => { setFindReplaceMode(true); setFindVisible(true); }}
             onCopyPlainText={handleCopyPlainText}
+            writingMode={writingMode}
+            onToggleWritingMode={handleToggleWritingMode}
             onFontIncrease={() => changeFontSize(1)}
             onFontDecrease={() => changeFontSize(-1)}
             onFontReset={() => setFontSize(15)}
@@ -668,10 +689,17 @@ ${editorEl.innerHTML}
                 content={fileManager.content}
                 fileVersion={fileManager.fileVersion}
                 fontSize={fontSize}
+                writingMode={writingMode && fileManager.activeTab.fileType === "markdown"}
                 onChange={handleContentChange}
               />
             )}
           </div>
+          <WritingPanel
+            visible={writingMode && !focusMode && fileManager.activeTab.fileType === "markdown"}
+            stats={writingStats}
+            onClose={() => setWritingMode(false)}
+            onEditGoal={() => setWritingGoalDialogVisible(true)}
+          />
         </div>
         {!focusMode && (
           <StatusBar
@@ -716,6 +744,18 @@ ${editorEl.innerHTML}
           defaultValue={wordTarget ? String(wordTarget) : ""}
           onConfirm={handleWordTargetConfirm}
           onCancel={() => setWordTargetDialogVisible(false)}
+        />
+        <InputDialog
+          visible={writingGoalDialogVisible}
+          title={i18n.t("writing.goalPrompt")}
+          placeholder="500"
+          defaultValue={String(writingStats.goal)}
+          onConfirm={(val) => {
+            const n = parseInt(val, 10);
+            if (Number.isFinite(n) && n > 0) writingStats.setGoal(n);
+            setWritingGoalDialogVisible(false);
+          }}
+          onCancel={() => setWritingGoalDialogVisible(false)}
         />
         <AlertDialog
           visible={trialWelcomeVisible}
