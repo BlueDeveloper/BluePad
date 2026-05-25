@@ -109,6 +109,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://bluepad.work/en/blog/writing-mode-for-writers</loc>
+    <lastmod>2026-05-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://bluepad.work/en/blog/best-markdown-editors-2026</loc>
     <lastmod>2026-05-26</lastmod>
     <changefreq>monthly</changefreq>
@@ -151,6 +157,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://bluepad.work/ko/blog/writing-mode-for-writers</loc>
+    <lastmod>2026-05-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://bluepad.work/ko/blog/best-markdown-editors-2026</loc>
     <lastmod>2026-05-26</lastmod>
     <changefreq>monthly</changefreq>
@@ -190,6 +202,12 @@
     <loc>https://bluepad.work/ja/blog/</loc>
     <lastmod>2026-05-26</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bluepad.work/ja/blog/writing-mode-for-writers</loc>
+    <lastmod>2026-05-26</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>

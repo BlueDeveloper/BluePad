@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BluePad ライティングモード — 1日の目標、タイプライター、文章分析 | BluePad ブログ</title>
+  <meta name="description" content="小説家・ブロガー・日記作家のための集中ライティングモード。1日の語数目標、タイプライタースクロール、リアルタイム文章分析、30日のヒートマップ。">
+  <meta name="keywords" content="ライティングモード, 作家向けマークダウンエディタ, タイプライターモード, 語数カウント, 執筆目標, 文章分析, ヘミングウェイ, 集中執筆, markdown エディタ">
+  <link rel="canonical" href="https://bluepad.work/ja/blog/writing-mode-for-writers">
+  <link rel="alternate" hreflang="en" href="https://bluepad.work/en/blog/writing-mode-for-writers">
+  <link rel="alternate" hreflang="ko" href="https://bluepad.work/ko/blog/writing-mode-for-writers">
+  <link rel="alternate" hreflang="ja" href="https://bluepad.work/ja/blog/writing-mode-for-writers">
+  <link rel="alternate" hreflang="x-default" href="https://bluepad.work/en/blog/writing-mode-for-writers">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="BluePad ライティングモード — 目標・タイプライター・文章分析">
+  <meta property="og:description" content="作家のために設計された集中ライティングモード。">
+  <meta property="og:url" content="https://bluepad.work/ja/blog/writing-mode-for-writers">
+  <meta property="og:site_name" content="BluePad">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BluePad ライティングモード — 作家のための集中ツール">
+  <meta name="twitter:description" content="小説家とブロガーのためのライティングモード。">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "BluePad ライティングモード — 1日の目標、タイプライター、文章分析",
+    "datePublished": "2026-05-26",
+    "dateModified": "2026-05-26",
+    "author": { "@type": "Organization", "name": "BluePad Team" },
+    "publisher": { "@type": "Organization", "name": "BluePad" },
+    "description": "小説家・ブロガーのための集中ライティングモード。",
+    "mainEntityOfPage": "https://bluepad.work/ja/blog/writing-mode-for-writers"
+  }
+  </script>
+
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wkokfmayny");</script>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<meta name="naver-site-verification" content="9b479417f022befdffd0b837c015469b604758d3" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --c-bg: #09090b; --c-bg-raised: #111113; --c-bg-card: #18181b;
+      --c-border: #27272a; --c-border-subtle: #1c1c1f;
+      --c-text: #fafafa; --c-text-2: #a1a1aa; --c-text-3: #52525b;
+      --c-accent: #155dfc; --c-accent-hover: #3b7dff;
+      --font: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI", system-ui, sans-serif;
+      --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { font-family: var(--font); background: var(--c-bg); color: var(--c-text); overflow-x: hidden; }
+    ::selection { background: rgba(21,93,252,0.3); color: #fff; }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+    .nav-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); background: rgba(9,9,11,0.75); border-bottom: 1px solid var(--c-border-subtle); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+    .nav-brand { display: flex; align-items: center; gap: 9px; color: var(--c-text); font-size: 16px; font-weight: 700; text-decoration: none; }
+    .nav-mark { width: 28px; height: 28px; border-radius: 7px; background: linear-gradient(135deg, var(--c-accent), #0f43c8); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; }
+    .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+    .nav-links a { color: var(--c-text-2); font-size: 14px; text-decoration: none; transition: color .15s; font-weight: 500; }
+    .nav-links a:hover { color: var(--c-text); }
+    .nav-dl { background: var(--c-accent); color: #fff !important; padding: 8px 16px; border-radius: 7px; font-weight: 600 !important; }
+    .nav-dl:hover { background: var(--c-accent-hover); }
+    .nav-lang { display: flex; gap: 4px; font-size: 12px; }
+    .nav-lang a { padding: 4px 8px; border-radius: 5px; color: var(--c-text-3) !important; }
+    .nav-lang a.on { background: var(--c-bg-card); color: var(--c-text) !important; }
+    .article-hero { padding: 130px 0 60px; border-bottom: 1px solid var(--c-border-subtle); }
+    .article-hero h1 { font-size: 42px; font-weight: 720; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .article-meta { color: var(--c-text-3); font-size: 13.5px; }
+    .article-content { padding: 56px 0 80px; font-size: 16px; line-height: 1.85; color: var(--c-text-2); }
+    .article-content h2 { color: var(--c-text); font-size: 26px; font-weight: 700; margin: 48px 0 18px; letter-spacing: -0.015em; }
+    .article-content h3 { color: var(--c-text); font-size: 19px; font-weight: 650; margin: 32px 0 12px; }
+    .article-content p { margin-bottom: 18px; }
+    .article-content ul, .article-content ol { margin: 0 0 18px 22px; }
+    .article-content li { margin-bottom: 8px; }
+    .article-content strong { color: var(--c-text); font-weight: 650; }
+    .article-content a { color: var(--c-accent); text-decoration: none; border-bottom: 1px solid rgba(21,93,252,0.4); transition: border-color .15s; }
+    .article-content a:hover { border-bottom-color: var(--c-accent); }
+    .cta-banner { margin-top: 56px; border: 1px solid var(--c-border); border-radius: 14px; padding: 44px 32px; text-align: center; background: var(--c-bg-raised); }
+    .cta-banner h3 { color: var(--c-text); font-size: 22px; font-weight: 720; margin-bottom: 10px; }
+    .cta-banner p { color: var(--c-text-2); margin-bottom: 24px; font-size: 15px; }
+    .cta-btn { display: inline-block; background: var(--c-accent); color: #fff; padding: 13px 32px; border-radius: 9px; font-size: 14.5px; font-weight: 620; text-decoration: none; transition: background .15s, transform .1s; }
+    .cta-btn:hover { background: var(--c-accent-hover); }
+    .cta-btn:active { transform: scale(0.97); }
+    .foot { padding: 40px 0; border-top: 1px solid var(--c-border-subtle); background: var(--c-bg); }
+    .foot-inner { display: flex; align-items: center; justify-content: space-between; }
+    .foot-copy { color: var(--c-text-3); font-size: 13px; }
+    .foot-links { display: flex; list-style: none; gap: 24px; }
+    .foot-links a { color: var(--c-text-3); text-decoration: none; font-size: 13px; transition: color .15s; }
+    .foot-links a:hover { color: var(--c-text); }
+    .feature-callout { background: var(--c-bg-card); border: 1px solid var(--c-border); border-radius: 12px; padding: 22px 26px; margin: 24px 0; }
+    .feature-callout h4 { color: var(--c-text); font-size: 16px; font-weight: 650; margin-bottom: 8px; }
+    .feature-callout p { margin-bottom: 0; font-size: 14.5px; }
+    .kbd { font-family: var(--font-mono); background: var(--c-bg-card); border: 1px solid var(--c-border); border-radius: 4px; padding: 2px 7px; font-size: 13px; color: var(--c-text); }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .foot-inner { flex-direction: column; gap: 16px; text-align: center; }
+      .article-hero { padding: 110px 0 60px; }
+      .article-hero h1 { font-size: 30px; }
+      .article-content { padding: 40px 0 60px; }
+    }
+    @media (max-width: 480px) { .wrap { padding: 0 20px; } }
+  </style>
+</head>
+<body>
+
+  <header class="nav-bar">
+    <div class="wrap nav-inner">
+      <a href="/ja/" class="nav-brand"><div class="nav-mark">B</div>BluePad</a>
+      <ul class="nav-links">
+        <li><a href="/ja/#features">機能</a></li>
+        <li><a href="/ja/#pricing">価格</a></li>
+        <li><a href="/ja/blog/">ブログ</a></li>
+        <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="/ja/download/" class="nav-dl">ダウンロード</a></li>
+        <li>
+          <div class="nav-lang">
+            <a href="/en/blog/writing-mode-for-writers">EN</a>
+            <a href="/ko/blog/writing-mode-for-writers">KO</a>
+            <a href="/ja/blog/writing-mode-for-writers" class="on">JA</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <section class="article-hero">
+    <div class="wrap">
+      <h1>BluePad ライティングモード — 1日の目標、タイプライター、文章分析</h1>
+      <p class="article-meta">2026年5月26日 &middot; BluePad Team &middot; 7分</p>
+    </div>
+  </section>
+
+  <article class="article-content wrap">
+
+    <p>多くのマークダウンエディタはドキュメント作成のために作られています。READMEを書き、コードブロックを整え、リリースする。それはそれで結構です。しかし小説を書く、エッセイを練る、長いブログを書くという活動は、まったく別ものです。何日にもまたがる語数を追いかける必要があり、文章が冗長になっていないか確認する必要があり、ツールバーやパネルではなく、書いている文章そのものへ意識が向く環境が必要になります。</p>
+
+    <p>そこで BluePad に<strong>ライティングモード</strong>を作りました。ショートカット一つ(<span class="kbd">Ctrl+Shift+W</span>)で、マークダウンエディタが作家向けツールに近い状態へ切り替わります。この記事では、その中身と設計の理由を順に紹介します。</p>
+
+    <h2>作家が本当に求める三つのこと</h2>
+
+    <p>実際の作家がエディタをどう使うかを観察すると、ある傾向が見えてきます。執筆で大切な機能は、ドキュメント作成で大切な機能とは違うのです。作家が気にかけるのは次の三つです。</p>
+
+    <ul>
+      <li><strong>時間の経過に沿った進捗</strong> — 今日の目標にどれだけ近づいたか?昨日は書いたか?先週は?</li>
+      <li><strong>今この瞬間の集中</strong> — 今書いている文だけを見ていたい。前の段落に視線を奪われたくない。</li>
+      <li><strong>自分の文章への気づき</strong> — 文が長すぎないか?副詞を多用していないか?</li>
+    </ul>
+
+    <p>ライティングモードはこれら三つを、エディタ右側のパネル一つにまとめています。書き終わったらまた閉じておけば大丈夫です。</p>
+
+    <h2>1日の目標と30日ヒートマップ</h2>
+
+    <p>1日の目標を設定すると、進捗バーが現在地を教えてくれます。執筆をゲーム化するのが目的ではありません — ゲーム化はしばしば逆効果になります — 自分が今どこにいるのかをはっきり示すためです。200語で十分な日もあれば、2,000語を軽く超えていく日もあります。</p>
+
+    <p>バーの下には30日ヒートマップがあります。GitHubのコントリビューショングラフのような形で、1マスが1日です。色が濃いほどたくさん書いた日です。執筆習慣を一目で振り返れる、控えめな記録です。</p>
+
+    <div class="feature-callout">
+      <h4>ヒント: 最初は目標を小さく</h4>
+      <p>毎日達成できる小さな目標は、何度も逃す大きな目標よりはるかに役立ちます。300語から始めて、連続記録ができてから上げてください。ヒートマップは量より継続を褒めてくれます。</p>
+    </div>
+
+    <h2>タイプライターモード — 視線を一行に</h2>
+
+    <p>タイプライターモードでは、今書いている行が画面の中央に保たれます。入力するとテキストが上へとスクロールしていきます。視線はページの下方に降りていきません。安定した水平線の上にとどまります。</p>
+
+    <p>30分ほど試してみてください。小さな変化に見えますが、このモードを使う作家は首の疲れが減り、集中が長く続くと話します。視線が画面の上下を行き来しなくなります。残るのはカーソルと、その両側に現れる言葉だけです。</p>
+
+    <h2>ハイライトモード — 今の段落だけを鮮明に</h2>
+
+    <p>今書いている段落だけが鮮明に保たれ、ほかの段落はうっすらと淡くなります。文書の構造 — 見出し、リスト、これまで書いた内容 — はそのまま見えますが、視線を奪うことはありません。</p>
+
+    <p>二つの面で効きます。一つ目、考えるべきことが一つに絞られます。初稿で作家が望む状態です。二つ目、書いたばかりの部分を執拗に直したくなる衝動を抑えられます。下書きが止まる最大の原因の一つは、まさにこの癖です。</p>
+
+    <h2>スプリントタイマー — 散文のためのポモドーロ</h2>
+
+    <p>ライティングパネルにはスプリントタイマーがあり、10分、15分、25分、45分のプリセットが並んでいます。ポモドーロから借りた代表的な25分スプリント + 短い休憩が最も使われますが、もっと短いリズムが合うときもあります。とくにセッションの開始直後、カーソルが重く感じる瞬間に。</p>
+
+    <p>タイマーが終わると短いチャイムとデスクトップ通知が一度だけ鳴ります。休憩するか、もう一度走るかはその場で決めれば大丈夫です。タイマーはオプトインで、ポップアップが連発したり、しつこく催促することはありません。</p>
+
+    <h2>文章分析 — 静かな編集者</h2>
+
+    <p>ライティングパネルの下部には、書きながらリアルタイムで更新される小さな統計が並びます。</p>
+
+    <ul>
+      <li><strong>平均文長</strong> — 語数ベース。</li>
+      <li><strong>長文</strong> — 25語を超える文の数。常に悪いわけではありませんが、意図的であるべきです。</li>
+      <li><strong>受動態</strong> — 多用すると警告が出ます。叙述では能動態のほうが明快なことが多いです。</li>
+      <li><strong>副詞</strong> — 英語の -ly、韓国語の「~게/~히/매우/너무」など。削っても通じる場合が多いです。</li>
+      <li><strong>冗長語</strong> — "just"、"really"、"basically" などの英単語。文からエネルギーを奪います。</li>
+      <li><strong>読みやすさスコア</strong> — Flesch reading ease 公式に基づく大まかな目安。</li>
+    </ul>
+
+    <p>しきい値を超えると数字がオレンジに変わります。これに執着するのが目的ではありません。原稿と原稿の間に軽く眺めて、ふだん見過ごしていたパターンに気づくための道具です。1,000語の文章に長文が20も並んでいたら、いくつかは確かに分割した方がよいでしょう。</p>
+
+    <h2>専用ライティングアプリを使えばいいのでは?</h2>
+
+    <p>Scrivener や Ulysses といったアプリは、最初から作家のために作られています。素晴らしい道具です。ただし独自フォーマットに縛られたり、月額制だったり、特定のOSでしか動かなかったりします。プレーンなマークダウンで書きながら作家向け機能の大半を得たいなら、選択肢はこれまで限られていました。</p>
+
+    <p>BluePadの方針はシンプルです。ファイル形式はプレーンマークダウンのまま — 自分のフォルダ、データベースなし — その上に作家向けの機能を重ねます。ライティングモードはいつでもオフにでき、そのときはただ高速なマークダウンエディタに戻ります。ファイルは常に持ち運び可能です。</p>
+
+    <h2>始め方</h2>
+
+    <p>すでに BluePad をインストール済みなら、任意のマークダウンファイルを開いて <span class="kbd">Ctrl+Shift+W</span> を押してください。右側にパネルが現れます。1日の目標を設定し、スプリントの長さを選び、書き始めましょう。</p>
+
+    <p>まだの方は、Windows 向けに無料でダウンロードできます。トライアルで14日間、すべてのライティング機能をお試しいただけます。サインアップやアカウント作成は不要です。</p>
+
+    <div class="cta-banner">
+      <h3>BluePad のライティングモードを試す</h3>
+      <p>毎日の目標、タイプライタースクロール、静かな文章分析 — すでに書いているエディタに組み込まれています。</p>
+      <a href="/ja/download/" target="_blank" rel="noopener" class="cta-btn">Windows 版をダウンロード</a>
+    </div>
+
+  </article>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <div class="foot-copy">&copy; 2026 <strong>BRP</strong></div>
+      <ul class="foot-links">
+        <li><a href="/ja/blog/">ブログ</a></li>
+        <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="/legal/privacy">プライバシー</a></li>
+        <li><a href="/legal/eula">EULA</a></li>
+        <li><a href="/legal/opensource">オープンソース</a></li>
+      </ul>
+    </div>
+  </footer>
+
+</body>
+</html>

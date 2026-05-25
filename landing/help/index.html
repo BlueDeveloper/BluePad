@@ -74,6 +74,23 @@ footer a{color:#52525b}
   <details class="faq"><summary id="q7">Does BluePad save my work automatically?</summary>
   <div class="answer" id="a7">Yes. Auto-save runs every 30 seconds for files that have been saved before. You can toggle it in File &gt; Auto Save. All settings, open tabs, and sidebar state persist when you restart the app.</div></details>
 
+  <details class="faq"><summary id="q14">How do code files like .js / .html / .css work?</summary>
+  <div class="answer" id="a14">BluePad opens code files in a CodeMirror-based editor with syntax highlighting and line numbers. Supported extensions include <strong>.js / .jsx / .mjs / .cjs / .ts / .tsx</strong>, <strong>.html / .htm / .xhtml</strong>, and <strong>.css / .scss / .sass / .less</strong>. Colors adapt to your selected theme automatically.</div></details>
+
+  <details class="faq"><summary id="q15">What is the outline sidebar and how do I reorder chapters?</summary>
+  <div class="answer" id="a15">Press <strong>Ctrl+Shift+L</strong> to open the outline sidebar. It shows all H1~H6 headings in your document. <strong>Drag and drop</strong> any heading onto another to move the entire section — heading plus all its content and child headings — to a new position. Useful for novels and long-form essays where you need to restructure chapters.</div></details>
+
+  <h2 id="t-writing-mode">Writing Mode</h2>
+
+  <details class="faq"><summary id="q16">What is Writing Mode and how do I turn it on?</summary>
+  <div class="answer" id="a16">Writing Mode (Pro) is a focused environment built for novelists, bloggers, and journal writers. Press <strong>Ctrl+Shift+W</strong> in any markdown file. A panel appears on the right with daily word goals, a session timer, real-time WPM, a 30-day heatmap, a sprint timer (10/15/25/45 min), and sentence analysis (long sentences, passive voice, adverbs, filler words, readability).</div></details>
+
+  <details class="faq"><summary id="q17">What do Typewriter Mode and Highlight Mode do?</summary>
+  <div class="answer" id="a17">When Writing Mode is on, the editor automatically applies two visual changes. <strong>Typewriter Mode</strong> keeps the current line fixed in the middle of the screen as you type — your eyes never move down to the bottom of the page. <strong>Highlight Mode</strong> dims every paragraph except the one your cursor is in, so you only see what you are writing now.</div></details>
+
+  <details class="faq"><summary id="q18">How are sentence analysis numbers calculated?</summary>
+  <div class="answer" id="a18">All analysis runs locally — nothing leaves your computer. The threshold for a "long" sentence is 25 words. Passive voice detection uses simple patterns (English be-verb + past participle, Korean "되다/받다/지다" endings). Adverb detection looks for English -ly words and Korean "~게/~히/매우/너무" patterns. Numbers that exceed reasonable thresholds turn orange — treat them as gentle reminders, not strict rules.</div></details>
+
   <h2 id="t-shortcuts">Keyboard Shortcuts</h2>
   <table class="shortcuts">
     <tr><th>Shortcut</th><th>Action</th></tr>
@@ -87,6 +104,10 @@ footer a{color:#52525b}
     <tr><td><kbd>Ctrl+F</kbd></td><td>Find</td></tr>
     <tr><td><kbd>Ctrl+H</kbd></td><td>Find & Replace</td></tr>
     <tr><td><kbd>Ctrl+Shift+F</kbd></td><td>Format (JSON/YAML)</td></tr>
+    <tr><td><kbd>Ctrl+Shift+C</kbd></td><td>Copy as plain text (markdown → plain)</td></tr>
+    <tr><td><kbd>Ctrl+Shift+L</kbd></td><td>Toggle outline sidebar</td></tr>
+    <tr><td><kbd>Ctrl+Shift+W</kbd></td><td>Toggle Writing Mode (Pro)</td></tr>
+    <tr><td><kbd>Ctrl+Click</kbd></td><td>Open hyperlink in browser</td></tr>
     <tr><td><kbd>Ctrl+=/-/0</kbd></td><td>Font size</td></tr>
     <tr><td><kbd>F11</kbd></td><td>Focus mode (Pro)</td></tr>
   </table>
@@ -102,6 +123,15 @@ footer a{color:#52525b}
   <details class="faq"><summary id="q10">How do I move my license to another computer?</summary>
   <div class="answer" id="a10">On the old computer: Settings &gt; Activate License &gt; <strong>Deactivate</strong>. Then activate on the new computer with the same key. Max 3 devices.</div></details>
 
+  <details class="faq"><summary id="q11">What does the 14-day trial include?</summary>
+  <div class="answer" id="a11">All Pro features are unlocked during the trial: unlimited tabs, all 5 themes, focus mode, HTML/PDF export, and Writing Mode with the full statistics panel. No signup, no credit card. After 14 days, the editor reverts to Free unless you activate a license.</div></details>
+
+  <details class="faq"><summary id="q12">Does BluePad notice when files change outside the editor?</summary>
+  <div class="answer" id="a12">Yes. When you switch back to BluePad (window focus), it compares the disk mtime to what it last read. If the file was modified externally, you are offered to reload. Useful when you edit the same file in another tool (e.g., git pull, VS Code).</div></details>
+
+  <details class="faq"><summary id="q13">What if my file is not UTF-8 encoded?</summary>
+  <div class="answer" id="a13">BluePad detects non-UTF-8 files (CP949, EUC-KR, Shift-JIS) by looking for replacement characters and falls back to the appropriate decoder. UTF-8 BOM is stripped on save so files remain clean.</div></details>
+
   <footer>
     <p>Still need help? <a href="/support/" style="color:#155dfc">Contact Support</a></p>
     <p style="margin-top:8px">&copy; 2026 BRP &middot; <a href="https://bluepad.work">bluepad.work</a></p>
@@ -111,38 +141,54 @@ footer a{color:#52525b}
 <script>
 const i18n={
   ko:{title:'도움말 & FAQ',sub:'자주 묻는 질문과 사용법',
-    'getting-started':'시작하기','features':'기능','shortcuts':'단축키','troubleshoot':'문제 해결',
+    'getting-started':'시작하기','features':'기능','writing-mode':'글쓰기 모드','shortcuts':'단축키','troubleshoot':'문제 해결',
     q1:'어떻게 설치하나요?',a1:'<a href="https://bluepad.work" style="color:#155dfc">bluepad.work</a>에서 MSI 파일을 다운로드하고 실행하세요. Windows SmartScreen 경고가 나타나면 "추가 정보"를 클릭한 후 "실행"을 클릭하세요.',
     q2:'Free와 Pro의 차이는?',a2:'<strong>Free:</strong> 탭 3개, Classic+Dark 테마, JSON/YAML 편집, 자동저장, 찾기/바꾸기.<br><strong>Pro ($10.99, 1회):</strong> 무제한 탭, 5개 테마, 집중모드, HTML/PDF 내보내기. 14일 무료 체험 포함.',
     q3:'Pro 라이선스 어떻게 활성화하나요?',a3:'<strong>설정 &gt; 라이선스 등록</strong>에서 키를 입력하고 활성화를 클릭하세요. 최대 3대 기기에서 사용 가능.',
-    q4:'어떤 파일 형식을 지원하나요?',a4:'<strong>Markdown:</strong> .md, .markdown, .mdx<br><strong>JSON:</strong> .json (구문강조+자동정렬)<br><strong>YAML:</strong> .yaml, .yml<br><strong>텍스트:</strong> .txt, .log, .env, .ini',
+    q4:'어떤 파일 형식을 지원하나요?',a4:'<strong>Markdown:</strong> .md, .markdown, .mdx<br><strong>JSON:</strong> .json (구문강조+자동정렬)<br><strong>YAML:</strong> .yaml, .yml<br><strong>코드:</strong> .js, .ts, .jsx, .tsx, .html, .css, .scss<br><strong>텍스트:</strong> .txt, .log, .env, .ini',
     q5:'JSON/YAML 자동 정렬은 어떻게?',a5:'.json 또는 .yaml 파일을 연 후 <strong>Ctrl+Shift+F</strong> 또는 편집 &gt; 자동 정렬.',
     q6:'다크 테마 어떻게 사용하나요?',a6:'<strong>보기 &gt; 테마: Dark</strong>. Dark와 Classic 테마는 무료입니다.',
     q7:'자동 저장 되나요?',a7:'네. 저장된 파일은 30초마다 자동 저장됩니다. 파일 &gt; 자동 저장으로 토글 가능. 탭, 사이드바, 설정은 앱 재시작 후에도 유지됩니다.',
     q8:'SmartScreen이 설치를 차단해요',a8:'코드 서명이 아직 적용되지 않아 발생합니다. <strong>"추가 정보"</strong> → <strong>"실행"</strong>을 클릭하세요.',
     q9:'환불은 어떻게 하나요?',a9:'<a href="/support/" style="color:#155dfc">bluepad.work/support</a>에서 "환불 요청"을 선택하세요. 1~2 영업일 내 처리됩니다.',
-    q10:'다른 컴퓨터로 라이선스를 옮기려면?',a10:'이전 컴퓨터: 설정 &gt; 라이선스 &gt; <strong>비활성화</strong>. 새 컴퓨터에서 같은 키로 활성화. 최대 3대.'
+    q10:'다른 컴퓨터로 라이선스를 옮기려면?',a10:'이전 컴퓨터: 설정 &gt; 라이선스 &gt; <strong>비활성화</strong>. 새 컴퓨터에서 같은 키로 활성화. 최대 3대.',
+    q11:'14일 트라이얼에 무엇이 포함되나요?',a11:'모든 Pro 기능이 14일간 잠금 해제됩니다 — 무제한 탭, 5개 테마, 집중 모드, HTML/PDF 내보내기, 글쓰기 모드 전체. 가입이나 카드 등록 불필요. 14일 후 라이선스 미활성 시 Free로 전환.',
+    q12:'외부에서 파일을 수정해도 알아채나요?',a12:'네. BluePad 창에 포커스가 돌아올 때 디스크 mtime을 비교합니다. 외부에서 변경됐다면 다시 불러올지 묻습니다. git pull / VS Code 병용 시 유용합니다.',
+    q13:'UTF-8이 아닌 파일은?',a13:'BluePad는 비-UTF-8 파일(CP949, EUC-KR, Shift-JIS)을 replacement character로 감지하여 적절한 디코더로 폴백합니다. UTF-8 BOM은 저장 시 자동 제거됩니다.',
+    q14:'.js / .html / .css 같은 코드 파일은 어떻게 동작하나요?',a14:'CodeMirror 기반 에디터에서 구문 강조 + 줄 번호와 함께 열립니다. 지원 확장자: <strong>.js / .jsx / .mjs / .cjs / .ts / .tsx</strong>, <strong>.html / .htm / .xhtml</strong>, <strong>.css / .scss / .sass / .less</strong>. 색상은 선택한 테마에 자동으로 맞춰집니다.',
+    q15:'개요 사이드바와 챕터 재배치는?',a15:'<strong>Ctrl+Shift+L</strong>로 개요 사이드바를 엽니다. 모든 H1~H6 헤딩이 표시됩니다. 헤딩을 다른 위치로 <strong>드래그 & 드롭</strong>하면 해당 섹션(헤딩 + 본문 + 자식 헤딩)이 통째로 이동합니다. 장편 소설/에세이 구조 재배치에 유용합니다.',
+    q16:'글쓰기 모드는 무엇이고 어떻게 켜나요?',a16:'글쓰기 모드(Pro)는 소설가·블로거·일기 작가를 위한 집중 환경입니다. 마크다운 파일에서 <strong>Ctrl+Shift+W</strong>를 누르면 오른쪽에 패널이 열리며 일일 단어 목표, 세션 시간, 실시간 WPM, 30일 히트맵, 스프린트 타이머(10/15/25/45분), 문장 분석(긴 문장, 수동태, 부사, 군더더기, 가독성)이 표시됩니다.',
+    q17:'타이핑라이터 모드와 하이라이트 모드란?',a17:'글쓰기 모드를 켜면 자동으로 적용됩니다. <strong>타이핑라이터</strong>: 입력 중인 줄이 화면 중앙에 고정되어 시선이 흔들리지 않습니다. <strong>하이라이트</strong>: 커서가 위치한 단락만 선명하고 나머지는 흐려져 지금 쓰는 문장에만 집중됩니다.',
+    q18:'문장 분석 수치는 어떻게 계산되나요?',a18:'모든 분석은 로컬에서 동작합니다 — 컴퓨터 밖으로 데이터가 나가지 않습니다. 긴 문장 임계값은 25어절. 수동태 감지는 한국어 "되다/받다/지다" 어미 + 영어 be+pp 패턴. 부사 감지는 한국어 "~게/~히/매우/너무" + 영어 -ly. 임계값 초과 시 숫자가 주황색으로 변하며 — 엄격한 규칙이 아니라 부드러운 알림으로 사용하세요.'
   },
   ja:{title:'ヘルプ & FAQ',sub:'よくある質問と使い方',
-    'getting-started':'はじめに','features':'機能','shortcuts':'ショートカット','troubleshoot':'トラブルシューティング',
+    'getting-started':'はじめに','features':'機能','writing-mode':'ライティングモード','shortcuts':'ショートカット','troubleshoot':'トラブルシューティング',
     q1:'インストール方法は？',a1:'<a href="https://bluepad.work" style="color:#155dfc">bluepad.work</a>からMSIファイルをダウンロードして実行してください。',
     q2:'FreeとProの違いは？',a2:'<strong>Free:</strong> タブ3個、Classic+Darkテーマ。<br><strong>Pro ($10.99):</strong> 無制限タブ、5テーマ、集中モード。14日間無料トライアル。',
     q3:'Proライセンスの有効化方法は？',a3:'<strong>設定 &gt; ライセンス登録</strong>でキーを入力して有効化をクリック。最大3台。',
-    q4:'対応ファイル形式は？',a4:'Markdown (.md), JSON (.json), YAML (.yaml), Text (.txt) など。',
+    q4:'対応ファイル形式は？',a4:'Markdown (.md), JSON (.json), YAML (.yaml), コード (.js .ts .html .css), Text (.txt) など。',
     q5:'JSON/YAMLの自動整形は？',a5:'<strong>Ctrl+Shift+F</strong>または編集 &gt; 整形。',
     q6:'ダークテーマの使い方は？',a6:'<strong>表示 &gt; テーマ: Dark</strong>。無料で利用可能。',
     q7:'自動保存されますか？',a7:'はい。30秒ごとに自動保存。設定は再起動後も維持。',
     q8:'SmartScreenがブロックする',a8:'「詳細情報」→「実行」をクリックしてください。',
     q9:'返金方法は？',a9:'<a href="/support/" style="color:#155dfc">サポートページ</a>から返金リクエストを送信。',
-    q10:'別のPCにライセンスを移すには？',a10:'旧PC: 設定 &gt; ライセンス &gt; 無効化。新PCで同じキーで有効化。'
+    q10:'別のPCにライセンスを移すには？',a10:'旧PC: 設定 &gt; ライセンス &gt; 無効化。新PCで同じキーで有効化。',
+    q11:'14日トライアルに何が含まれますか？',a11:'すべてのPro機能が14日間アンロックされます — 無制限タブ、5テーマ、集中モード、HTML/PDF出力、ライティングモード全体。サインアップ・カード登録不要。14日後にライセンス未有効化ならFreeに戻ります。',
+    q12:'外部から変更されたファイルを検知しますか？',a12:'はい。BluePadウィンドウにフォーカスが戻った時、ディスクのmtimeを比較します。外部で変更されていれば再読み込みを提案します。git pull / VS Code 併用時に便利です。',
+    q13:'UTF-8でないファイルは？',a13:'BluePadは非UTF-8ファイル(CP949、EUC-KR、Shift-JIS)を置換文字で検出し、適切なデコーダにフォールバックします。UTF-8 BOMは保存時に自動削除されます。',
+    q14:'.js / .html / .cssなどのコードファイルは？',a14:'CodeMirrorベースのエディタで構文強調 + 行番号付きで開きます。対応拡張子: <strong>.js / .jsx / .mjs / .cjs / .ts / .tsx</strong>, <strong>.html / .htm / .xhtml</strong>, <strong>.css / .scss / .sass / .less</strong>。色はテーマに自動追従します。',
+    q15:'アウトラインサイドバーと章の並び替え?',a15:'<strong>Ctrl+Shift+L</strong>でアウトラインを開きます。すべてのH1~H6見出しが表示されます。見出しを<strong>ドラッグ&ドロップ</strong>すると、そのセクション(見出し+本文+子見出し)がまとめて移動します。長編小説やエッセイの構成変更に便利です。',
+    q16:'ライティングモードとは?有効化方法は?',a16:'ライティングモード(Pro)は小説家・ブロガー・日記作家のための集中環境です。マークダウンファイルで<strong>Ctrl+Shift+W</strong>を押すと、右側にパネルが開き、1日の語数目標、セッション時間、リアルタイムWPM、30日ヒートマップ、スプリントタイマー(10/15/25/45分)、文章分析(長文・受動態・副詞・冗長語・読みやすさ)が表示されます。',
+    q17:'タイプライターモードとハイライトモードとは?',a17:'ライティングモードを有効にすると自動的に適用されます。<strong>タイプライター</strong>: 入力中の行が画面中央に固定され、視線が安定します。<strong>ハイライト</strong>: カーソルがある段落だけ鮮明で、ほかは淡くなり、今書いている文に集中できます。',
+    q18:'文章分析の数値はどう計算されますか?',a18:'すべての分析はローカルで動作します — データはコンピュータの外に出ません。長文のしきい値は25語。受動態検出は韓国語「되다/받다/지다」語尾 + 英語 be+pp パターン。副詞検出は韓国語「~게/~히/매우/너무」 + 英語 -ly。しきい値超過時に数字がオレンジになります — 厳密なルールではなく緩やかなリマインダとして使ってください。'
   }
 };
 function setLang(l){
   const t=i18n[l];if(!t)return;
   document.getElementById('t-title').textContent=t.title;
   document.getElementById('t-sub').textContent=t.sub;
-  ['getting-started','features','shortcuts','troubleshoot'].forEach(k=>{const el=document.getElementById('t-'+k);if(el)el.textContent=t[k];});
-  for(let i=1;i<=10;i++){
+  ['getting-started','features','writing-mode','shortcuts','troubleshoot'].forEach(k=>{const el=document.getElementById('t-'+k);if(el&&t[k])el.textContent=t[k];});
+  for(let i=1;i<=18;i++){
     const q=document.getElementById('q'+i),a=document.getElementById('a'+i);
     if(q&&t['q'+i])q.textContent=t['q'+i];
     if(a&&t['a'+i])a.innerHTML=t['a'+i];

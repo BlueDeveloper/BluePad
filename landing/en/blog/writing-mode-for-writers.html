@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Writing Mode in BluePad — Word Goals, Typewriter Mode, and Sentence Analysis | BluePad Blog</title>
+  <meta name="description" content="A focused writing mode for novelists, bloggers, and journal writers. Daily word goals, typewriter scrolling, sentence analysis, and a 30-day writing heatmap.">
+  <meta name="keywords" content="writing mode, markdown editor for writers, typewriter mode, daily word count, writing goals, sentence analysis, hemingway editor alternative, distraction free writing">
+  <link rel="canonical" href="https://bluepad.work/en/blog/writing-mode-for-writers">
+  <link rel="alternate" hreflang="en" href="https://bluepad.work/en/blog/writing-mode-for-writers">
+  <link rel="alternate" hreflang="ko" href="https://bluepad.work/ko/blog/writing-mode-for-writers">
+  <link rel="alternate" hreflang="ja" href="https://bluepad.work/ja/blog/writing-mode-for-writers">
+  <link rel="alternate" hreflang="x-default" href="https://bluepad.work/en/blog/writing-mode-for-writers">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writing Mode in BluePad — Word Goals, Typewriter Mode, Sentence Analysis">
+  <meta property="og:description" content="A focused writing mode built for writers: daily word goals, typewriter scrolling, real-time sentence analysis.">
+  <meta property="og:url" content="https://bluepad.work/en/blog/writing-mode-for-writers">
+  <meta property="og:site_name" content="BluePad">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Writing Mode in BluePad — Word Goals, Typewriter Mode, Sentence Analysis">
+  <meta name="twitter:description" content="A focused writing mode for novelists and bloggers.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Writing Mode in BluePad — Word Goals, Typewriter Mode, and Sentence Analysis",
+    "datePublished": "2026-05-26",
+    "dateModified": "2026-05-26",
+    "author": { "@type": "Organization", "name": "BluePad Team" },
+    "publisher": { "@type": "Organization", "name": "BluePad" },
+    "description": "A focused writing mode for novelists, bloggers, and journal writers.",
+    "mainEntityOfPage": "https://bluepad.work/en/blog/writing-mode-for-writers"
+  }
+  </script>
+
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wkokfmayny");</script>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<meta name="naver-site-verification" content="9b479417f022befdffd0b837c015469b604758d3" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --c-bg: #09090b; --c-bg-raised: #111113; --c-bg-card: #18181b;
+      --c-border: #27272a; --c-border-subtle: #1c1c1f;
+      --c-text: #fafafa; --c-text-2: #a1a1aa; --c-text-3: #52525b;
+      --c-accent: #155dfc; --c-accent-hover: #3b7dff;
+      --font: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { font-family: var(--font); background: var(--c-bg); color: var(--c-text); overflow-x: hidden; }
+    ::selection { background: rgba(21,93,252,0.3); color: #fff; }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+    .nav-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); background: rgba(9,9,11,0.75); border-bottom: 1px solid var(--c-border-subtle); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+    .nav-brand { display: flex; align-items: center; gap: 9px; color: var(--c-text); font-size: 16px; font-weight: 700; text-decoration: none; }
+    .nav-mark { width: 28px; height: 28px; border-radius: 7px; background: linear-gradient(135deg, var(--c-accent), #0f43c8); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; }
+    .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+    .nav-links a { color: var(--c-text-2); font-size: 14px; text-decoration: none; transition: color .15s; font-weight: 500; }
+    .nav-links a:hover { color: var(--c-text); }
+    .nav-dl { background: var(--c-accent); color: #fff !important; padding: 8px 16px; border-radius: 7px; font-weight: 600 !important; }
+    .nav-dl:hover { background: var(--c-accent-hover); }
+    .nav-lang { display: flex; gap: 4px; font-size: 12px; }
+    .nav-lang a { padding: 4px 8px; border-radius: 5px; color: var(--c-text-3) !important; }
+    .nav-lang a.on { background: var(--c-bg-card); color: var(--c-text) !important; }
+    .article-hero { padding: 130px 0 60px; border-bottom: 1px solid var(--c-border-subtle); }
+    .article-hero h1 { font-size: 42px; font-weight: 720; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .article-meta { color: var(--c-text-3); font-size: 13.5px; }
+    .article-content { padding: 56px 0 80px; font-size: 16px; line-height: 1.85; color: var(--c-text-2); }
+    .article-content h2 { color: var(--c-text); font-size: 26px; font-weight: 700; margin: 48px 0 18px; letter-spacing: -0.015em; }
+    .article-content h3 { color: var(--c-text); font-size: 19px; font-weight: 650; margin: 32px 0 12px; }
+    .article-content p { margin-bottom: 18px; }
+    .article-content ul, .article-content ol { margin: 0 0 18px 22px; }
+    .article-content li { margin-bottom: 8px; }
+    .article-content strong { color: var(--c-text); font-weight: 650; }
+    .article-content a { color: var(--c-accent); text-decoration: none; border-bottom: 1px solid rgba(21,93,252,0.4); transition: border-color .15s; }
+    .article-content a:hover { border-bottom-color: var(--c-accent); }
+    .cta-banner { margin-top: 56px; border: 1px solid var(--c-border); border-radius: 14px; padding: 44px 32px; text-align: center; background: var(--c-bg-raised); }
+    .cta-banner h3 { color: var(--c-text); font-size: 22px; font-weight: 720; margin-bottom: 10px; }
+    .cta-banner p { color: var(--c-text-2); margin-bottom: 24px; font-size: 15px; }
+    .cta-btn { display: inline-block; background: var(--c-accent); color: #fff; padding: 13px 32px; border-radius: 9px; font-size: 14.5px; font-weight: 620; text-decoration: none; transition: background .15s, transform .1s; }
+    .cta-btn:hover { background: var(--c-accent-hover); }
+    .cta-btn:active { transform: scale(0.97); }
+    .foot { padding: 40px 0; border-top: 1px solid var(--c-border-subtle); background: var(--c-bg); }
+    .foot-inner { display: flex; align-items: center; justify-content: space-between; }
+    .foot-copy { color: var(--c-text-3); font-size: 13px; }
+    .foot-links { display: flex; list-style: none; gap: 24px; }
+    .foot-links a { color: var(--c-text-3); text-decoration: none; font-size: 13px; transition: color .15s; }
+    .foot-links a:hover { color: var(--c-text); }
+    .feature-callout { background: var(--c-bg-card); border: 1px solid var(--c-border); border-radius: 12px; padding: 22px 26px; margin: 24px 0; }
+    .feature-callout h4 { color: var(--c-text); font-size: 16px; font-weight: 650; margin-bottom: 8px; }
+    .feature-callout p { margin-bottom: 0; font-size: 14.5px; }
+    .kbd { font-family: var(--font-mono); background: var(--c-bg-card); border: 1px solid var(--c-border); border-radius: 4px; padding: 2px 7px; font-size: 13px; color: var(--c-text); }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .foot-inner { flex-direction: column; gap: 16px; text-align: center; }
+      .article-hero { padding: 110px 0 60px; }
+      .article-hero h1 { font-size: 30px; }
+      .article-content { padding: 40px 0 60px; }
+    }
+    @media (max-width: 480px) { .wrap { padding: 0 20px; } }
+  </style>
+</head>
+<body>
+
+  <header class="nav-bar">
+    <div class="wrap nav-inner">
+      <a href="/en/" class="nav-brand"><div class="nav-mark">B</div>BluePad</a>
+      <ul class="nav-links">
+        <li><a href="/en/#features">Features</a></li>
+        <li><a href="/en/#pricing">Pricing</a></li>
+        <li><a href="/en/blog/">Blog</a></li>
+        <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="/en/download/" class="nav-dl">Download</a></li>
+        <li>
+          <div class="nav-lang">
+            <a href="/en/blog/writing-mode-for-writers" class="on">EN</a>
+            <a href="/ko/blog/writing-mode-for-writers">KO</a>
+            <a href="/ja/blog/writing-mode-for-writers">JA</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <section class="article-hero">
+    <div class="wrap">
+      <h1>Writing Mode in BluePad — Word Goals, Typewriter Mode, and Sentence Analysis</h1>
+      <p class="article-meta">May 26, 2026 &middot; BluePad Team &middot; 7 min read</p>
+    </div>
+  </section>
+
+  <article class="article-content wrap">
+
+    <p>Most markdown editors are built for documentation. You write a README, format some code blocks, ship it. That is fine. But writing a novel, an essay, or a long blog post is a very different activity. You need to track word counts across days. You need to know if your sentences are too long. You need an environment that pulls your attention inward, not toward toolbars and panels.</p>
+
+    <p>This is why we built <strong>Writing Mode</strong> in BluePad. It is a single toggle (<span class="kbd">Ctrl+Shift+W</span>) that transforms the editor into something closer to a writing tool than a markdown editor. Here is what it does and why we made each choice.</p>
+
+    <h2>The Three Things Writers Need</h2>
+
+    <p>After watching how writers actually use editors, we noticed a pattern. The features that matter most for writing are not the features that matter most for documentation. Writers care about:</p>
+
+    <ul>
+      <li><strong>Progress over time</strong> — am I getting closer to my daily goal? Did I write yesterday? Last week?</li>
+      <li><strong>Focus in the moment</strong> — can I see only the sentence I am writing, without distraction from what came before?</li>
+      <li><strong>Self-awareness about the prose</strong> — are my sentences too long? Am I using too many adverbs?</li>
+    </ul>
+
+    <p>Writing Mode addresses all three of these in a single panel on the right side of the editor. You can turn it off when you are done writing for the day.</p>
+
+    <h2>Daily Word Goals and the 30-Day Heatmap</h2>
+
+    <p>Set a daily target, and a progress bar shows how close you are. The goal is not to gamify writing — gamification tends to backfire — but to give you a clear sense of where you stand. Some days you write 200 words and that is enough. Other days you sprint past 2,000.</p>
+
+    <p>Below the progress bar is a 30-day heatmap, modeled on the contribution graph you might recognize from GitHub. Each square is a day. The deeper the color, the more you wrote. It is a quiet record of your writing habit, visible at a glance.</p>
+
+    <div class="feature-callout">
+      <h4>Tip: keep your goal small at first</h4>
+      <p>A goal you can hit every day is more useful than an ambitious one you miss most days. Start at 300 words and raise it once you have a streak going. The heatmap will reward the streak more than the volume.</p>
+    </div>
+
+    <h2>Typewriter Mode — Keeping Your Eyes Steady</h2>
+
+    <p>In Typewriter Mode, the line you are writing stays in the middle of the screen. As you type, the text scrolls up to make room. Your eyes never move down to the bottom of the page; they stay focused on a steady horizontal line.</p>
+
+    <p>Try it for thirty minutes. It sounds like a small thing, but writers who use this mode report less neck strain and more sustained focus. Your gaze stops jumping between the top of the screen and the bottom. There is just the cursor, and the words appearing on either side of it.</p>
+
+    <h2>Highlight Mode — Only the Sentence in Front of You</h2>
+
+    <p>The block you are currently writing in stays sharp. Every other paragraph fades to a soft gray. You can still see the structure of the document — headings, lists, what came before — but it does not compete for your attention.</p>
+
+    <p>This is helpful in two ways. First, it gives you a single thing to think about, which is what most writers want when they are drafting. Second, it makes it harder to compulsively edit what you just wrote, which is one of the most common reasons drafts stall.</p>
+
+    <h2>Sprint Timer — Pomodoro for Prose</h2>
+
+    <p>The writing panel includes a sprint timer with presets at 10, 15, 25, and 45 minutes. The most common pattern, borrowed from the Pomodoro technique, is to write in 25-minute sprints with short breaks. But shorter bursts work too, especially when you are starting a session and the cursor feels heavy.</p>
+
+    <p>When the timer ends, you hear a single chime and a desktop notification appears. Then you decide whether to take a break or start another sprint. The timer is opt-in — no popups, no nagging.</p>
+
+    <h2>Sentence Analysis — A Quiet Editor</h2>
+
+    <p>The bottom of the writing panel shows a small set of statistics about your prose, refreshed as you type:</p>
+
+    <ul>
+      <li><strong>Average sentence length</strong> — in words.</li>
+      <li><strong>Long sentences</strong> — how many sentences exceed 25 words. These are not always bad, but they should be deliberate.</li>
+      <li><strong>Passive voice</strong> — flagged when overused. Active voice is usually clearer in narrative prose.</li>
+      <li><strong>Adverbs</strong> — words ending in <em>-ly</em> in English, or specific patterns in Korean. Many can be cut.</li>
+      <li><strong>Filler words</strong> — "just," "really," "very," "basically." These drain energy from a sentence.</li>
+      <li><strong>Readability score</strong> — a rough estimate based on the Flesch reading ease formula.</li>
+    </ul>
+
+    <p>Numbers that exceed reasonable thresholds turn orange. The point is not to obsess over them. The point is to glance at them between drafts and notice patterns you would otherwise miss. If you see twenty long sentences in a 1,000-word piece, you probably want to break some up.</p>
+
+    <h2>Why Not Just Use a Dedicated Writing App?</h2>
+
+    <p>Apps like Scrivener and Ulysses are designed for writers from the ground up. They are excellent. But they also lock you into a proprietary format, charge a subscription, or run on only one operating system. If you want to write in plain markdown and still get most of these features, your options have been limited.</p>
+
+    <p>BluePad's approach is to keep the file format simple — plain markdown, your own folders, no database — and add the writer-focused features on top. You can turn Writing Mode off at any time and the editor is still just a fast markdown editor. Your files stay portable.</p>
+
+    <h2>Getting Started</h2>
+
+    <p>If you already have BluePad installed, open any markdown file and press <span class="kbd">Ctrl+Shift+W</span>. The panel appears on the right. Set your daily goal, pick a sprint length, and start writing.</p>
+
+    <p>If you do not have BluePad yet, it is a free download for Windows. The trial unlocks all writing features for 14 days. There is no signup and no account creation.</p>
+
+    <div class="cta-banner">
+      <h3>Try BluePad's Writing Mode</h3>
+      <p>Daily goals, typewriter scrolling, and quiet sentence analysis — built into the editor you already write in.</p>
+      <a href="/en/download/" target="_blank" rel="noopener" class="cta-btn">Download for Windows</a>
+    </div>
+
+  </article>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <div class="foot-copy">&copy; 2026 <strong>BRP</strong></div>
+      <ul class="foot-links">
+        <li><a href="/en/blog/">Blog</a></li>
+        <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="/legal/privacy">Privacy Policy</a></li>
+        <li><a href="/legal/eula">EULA</a></li>
+        <li><a href="/legal/opensource">Open Source</a></li>
+      </ul>
+    </div>
+  </footer>
+
+</body>
+</html>
