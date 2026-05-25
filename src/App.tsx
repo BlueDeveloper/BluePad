@@ -72,25 +72,42 @@ function App() {
   const editorWrapperRef = useRef<HTMLDivElement>(null);
   const lastEditorScrollTop = useRef(0);
 
-  const handleToggleSource = useCallback(() => {
-    // 모드 전환 시 현재 스크롤 위치 캐시 → 새 마운트 후 복원
-    const cur = editorWrapperRef.current?.querySelector(".editor-content") as HTMLElement | null;
-    if (cur) lastEditorScrollTop.current = cur.scrollTop;
-    setSourceMode((s) => !s);
+  // WYSIWYG ↔ SourceEditor의 scroll 컨테이너가 다름:
+  //  - WYSIWYG: div.editor-content (overflow-y: auto)
+  //  - SourceEditor: textarea.source-editor (자체 스크롤)
+  // 두 케이스 모두 탐색.
+  const findEditorScroller = useCallback((): HTMLElement | null => {
+    const wrap = editorWrapperRef.current;
+    if (!wrap) return null;
+    return (
+      (wrap.querySelector(".editor-content") as HTMLElement | null) ||
+      (wrap.querySelector(".source-editor") as HTMLElement | null) ||
+      null
+    );
   }, []);
 
+  const handleToggleSource = useCallback(() => {
+    const cur = findEditorScroller();
+    if (cur) lastEditorScrollTop.current = cur.scrollTop;
+    setSourceMode((s) => !s);
+  }, [findEditorScroller]);
+
   useEffect(() => {
-    // 새 .editor-content가 마운트된 직후 scrollTop 복원 (RAF 두 번으로 ProseMirror/textarea 렌더 대기)
+    // 새 scroller 마운트 + Milkdown async 초기화 대기 — 여러 시점 재시도
+    const timers: number[] = [];
     const restore = () => {
-      const cur = editorWrapperRef.current?.querySelector(".editor-content") as HTMLElement | null;
+      const cur = findEditorScroller();
       if (cur) cur.scrollTop = lastEditorScrollTop.current;
     };
-    const f1 = requestAnimationFrame(() => {
-      const f2 = requestAnimationFrame(restore);
-      return () => cancelAnimationFrame(f2);
-    });
-    return () => cancelAnimationFrame(f1);
-  }, [sourceMode]);
+    // RAF + 50ms + 200ms 세 번 시도 (Milkdown ProseMirror 마운트 지연 대응)
+    const raf = requestAnimationFrame(restore);
+    timers.push(window.setTimeout(restore, 50));
+    timers.push(window.setTimeout(restore, 200));
+    return () => {
+      cancelAnimationFrame(raf);
+      timers.forEach((t) => window.clearTimeout(t));
+    };
+  }, [sourceMode, findEditorScroller]);
   const [findVisible, setFindVisible] = useState(false);
   const [findReplaceMode, setFindReplaceMode] = useState(false);
   const [licenseDialogVisible, setLicenseDialogVisible] = useState(false);

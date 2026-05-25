@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/nicosaurus/tauri-schema-generator/main/schema/2.0.0/schema.json",
   "productName": "BluePad",
-  "version": "1.13.3",
+  "version": "1.13.4",
   "identifier": "brp.bluepad.desktop",
   "build": {
     "frontendDist": "../dist",
