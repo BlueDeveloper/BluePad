@@ -57,8 +57,32 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
         const sel = window.getSelection()?.toString() ?? "";
         let text = sel;
         if (!text) {
+          // ProseMirror 직계 자식(블록)을 순회하여 줄바꿈 보존.
+          // pm.innerText 단독 사용은 일부 contenteditable 블록 사이 줄바꿈을 누락할 수 있음.
           const pm = el.querySelector(".ProseMirror") as HTMLElement | null;
-          text = pm?.innerText ?? pm?.textContent ?? "";
+          if (pm) {
+            const parts: string[] = [];
+            for (const child of Array.from(pm.children)) {
+              const tag = child.tagName.toLowerCase();
+              if (tag === "ul" || tag === "ol") {
+                for (const li of Array.from(child.querySelectorAll(":scope > li"))) {
+                  parts.push((li as HTMLElement).innerText.trim());
+                }
+              } else if (tag === "table") {
+                for (const tr of Array.from(child.querySelectorAll("tr"))) {
+                  const cells = Array.from(tr.children).map((c) => (c as HTMLElement).innerText.trim());
+                  parts.push(cells.join("\t"));
+                }
+              } else if (tag === "pre") {
+                parts.push((child as HTMLElement).innerText);
+              } else {
+                parts.push((child as HTMLElement).innerText || child.textContent || "");
+              }
+            }
+            text = parts.filter((p) => p.length > 0).join("\n\n");
+          } else {
+            text = "";
+          }
         }
         text = text.replace(/ /g, " ").trim();
         if (!text) return false;
