@@ -23,6 +23,20 @@
   --accent-hover: #3572b0;
   --code-bg: #f6f8fa;
   --selection: #b4d5fe;
+  /* Syntax tokens (GitHub-like) */
+  --tok-keyword: #d73a49;
+  --tok-string: #032f62;
+  --tok-number: #005cc5;
+  --tok-comment: #6a737d;
+  --tok-operator: #d73a49;
+  --tok-tag: #22863a;
+  --tok-attr-name: #6f42c1;
+  --tok-attr-value: #032f62;
+  --tok-function: #6f42c1;
+  --tok-property: #005cc5;
+  --tok-type: #6f42c1;
+  --tok-bracket: #24292e;
+  --tok-meta: #6a737d;
 }
 
 /* BRP Blue */
@@ -40,6 +54,19 @@
   --accent-hover: #0f43c8;
   --code-bg: #edf1fa;
   --selection: rgba(21, 93, 252, 0.2);
+  --tok-keyword: #c63a8c;
+  --tok-string: #0f43c8;
+  --tok-number: #6f42c1;
+  --tok-comment: #7b86a3;
+  --tok-operator: #c63a8c;
+  --tok-tag: #155dfc;
+  --tok-attr-name: #6f42c1;
+  --tok-attr-value: #0f43c8;
+  --tok-function: #c63a8c;
+  --tok-property: #0f43c8;
+  --tok-type: #6f42c1;
+  --tok-bracket: #10131a;
+  --tok-meta: #7b86a3;
 }
 
 /* BRP Red */
@@ -57,6 +84,19 @@
   --accent-hover: #c81f2c;
   --code-bg: #faf0f1;
   --selection: rgba(239, 51, 64, 0.18);
+  --tok-keyword: #c81f2c;
+  --tok-string: #155dfc;
+  --tok-number: #6f42c1;
+  --tok-comment: #a37b82;
+  --tok-operator: #c81f2c;
+  --tok-tag: #ef3340;
+  --tok-attr-name: #6f42c1;
+  --tok-attr-value: #155dfc;
+  --tok-function: #c81f2c;
+  --tok-property: #155dfc;
+  --tok-type: #6f42c1;
+  --tok-bracket: #1a1013;
+  --tok-meta: #a37b82;
 }
 
 /* Dark */
@@ -74,6 +114,20 @@
   --accent-hover: #4e8cc2;
   --code-bg: #2d2d2d;
   --selection: rgba(86, 156, 214, 0.3);
+  /* Syntax tokens (VS Code Dark+) */
+  --tok-keyword: #569cd6;
+  --tok-string: #ce9178;
+  --tok-number: #b5cea8;
+  --tok-comment: #6a9955;
+  --tok-operator: #d4d4d4;
+  --tok-tag: #569cd6;
+  --tok-attr-name: #9cdcfe;
+  --tok-attr-value: #ce9178;
+  --tok-function: #dcdcaa;
+  --tok-property: #9cdcfe;
+  --tok-type: #4ec9b0;
+  --tok-bracket: #ffd700;
+  --tok-meta: #c586c0;
 }
 
 /* BRP Polarity (Blue + Red gradient accents) */
@@ -91,6 +145,19 @@
   --accent-hover: #ef3340;
   --code-bg: #eef0f5;
   --selection: rgba(21, 93, 252, 0.15);
+  --tok-keyword: #ef3340;
+  --tok-string: #0f43c8;
+  --tok-number: #6f42c1;
+  --tok-comment: #888da3;
+  --tok-operator: #ef3340;
+  --tok-tag: #155dfc;
+  --tok-attr-name: #6f42c1;
+  --tok-attr-value: #0f43c8;
+  --tok-function: #ef3340;
+  --tok-property: #155dfc;
+  --tok-type: #6f42c1;
+  --tok-bracket: #10131a;
+  --tok-meta: #888da3;
 }
 
 ::selection {
@@ -1929,6 +1996,77 @@ body {
   outline: 1px solid rgba(124, 58, 237, 0.4);
   outline-offset: -1px;
 }
+
+/* CodeMirror syntax tokens — driven by per-theme CSS variables */
+.cm-content .tok-keyword,
+.cm-content .tok-controlKeyword,
+.cm-content .tok-modifier,
+.cm-content .tok-definitionKeyword,
+.cm-content .tok-operatorKeyword,
+.cm-content .tok-self,
+.cm-content .tok-null,
+.cm-content .tok-atom,
+.cm-content .tok-bool { color: var(--tok-keyword); font-weight: 500; }
+
+.cm-content .tok-string,
+.cm-content .tok-string2,
+.cm-content .tok-regexp,
+.cm-content .tok-escape,
+.cm-content .tok-character { color: var(--tok-string); }
+
+.cm-content .tok-number,
+.cm-content .tok-integer,
+.cm-content .tok-float,
+.cm-content .tok-unit { color: var(--tok-number); }
+
+.cm-content .tok-comment,
+.cm-content .tok-lineComment,
+.cm-content .tok-blockComment,
+.cm-content .tok-docComment { color: var(--tok-comment); font-style: italic; }
+
+.cm-content .tok-operator,
+.cm-content .tok-arithmeticOperator,
+.cm-content .tok-logicOperator,
+.cm-content .tok-bitwiseOperator,
+.cm-content .tok-compareOperator,
+.cm-content .tok-definitionOperator,
+.cm-content .tok-updateOperator,
+.cm-content .tok-typeOperator { color: var(--tok-operator); }
+
+.cm-content .tok-tagName,
+.cm-content .tok-angleBracket { color: var(--tok-tag); }
+
+.cm-content .tok-attributeName { color: var(--tok-attr-name); }
+.cm-content .tok-attributeValue { color: var(--tok-attr-value); }
+
+.cm-content .tok-function,
+.cm-content .tok-function.tok-variableName,
+.cm-content .tok-macroName { color: var(--tok-function); }
+
+.cm-content .tok-propertyName,
+.cm-content .tok-labelName { color: var(--tok-property); }
+
+.cm-content .tok-typeName,
+.cm-content .tok-className,
+.cm-content .tok-namespace { color: var(--tok-type); }
+
+.cm-content .tok-bracket,
+.cm-content .tok-paren,
+.cm-content .tok-brace,
+.cm-content .tok-squareBracket { color: var(--tok-bracket); }
+
+.cm-content .tok-meta,
+.cm-content .tok-processingInstruction,
+.cm-content .tok-annotation { color: var(--tok-meta); }
+
+.cm-content .tok-link,
+.cm-content .tok-url { color: var(--tok-string); text-decoration: underline; }
+
+.cm-content .tok-heading { color: var(--tok-keyword); font-weight: 700; }
+.cm-content .tok-emphasis { font-style: italic; }
+.cm-content .tok-strong { font-weight: 700; }
+.cm-content .tok-strikethrough { text-decoration: line-through; }
+.cm-content .tok-invalid { color: #ff5252; text-decoration: underline wavy; }
 
 .app-toast {
   position: fixed;

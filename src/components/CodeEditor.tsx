@@ -2,7 +2,8 @@ import { useRef, useEffect } from "react";
 import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter } from "@codemirror/view";
 import { EditorState } from "@codemirror/state";
 import { defaultKeymap, indentWithTab, history, historyKeymap } from "@codemirror/commands";
-import { syntaxHighlighting, defaultHighlightStyle, bracketMatching, foldGutter, foldKeymap } from "@codemirror/language";
+import { syntaxHighlighting, bracketMatching, foldGutter, foldKeymap } from "@codemirror/language";
+import { classHighlighter } from "@lezer/highlight";
 import { json } from "@codemirror/lang-json";
 import { yaml } from "@codemirror/lang-yaml";
 import { javascript } from "@codemirror/lang-javascript";
@@ -97,7 +98,7 @@ export function CodeEditor({ content, fileType, onChange }: CodeEditorProps) {
         foldGutter(),
         highlightSelectionMatches(),
         history(),
-        syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+        syntaxHighlighting(classHighlighter),
         getLanguageExtension(fileType),
         keymap.of([
           ...defaultKeymap,
