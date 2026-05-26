@@ -94,6 +94,7 @@ export const ko = {
   // File Tree
   "fileTree.files": "파일",
   "fileTree.openFolder": "폴더 열기",
+  "fileTree.refresh": "새로고침 (열어둔 트리 유지)",
   "fileTree.pleaseOpen": "폴더를 열어주세요",
 
   // Find & Replace

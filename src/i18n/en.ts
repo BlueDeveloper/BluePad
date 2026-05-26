@@ -94,6 +94,7 @@ export const en = {
   // File Tree
   "fileTree.files": "Files",
   "fileTree.openFolder": "Open Folder",
+  "fileTree.refresh": "Refresh (keep open folders)",
   "fileTree.pleaseOpen": "Open a folder",
 
   // Find & Replace

@@ -98,15 +98,48 @@ export function FileTree({ visible, onOpenFile }: FileTreeProps) {
     }
   }, []);
 
+  /** 신규 목록 위에 기존 expanded 상태 + 자식 트리 재적용 */
+  const mergeExpanded = useCallback(async (fresh: FileEntry[], old: FileEntry[]): Promise<FileEntry[]> => {
+    const oldByPath = new Map<string, FileEntry>();
+    for (const e of old) oldByPath.set(e.path, e);
+
+    const merged: FileEntry[] = [];
+    for (const f of fresh) {
+      const o = oldByPath.get(f.path);
+      if (f.isDir && o?.expanded) {
+        // 디스크에서 최신 자식 목록 다시 읽고, 기존 expanded 정보를 재귀 병합
+        const freshChildren = await loadDir(f.path);
+        const mergedChildren = await mergeExpanded(freshChildren, o.children || []);
+        merged.push({ ...f, expanded: true, children: mergedChildren });
+      } else {
+        merged.push(f);
+      }
+    }
+    return merged;
+  }, [loadDir]);
+
+  const refreshTree = useCallback(async () => {
+    if (!rootPath) return;
+    const fresh = await loadDir(rootPath);
+    const merged = await mergeExpanded(fresh, entries);
+    setEntries(merged);
+  }, [rootPath, entries, loadDir, mergeExpanded]);
+
   const openFolder = useCallback(async () => {
     const selected = await open({ directory: true });
-    if (selected) {
-      setRootPath(selected);
-      try { localStorage.setItem(FILETREE_ROOT_KEY, selected); } catch { /* ignore */ }
-      const items = await loadDir(selected);
-      setEntries(items);
+    if (!selected) return;
+    // 동일 폴더 다시 선택 시 expanded 보존
+    if (selected === rootPath) {
+      const fresh = await loadDir(selected);
+      const merged = await mergeExpanded(fresh, entries);
+      setEntries(merged);
+      return;
     }
-  }, [loadDir]);
+    setRootPath(selected);
+    try { localStorage.setItem(FILETREE_ROOT_KEY, selected); } catch { /* ignore */ }
+    const items = await loadDir(selected);
+    setEntries(items);
+  }, [loadDir, mergeExpanded, rootPath, entries]);
 
   useEffect(() => {
     if (rootPath) loadDir(rootPath).then(setEntries).catch(() => {
@@ -144,9 +177,14 @@ export function FileTree({ visible, onOpenFile }: FileTreeProps) {
       <div className="file-tree-resize-handle" onMouseDown={startResize} title="드래그하여 너비 조정" />
       <div className="file-tree-header">
         <span>{t("fileTree.files")}</span>
-        <button className="file-tree-open" onClick={openFolder} title={t("fileTree.openFolder")}>
-          &#128193;
-        </button>
+        <div className="file-tree-header-actions">
+          <button className="file-tree-open" onClick={refreshTree} title={t("fileTree.refresh")} disabled={!rootPath}>
+            &#x21bb;
+          </button>
+          <button className="file-tree-open" onClick={openFolder} title={t("fileTree.openFolder")}>
+            &#128193;
+          </button>
+        </div>
       </div>
       {rootPath && (
         <div className="file-tree-rootpath" title={rootPath.replace(/\\/g, "/")}>

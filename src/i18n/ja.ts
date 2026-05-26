@@ -94,6 +94,7 @@ export const ja = {
   // File Tree
   "fileTree.files": "ファイル",
   "fileTree.openFolder": "フォルダを開く",
+  "fileTree.refresh": "更新 (展開状態を保持)",
   "fileTree.pleaseOpen": "フォルダを開いてください",
 
   // Find & Replace
