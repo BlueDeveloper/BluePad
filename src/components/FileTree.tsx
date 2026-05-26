@@ -128,8 +128,9 @@ export function FileTree({ visible, onOpenFile }: FileTreeProps) {
   const openFolder = useCallback(async () => {
     const selected = await open({ directory: true });
     if (!selected) return;
-    // 동일 폴더 다시 선택 시 expanded 보존
-    if (selected === rootPath) {
+    // 동일 폴더 다시 선택 시 expanded 보존 (path 정규화 후 비교)
+    const norm = (p: string) => p.replace(/\\/g, "/").replace(/\/+$/, "").toLowerCase();
+    if (rootPath && norm(selected) === norm(rootPath)) {
       const fresh = await loadDir(selected);
       const merged = await mergeExpanded(fresh, entries);
       setEntries(merged);
@@ -178,10 +179,15 @@ export function FileTree({ visible, onOpenFile }: FileTreeProps) {
       <div className="file-tree-header">
         <span>{t("fileTree.files")}</span>
         <div className="file-tree-header-actions">
-          <button className="file-tree-open" onClick={refreshTree} title={t("fileTree.refresh")} disabled={!rootPath}>
-            &#x21bb;
+          <button className="file-tree-open file-tree-refresh" onClick={refreshTree} title={t("fileTree.refresh")} disabled={!rootPath} aria-label="refresh">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 12a9 9 0 0 1 15.5-6.3L21 8"></path>
+              <path d="M21 3v5h-5"></path>
+              <path d="M21 12a9 9 0 0 1-15.5 6.3L3 16"></path>
+              <path d="M3 21v-5h5"></path>
+            </svg>
           </button>
-          <button className="file-tree-open" onClick={openFolder} title={t("fileTree.openFolder")}>
+          <button className="file-tree-open" onClick={openFolder} title={t("fileTree.openFolder")} aria-label="open folder">
             &#128193;
           </button>
         </div>

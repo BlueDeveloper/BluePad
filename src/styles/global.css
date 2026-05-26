@@ -1308,6 +1308,13 @@ body {
   cursor: not-allowed;
 }
 
+.file-tree-refresh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.file-tree-refresh svg { display: block; }
+
 /* 현재 열린 폴더 경로 — 헤더 아래 별도 row, RTL 트림으로 끝(폴더명) 항상 보이도록 */
 .file-tree-rootpath {
   display: flex;
