@@ -28,9 +28,35 @@ const SUPPORTED_EXTENSIONS = [
 
 const FILETREE_ROOT_KEY = "bluepad_filetree_root";
 const FILETREE_WIDTH_KEY = "bluepad_filetree_width";
+const FILETREE_EXPANDED_KEY = "bluepad_filetree_expanded";
 const MIN_WIDTH = 180;
 const MAX_WIDTH = 600;
 const DEFAULT_WIDTH = 220;
+
+/** localStorage에서 expanded path set 로드 */
+function loadExpanded(): Set<string> {
+  try {
+    const raw = localStorage.getItem(FILETREE_EXPANDED_KEY);
+    if (!raw) return new Set();
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? new Set(arr.filter((s) => typeof s === "string")) : new Set();
+  } catch { return new Set(); }
+}
+
+function saveExpanded(set: Set<string>): void {
+  try { localStorage.setItem(FILETREE_EXPANDED_KEY, JSON.stringify(Array.from(set))); } catch { /* ignore */ }
+}
+
+/** entries 트리에서 expanded인 모든 디렉토리 path 수집 */
+function collectExpanded(list: FileEntry[], out: Set<string> = new Set()): Set<string> {
+  for (const e of list) {
+    if (e.isDir && e.expanded) {
+      out.add(e.path);
+      if (e.children) collectExpanded(e.children, out);
+    }
+  }
+  return out;
+}
 
 export function FileTree({ visible, onOpenFile }: FileTreeProps) {
   const { t } = useI18n();
@@ -98,32 +124,32 @@ export function FileTree({ visible, onOpenFile }: FileTreeProps) {
     }
   }, []);
 
-  /** 신규 목록 위에 기존 expanded 상태 + 자식 트리 재적용 */
-  const mergeExpanded = useCallback(async (fresh: FileEntry[], old: FileEntry[]): Promise<FileEntry[]> => {
-    const oldByPath = new Map<string, FileEntry>();
-    for (const e of old) oldByPath.set(e.path, e);
-
-    const merged: FileEntry[] = [];
+  /** localStorage의 expanded path set을 기반으로 자식 트리까지 펼친 entries 생성.
+   *  메모리 old entries에 의존하지 않으므로 F5 reload 후에도 동일하게 동작. */
+  const expandFromSet = useCallback(async (fresh: FileEntry[], expandedSet: Set<string>): Promise<FileEntry[]> => {
+    const result: FileEntry[] = [];
     for (const f of fresh) {
-      const o = oldByPath.get(f.path);
-      if (f.isDir && o?.expanded) {
-        // 디스크에서 최신 자식 목록 다시 읽고, 기존 expanded 정보를 재귀 병합
-        const freshChildren = await loadDir(f.path);
-        const mergedChildren = await mergeExpanded(freshChildren, o.children || []);
-        merged.push({ ...f, expanded: true, children: mergedChildren });
+      if (f.isDir && expandedSet.has(f.path)) {
+        const children = await loadDir(f.path);
+        const expandedChildren = await expandFromSet(children, expandedSet);
+        result.push({ ...f, expanded: true, children: expandedChildren });
       } else {
-        merged.push(f);
+        result.push(f);
       }
     }
-    return merged;
+    return result;
   }, [loadDir]);
 
   const refreshTree = useCallback(async () => {
     if (!rootPath) return;
     const fresh = await loadDir(rootPath);
-    const merged = await mergeExpanded(fresh, entries);
-    setEntries(merged);
-  }, [rootPath, entries, loadDir, mergeExpanded]);
+    // 메모리 entries가 아니라 localStorage set에서 expanded 가져오기 (F5 reload 안전)
+    const expanded = collectExpanded(entries);
+    // 메모리에 없는 케이스(F5 직후 등) 대비 localStorage도 합치기
+    for (const p of loadExpanded()) expanded.add(p);
+    const restored = await expandFromSet(fresh, expanded);
+    setEntries(restored);
+  }, [rootPath, entries, loadDir, expandFromSet]);
 
   const openFolder = useCallback(async () => {
     const selected = await open({ directory: true });
@@ -132,24 +158,47 @@ export function FileTree({ visible, onOpenFile }: FileTreeProps) {
     const norm = (p: string) => p.replace(/\\/g, "/").replace(/\/+$/, "").toLowerCase();
     if (rootPath && norm(selected) === norm(rootPath)) {
       const fresh = await loadDir(selected);
-      const merged = await mergeExpanded(fresh, entries);
-      setEntries(merged);
+      const expanded = collectExpanded(entries);
+      for (const p of loadExpanded()) expanded.add(p);
+      const restored = await expandFromSet(fresh, expanded);
+      setEntries(restored);
       return;
     }
+    // 다른 폴더로 전환 시 expanded set 클리어
+    saveExpanded(new Set());
     setRootPath(selected);
     try { localStorage.setItem(FILETREE_ROOT_KEY, selected); } catch { /* ignore */ }
     const items = await loadDir(selected);
     setEntries(items);
-  }, [loadDir, mergeExpanded, rootPath, entries]);
+  }, [loadDir, expandFromSet, rootPath, entries]);
 
   useEffect(() => {
-    if (rootPath) loadDir(rootPath).then(setEntries).catch(() => {
-      // 저장된 폴더가 더 이상 없으면 초기화
-      setRootPath(null);
-      setEntries([]);
-      try { localStorage.removeItem(FILETREE_ROOT_KEY); } catch { /* ignore */ }
-    });
-  }, [rootPath, loadDir]);
+    if (!rootPath) return;
+    loadDir(rootPath)
+      .then(async (fresh) => {
+        // 마운트 시 localStorage의 expanded set으로 복원 (F5 reload 또는 앱 재시작 후)
+        const restored = await expandFromSet(fresh, loadExpanded());
+        setEntries(restored);
+      })
+      .catch(() => {
+        setRootPath(null);
+        setEntries([]);
+        try { localStorage.removeItem(FILETREE_ROOT_KEY); } catch { /* ignore */ }
+      });
+  }, [rootPath, loadDir, expandFromSet]);
+
+  // F5 / Ctrl+R 가로채기 → 페이지 reload 대신 우리 refreshTree 사용 (열어둔 트리 보존)
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "F5" || (e.ctrlKey && (e.key === "r" || e.key === "R"))) {
+        e.preventDefault();
+        e.stopPropagation();
+        refreshTree();
+      }
+    };
+    window.addEventListener("keydown", handler, true);
+    return () => window.removeEventListener("keydown", handler, true);
+  }, [refreshTree]);
 
   const toggleDir = useCallback(
     async (_entry: FileEntry, path: number[]) => {
@@ -167,6 +216,8 @@ export function FileTree({ visible, onOpenFile }: FileTreeProps) {
         target.expanded = false;
       }
       setEntries([...newEntries]);
+      // localStorage에 expanded set 저장 (F5/재시작 시 복원용)
+      saveExpanded(collectExpanded(newEntries));
     },
     [entries, loadDir]
   );

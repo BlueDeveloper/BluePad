@@ -61,15 +61,28 @@ footer a{color:#52525b}
 
   <div class="release">
     <div class="release-header">
-      <span class="version">v1.14.3</span>
+      <span class="version">v1.14.4</span>
       <span class="tag tag-latest">Latest</span>
+      <span class="date">2026-05-26</span>
+    </div>
+    <h3>Changes</h3>
+    <ul>
+      <li>파일 트리 새로고침 영구 보존: (1) F5 / Ctrl+R 키를 가로채서 WebView reload 대신 우리 refreshTree로 라우팅 (앱 전체 재마운트 방지). (2) expanded 폴더 경로를 localStorage에 저장 → F5/앱 재시작 후 트리 마운트 시 자동 복원. 다른 폴더로 전환 시 expanded set 클리어.</li>
+    </ul>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.14.4_x64.msi" class="dl-btn">Download v1.14.4</a>
+  </div>
+
+  <div class="release">
+    <div class="release-header">
+      <span class="version">v1.14.3</span>
+      <span class="tag tag-stable">Stable</span>
       <span class="date">2026-05-26</span>
     </div>
     <h3>Changes</h3>
     <ul>
       <li>파일 트리 새로고침 동작 보강: (1) Unicode ↻ 문자 폰트 매핑 부족 가능성 → 인라인 SVG 아이콘으로 교체(시계방향 화살표 2개). (2) 폴더 열기로 동일 폴더 재선택 시 path 정규화(슬래시·대소문자·trailing) 후 비교하여 expanded 보존 분기 정확히 진입.</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.14.3_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.14.3_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -82,7 +95,7 @@ footer a{color:#52525b}
     <ul>
       <li>파일 트리: (1) 헤더에 새로고침 버튼(↻) 추가 — 디스크 재조회 시 열어둔 폴더(expanded) 상태 + 자식 트리 보존. (2) '폴더 열기'로 동일 폴더 다시 선택 시에도 expanded 보존하도록 분기 추가.</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.14.2_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.14.2_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -95,7 +108,7 @@ footer a{color:#52525b}
     <ul>
       <li>에디터 스크롤바 항상 표시: 기존 transparent thumb를 var(--border) 색으로 항상 살짝 보이게 + hover 시 진하게. SourceEditor(textarea)에도 동일 스타일 적용. 너비 10px + 2px transparent border로 호버 영역 확보.</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.14.1_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.14.1_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -108,7 +121,7 @@ footer a{color:#52525b}
     <ul>
       <li>작가 기능 2차: (1) 챕터 아웃라인 사이드바 H1~H6 드래그 재배치 — 헤딩 + 하위 섹션 통째 이동, 자식 안으로 드롭 방어. (2) 글쓰기 모드 패널에 문장 분석 추가 — 문장 수/평균 길이/긴 문장/수동태/부사/군더더기/Flesch 가독성 (한·영 휴리스틱 임계값 초과 시 경고 색).</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.14.0_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.14.0_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -121,7 +134,7 @@ footer a{color:#52525b}
     <ul>
       <li>소스 ↔ WYSIWYG 모드 전환 시 스크롤 위치 보존 재수정: SourceEditor의 스크롤 컨테이너가 textarea(.source-editor)인 점을 고려해 두 셀렉터 모두 탐색. Milkdown async 마운트 지연 대응으로 RAF + 50ms + 200ms 세 시점에 재시도.</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.13.4_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.13.4_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -134,7 +147,7 @@ footer a{color:#52525b}
     <ul>
       <li>(1) 표 셀에 두 자리 숫자가 세로로 쪼개지던 문제 수정 — word-break: keep-all + min-width 적용. (2) WYSIWYG ↔ 소스모드 전환 시 스크롤 위치 보존 — 모드 변경 직전 scrollTop 캐시 후 새 마운트 후 복원.</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.13.3_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.13.3_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -147,7 +160,7 @@ footer a{color:#52525b}
     <ul>
       <li>(1) 트라이얼 만료 다이얼로그가 앱 재시작마다 다시 뜨던 버그 수정 — sessionStorage→localStorage로 변경하여 한 번 닫으면 다시 안 뜸. (2) WYSIWYG 에디터에서 하이퍼링크 Ctrl+클릭(또는 가운데 클릭) 시 외부 브라우저로 열림 — http(s)/mailto/tel 지원.</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.13.2_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.13.2_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -160,7 +173,7 @@ footer a{color:#52525b}
     <ul>
       <li>업데이트 다이얼로그 정렬 수정: 모든 메시지 좌측 정렬 일관화, 박스 간 spacing(gap)으로 통일, 진행률 % 표시 한 줄 정리, 에러 박스 가독성 개선, 한국어 단어 줄바꿈(keep-all) 적용.</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.13.1_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.13.1_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -173,7 +186,7 @@ footer a{color:#52525b}
     <ul>
       <li>글쓰기 모드 신설 (Pro): Ctrl+Shift+W로 토글. 우측 패널에 오늘 단어/일일 목표/세션 시간/WPM/30일 히트맵/스프린트 타이머(10·15·25·45분). 에디터는 타이핑라이터(현재 줄 화면 중앙) + 하이라이트(현재 블록만 선명) 모드 자동 적용. 작가용 편의 기능 묶음 1차.</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.13.0_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.13.0_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -186,7 +199,7 @@ footer a{color:#52525b}
     <ul>
       <li>일반 텍스트 복사 안정화: stripMarkdown 인라인화로 모듈 import 실패 가능성 제거, try/catch 강화로 토스트 항상 표시, markdown 외 파일에서도 raw content 클립보드 복사, Windows CRLF 변환 보강.</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.12.6_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.12.6_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -199,7 +212,7 @@ footer a{color:#52525b}
     <ul>
       <li>일반 텍스트 복사 줄바꿈 재수정: DOM 순회 방식이 단일 블록에서 줄바꿈 누락하던 문제를 해결. 원본 markdown에서 직접 마크업 제거 (stripMarkdownToPlain) + Windows 클립보드 CRLF 명시 변환.</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.12.5_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.12.5_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -212,7 +225,7 @@ footer a{color:#52525b}
     <ul>
       <li>마크다운 → 일반 텍스트 복사(Ctrl+Shift+C) 줄바꿈 누락 수정: 블록 요소 사이에 줄바꿈 명시적 삽입. 리스트는 항목별, 표는 행별(셀은 탭), 코드 블록은 원본 줄바꿈 유지.</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.12.4_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.12.4_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -225,7 +238,7 @@ footer a{color:#52525b}
     <ul>
       <li>파일 트리 좌측 사이드바: (1) .js/.ts/.html/.css 등 신규 확장자 13종 표시 추가, (2) 드래그로 너비 조정 가능 (180~600px, localStorage 저장).</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.12.3_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.12.3_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -238,7 +251,7 @@ footer a{color:#52525b}
     <ul>
       <li>보안 강화 — (1) 시계 역행 감지로 오프라인 grace 무한 연장 우회 차단, (2) 환불된 라이선스에 refunded 플래그 추가하여 캐시 우회 방지, (3) IP 기반 트라이얼 재가입 차단 (30일), (4) CORS 화이트리스트 외 Origin 차단.</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.12.2_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.12.2_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -251,7 +264,7 @@ footer a{color:#52525b}
     <ul>
       <li>코드 파일(JS/TS/HTML/CSS) 구문 색상 강조 — 5가지 테마(Classic, Dark, BRP Blue/Red/Polarity)별로 키워드/문자열/주석/태그/속성 색상 자동 적용.</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.12.1_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.12.1_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -264,7 +277,7 @@ footer a{color:#52525b}
     <ul>
       <li>신규 파일 형식 지원 (JavaScript/TypeScript, HTML, CSS) — 구문 강조 + 줄 번호. 마크다운 → 일반 텍스트 복사 (Ctrl+Shift+C, 편집 메뉴) — 블로그/이메일/메신저 붙여넣기 시 마크업 제거.</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.12.0_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.12.0_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -277,7 +290,7 @@ footer a{color:#52525b}
     <ul>
       <li>외부 파일 변경 감지 (#3, window focus 시 mtime 비교) · non-UTF-8 인코딩 자동 감지 (#7, replacement char로 추정)</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.11.2_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.11.2_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -290,7 +303,7 @@ footer a{color:#52525b}
     <ul>
       <li>UTF-8 BOM 자동 제거 · 드래그앤드롭 파일 열기 · 5MB+ 큰 파일 경고 다이얼로그 (사용자 불편 사례 일괄 fix)</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.11.1_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.11.1_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -303,7 +316,7 @@ footer a{color:#52525b}
     <ul>
       <li>single-instance: 파일 더블클릭 시 새 프로세스 안 띄우고 기존 BluePad에 새 탭으로 열림</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.11.0_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.11.0_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -316,7 +329,7 @@ footer a{color:#52525b}
     <ul>
       <li>수정 표시(dirty indicator) 안 뜨는 버그 fix — setContent의 과도한 정규화 비교 제거</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.10.3_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.10.3_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -329,7 +342,7 @@ footer a{color:#52525b}
     <ul>
       <li>이미 열린 파일 다시 클릭 시 중복 탭 안 만들고 그 탭으로 전환 (경로 형식 차이로 인한 중복 회피)</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.10.2_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.10.2_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -342,7 +355,7 @@ footer a{color:#52525b}
     <ul>
       <li>파일 트리에 현재 폴더 경로 표시 (RTL 트림 + 전체 경로 tooltip)</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.10.1_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.10.1_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -355,7 +368,7 @@ footer a{color:#52525b}
     <ul>
       <li>자동 생성 markdown(CRLF) 화면 렌더링 깨짐 hotfix · 저장 안 한 채 닫은 파일 재오픈 시 수정 상태로 시작하던 버그 fix</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.10.0_x64.msi" class="dl-btn">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad_1.10.0_x64.msi" class="dl-btn">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -370,7 +383,7 @@ footer a{color:#52525b}
       <li>OS별 다운로드 페이지 신설 (Windows/Linux 자동 감지)</li>
       <li>자동 업데이트 안정성 및 UX 개선 (Linux 분기 처리)</li>
     </ul>
-    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad-latest_x64.msi" class="dl-btn" id="t-dl">Download v1.14.3</a>
+    <a href="https://bluepad-download.blueehdwp.workers.dev/download/BluePad-latest_x64.msi" class="dl-btn" id="t-dl">Download v1.14.4</a>
   </div>
 
   <div class="release">
@@ -452,7 +465,7 @@ const i18n = {
     'r180-10':'앱 재시작 시 탭 복원 (이전에는 초기화됨)', 'r180-11':'파일 트리 폴더 유지', 'r180-12':'소스 모드, 사이드바, 자동 저장 설정 유지', 'r180-13':'탭 닫기: 저장하고 닫기 / 닫기 (이전 혼란 해소)', 'r180-14':'체크박스 / 체크리스트 렌더링 개선', 'r180-15':'코드 블록 구문 강조 (17종 토큰)', 'r180-16':'취소선, 이미지, 테이블, 인용구 스타일 개선',
     'r180-17':'결제 리플레이 방지 (중요 보안 수정)', 'r180-18':'결제 후 금액 검증', 'r180-19':'환불 추적을 위한 결제 기록', 'r180-20':'라이선스 생성 실패 시 복구'
   },
-  en: { title:'Changelog', sub:'Release notes and version history', new:'New Features', improved:'Improved', security:'Security', dl:'Download v1.14.3' },
+  en: { title:'Changelog', sub:'Release notes and version history', new:'New Features', improved:'Improved', security:'Security', dl:'Download v1.14.4' },
   ja: { title:'更新履歴', sub:'リリースノートとバージョン履歴', new:'新機能', improved:'改善', security:'セキュリティ', dl:'v1.9.0 ダウンロード',
     'r180-1':'ダークテーマ（全ユーザー無料）', 'r180-2':'JSON / YAML 編集 — シンタックスハイライト + 自動整形', 'r180-3':'常に最前面 — ウィンドウを固定', 'r180-4':'選択文字数をステータスバーに表示', 'r180-5':'読了時間の推定表示', 'r180-6':'YAML Front Matter 表示', 'r180-7':'[toc] 指示子 — 目次自動生成', 'r180-8':'ハイライトCSS対応', 'r180-9':'フィードバックページ — 開発者に意見を送信',
     'r180-10':'アプリ再起動時にタブを復元', 'r180-11':'ファイルツリーのフォルダを維持', 'r180-12':'ソースモード、サイドバー、自動保存設定を維持', 'r180-13':'タブ閉じるダイアログの改善', 'r180-14':'チェックボックスのレンダリング改善', 'r180-15':'コードブロックのシンタックスハイライト', 'r180-16':'取り消し線、画像、テーブルのスタイル改善',
