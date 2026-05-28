@@ -4,7 +4,7 @@ import { TabBar } from "./components/TabBar";
 import { Toolbar } from "./components/Toolbar";
 import { Editor } from "./components/Editor";
 import { SourceEditor } from "./components/SourceEditor";
-import { CodeEditor, formatCode } from "./components/CodeEditor";
+import { CodeEditor, formatCode, type CodeEditorHandle } from "./components/CodeEditor";
 import { Sidebar } from "./components/Sidebar";
 import { FileTree } from "./components/FileTree";
 import { StatusBar } from "./components/StatusBar";
@@ -190,6 +190,7 @@ function App() {
     toastTimerRef.current = window.setTimeout(() => setToast(""), 1800);
   }, []);
   const editorRef = useRef<EditorHandle>(null);
+  const codeEditorRef = useRef<CodeEditorHandle>(null);
   const fileManager = useFileManager();
   const license = useLicense();
   const writingStats = useWritingStats(fileManager.content, writingMode && fileManager.activeTab.fileType === "markdown");
@@ -424,6 +425,54 @@ ${editorEl.innerHTML}
     if (error) return; // invalid syntax, do nothing
     fileManager.setContent(formatted);
   }, [fileManager]);
+
+  // Find/Replace: 파일 타입별 분기 (markdown=FindReplace, code=CodeMirror panel, text/source=textarea)
+  const findInTextarea = useCallback((q: string, forward: boolean): boolean => {
+    if (!q) return false;
+    const ta = document.querySelector(".source-editor") as HTMLTextAreaElement | null;
+    if (!ta) return false;
+    const haystack = ta.value.toLowerCase();
+    const needle = q.toLowerCase();
+    let idx = -1;
+    if (forward) {
+      idx = haystack.indexOf(needle, ta.selectionEnd);
+      if (idx === -1) idx = haystack.indexOf(needle, 0);
+    } else {
+      idx = haystack.lastIndexOf(needle, Math.max(0, ta.selectionStart - 1));
+      if (idx === -1) idx = haystack.lastIndexOf(needle);
+    }
+    if (idx === -1) return false;
+    ta.focus();
+    ta.setSelectionRange(idx, idx + q.length);
+    return true;
+  }, []);
+
+  const handleFind = useCallback(() => {
+    const ft = fileManager.activeTab.fileType;
+    const codeTypes = ["json", "yaml", "javascript", "html", "css"];
+    if (codeTypes.includes(ft)) {
+      codeEditorRef.current?.openSearch();
+      return;
+    }
+    if (ft === "text" || sourceMode) {
+      const q = window.prompt(i18n.t("find.placeholder")) || "";
+      if (q && !findInTextarea(q, true)) showToast(i18n.t("find.noResults"));
+      return;
+    }
+    setFindReplaceMode(false);
+    setFindVisible(true);
+  }, [fileManager.activeTab.fileType, sourceMode, findInTextarea, i18n, showToast]);
+
+  const handleReplace = useCallback(() => {
+    const ft = fileManager.activeTab.fileType;
+    const codeTypes = ["json", "yaml", "javascript", "html", "css"];
+    if (codeTypes.includes(ft)) {
+      codeEditorRef.current?.openSearch(); // CodeMirror panel includes replace toggle
+      return;
+    }
+    setFindReplaceMode(true);
+    setFindVisible(true);
+  }, [fileManager.activeTab.fileType]);
 
   const handleToggleWritingMode = useCallback(() => {
     if (!license.isPro) {
@@ -669,8 +718,8 @@ ${editorEl.innerHTML}
             onToggleFileTree={() => setFileTreeVisible((s) => !s)}
             onToggleAutoSave={() => setAutoSaveEnabled((s) => !s)}
             onOpenRecent={handleOpenRecentFile}
-            onFind={() => { setFindReplaceMode(false); setFindVisible(true); }}
-            onReplace={() => { setFindReplaceMode(true); setFindVisible(true); }}
+            onFind={handleFind}
+            onReplace={handleReplace}
             onCopyPlainText={handleCopyPlainText}
             writingMode={writingMode}
             onToggleWritingMode={handleToggleWritingMode}
@@ -714,6 +763,7 @@ ${editorEl.innerHTML}
             {["json", "yaml", "javascript", "html", "css"].includes(fileManager.activeTab.fileType) ? (
               <CodeEditor
                 key={fileManager.activeTabId}
+                ref={codeEditorRef}
                 content={fileManager.content}
                 fileType={fileManager.activeTab.fileType}
                 onChange={handleContentChange}

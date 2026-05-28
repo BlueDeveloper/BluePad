@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, forwardRef, useImperativeHandle } from "react";
 import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter } from "@codemirror/view";
 import { EditorState } from "@codemirror/state";
 import { defaultKeymap, indentWithTab, history, historyKeymap } from "@codemirror/commands";
@@ -9,9 +9,14 @@ import { yaml } from "@codemirror/lang-yaml";
 import { javascript } from "@codemirror/lang-javascript";
 import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
-import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
+import { searchKeymap, highlightSelectionMatches, openSearchPanel, closeSearchPanel } from "@codemirror/search";
 import * as jsYaml from "js-yaml";
 import type { FileType } from "../hooks/useFileManager";
+
+export interface CodeEditorHandle {
+  openSearch: () => void;
+  closeSearch: () => void;
+}
 
 interface CodeEditorProps {
   content: string;
@@ -76,11 +81,23 @@ function getLanguageExtension(fileType: FileType) {
   }
 }
 
-export function CodeEditor({ content, fileType, onChange }: CodeEditorProps) {
+export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(({ content, fileType, onChange }, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
+
+  useImperativeHandle(ref, () => ({
+    openSearch: () => {
+      if (viewRef.current) {
+        viewRef.current.focus();
+        openSearchPanel(viewRef.current);
+      }
+    },
+    closeSearch: () => {
+      if (viewRef.current) closeSearchPanel(viewRef.current);
+    },
+  }));
 
   // Prevent re-creating editor when only onChange changes
   const isInternalUpdate = useRef(false);
@@ -151,7 +168,8 @@ export function CodeEditor({ content, fileType, onChange }: CodeEditorProps) {
   }, [content]);
 
   return <div ref={containerRef} className="code-editor-container" />;
-}
+});
+CodeEditor.displayName = "CodeEditor";
 
 export function formatCode(content: string, fileType: FileType): { formatted: string; error?: string } {
   if (fileType === "json") {
