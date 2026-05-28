@@ -86,6 +86,7 @@ function App() {
     );
   }, []);
 
+  // 실제 가드는 toggleSourceIfMarkdown 에서 — 이 함수는 raw toggle (호환 용도)
   const handleToggleSource = useCallback(() => {
     const cur = findEditorScroller();
     if (cur) lastEditorScrollTop.current = cur.scrollTop;
@@ -314,8 +315,15 @@ function App() {
   );
 
   const handleExportHtml = useCallback(async () => {
-    const editorEl = document.querySelector(".editor-content");
-    if (!editorEl) return;
+    if (fileManager.activeTab.fileType !== "markdown") {
+      showToast("HTML 내보내기는 마크다운 파일에서만 지원합니다");
+      return;
+    }
+    const editorEl = document.querySelector(".editor-content .ProseMirror");
+    if (!editorEl) {
+      showToast("내보낼 콘텐츠가 없습니다");
+      return;
+    }
     const htmlContent = `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
@@ -361,8 +369,15 @@ ${editorEl.innerHTML}
       setProGateVisible(true);
       return;
     }
-    const editorEl = document.querySelector(".editor-content");
-    if (!editorEl) return;
+    if (fileManager.activeTab.fileType !== "markdown") {
+      showToast("PDF 내보내기는 마크다운 파일에서만 지원합니다");
+      return;
+    }
+    const editorEl = document.querySelector(".editor-content .ProseMirror");
+    if (!editorEl) {
+      showToast("내보낼 콘텐츠가 없습니다");
+      return;
+    }
     const iframe = document.createElement("iframe");
     iframe.style.position = "fixed";
     iframe.style.left = "-9999px";
@@ -463,6 +478,20 @@ ${editorEl.innerHTML}
     setFindVisible(true);
   }, [fileManager.activeTab.fileType, sourceMode, findInTextarea, i18n, showToast]);
 
+  const replaceInTextarea = useCallback((q: string, r: string): number => {
+    if (!q) return 0;
+    const ta = document.querySelector(".source-editor") as HTMLTextAreaElement | null;
+    if (!ta) return 0;
+    const before = ta.value;
+    // 대소문자 구분 없이 모든 매치 replace
+    const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
+    const after = before.replace(re, r);
+    if (after === before) return 0;
+    const count = (before.match(re) || []).length;
+    fileManager.setContent(after);
+    return count;
+  }, [fileManager]);
+
   const handleReplace = useCallback(() => {
     const ft = fileManager.activeTab.fileType;
     const codeTypes = ["json", "yaml", "javascript", "html", "css"];
@@ -470,9 +499,27 @@ ${editorEl.innerHTML}
       codeEditorRef.current?.openSearch(); // CodeMirror panel includes replace toggle
       return;
     }
+    if (ft === "text" || sourceMode) {
+      const q = window.prompt(i18n.t("find.placeholder")) || "";
+      if (!q) return;
+      const r = window.prompt(i18n.t("find.replacePlaceholder")) ?? "";
+      const n = replaceInTextarea(q, r);
+      showToast(n > 0 ? `${n}건 바꿈` : i18n.t("find.noResults"));
+      return;
+    }
     setFindReplaceMode(true);
     setFindVisible(true);
-  }, [fileManager.activeTab.fileType]);
+  }, [fileManager.activeTab.fileType, sourceMode, replaceInTextarea, i18n, showToast]);
+
+  // markdown 외 파일에서 소스모드 토글은 의미 없음 → 무시 + 안내
+  const handleToggleSourceGuarded = useCallback(() => {
+    const ft = fileManager.activeTab.fileType;
+    if (ft !== "markdown") {
+      showToast("소스 모드는 마크다운 파일에서만 동작합니다");
+      return;
+    }
+    handleToggleSource();
+  }, [fileManager.activeTab.fileType, handleToggleSource, showToast]);
 
   const handleToggleWritingMode = useCallback(() => {
     if (!license.isPro) {
@@ -712,7 +759,7 @@ ${editorEl.innerHTML}
             onExportPdf={handleExportPdf}
             onFormat={handleFormat}
             onSetWordTarget={handleSetWordTarget}
-            onToggleSource={handleToggleSource}
+            onToggleSource={handleToggleSourceGuarded}
             onToggleSidebar={() => setSidebarVisible((s) => !s)}
             onToggleFocus={handleToggleFocus}
             onToggleFileTree={() => setFileTreeVisible((s) => !s)}
