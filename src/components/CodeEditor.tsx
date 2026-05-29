@@ -68,6 +68,86 @@ const theme = EditorView.theme({
   ".cm-scroller": {
     overflow: "auto",
   },
+  // ── 검색/바꾸기 패널 ──
+  ".cm-panels": {
+    backgroundColor: "var(--bg-secondary)",
+    color: "var(--text)",
+    borderTop: "1px solid var(--border)",
+  },
+  ".cm-panels.cm-panels-bottom": {
+    borderTop: "1px solid var(--border)",
+  },
+  ".cm-panel.cm-search": {
+    padding: "10px 12px",
+    fontFamily: "'Pretendard Variable', -apple-system, 'Segoe UI', sans-serif",
+    fontSize: "13px",
+    display: "flex",
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: "6px",
+  },
+  ".cm-panel.cm-search input, .cm-panel.cm-search input[type=text]": {
+    backgroundColor: "var(--bg)",
+    color: "var(--text)",
+    border: "1px solid var(--border)",
+    borderRadius: "7px",
+    padding: "5px 10px",
+    fontSize: "13px",
+    fontFamily: "inherit",
+    outline: "none",
+    minWidth: "180px",
+  },
+  ".cm-panel.cm-search input:focus": {
+    borderColor: "#155dfc",
+  },
+  ".cm-panel.cm-search button, .cm-panel.cm-search .cm-button": {
+    backgroundColor: "var(--bg)",
+    backgroundImage: "none",
+    color: "var(--text)",
+    border: "1px solid var(--border)",
+    borderRadius: "7px",
+    padding: "5px 11px",
+    fontSize: "13px",
+    fontFamily: "inherit",
+    cursor: "pointer",
+    transition: "background-color .12s, border-color .12s",
+  },
+  ".cm-panel.cm-search button:hover, .cm-panel.cm-search .cm-button:hover": {
+    backgroundColor: "var(--bg-hover, rgba(127,127,127,0.12))",
+    borderColor: "#155dfc",
+  },
+  ".cm-panel.cm-search label": {
+    fontSize: "12.5px",
+    color: "var(--text-muted, #888)",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "4px",
+    cursor: "pointer",
+  },
+  ".cm-panel.cm-search label input[type=checkbox]": {
+    minWidth: "auto",
+    accentColor: "#155dfc",
+    cursor: "pointer",
+  },
+  ".cm-panel.cm-search [name=close]": {
+    position: "absolute",
+    top: "6px",
+    right: "10px",
+    padding: "0",
+    width: "22px",
+    height: "22px",
+    lineHeight: "20px",
+    fontSize: "18px",
+    border: "none",
+    background: "none",
+    color: "var(--text-muted, #888)",
+    borderRadius: "5px",
+  },
+  ".cm-panel.cm-search [name=close]:hover": {
+    backgroundColor: "var(--bg-hover, rgba(127,127,127,0.15))",
+    color: "var(--text)",
+    borderColor: "transparent",
+  },
 });
 
 function getLanguageExtension(fileType: FileType) {
