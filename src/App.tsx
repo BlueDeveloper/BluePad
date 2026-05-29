@@ -668,12 +668,10 @@ ${editorEl.innerHTML}
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.key === "f") {
         e.preventDefault();
-        setFindReplaceMode(false);
-        setFindVisible(true);
+        handleFind();
       } else if (e.ctrlKey && e.key === "h") {
         e.preventDefault();
-        setFindReplaceMode(true);
-        setFindVisible(true);
+        handleReplace();
       } else if (e.ctrlKey && e.key === "=") {
         e.preventDefault();
         changeFontSize(1);
@@ -703,7 +701,7 @@ ${editorEl.innerHTML}
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [changeFontSize, fileManager, handlePrint]);
+  }, [changeFontSize, fileManager, handlePrint, handleFind, handleReplace]);
 
   // ESC focus mode exit + fullscreen sync
   useEffect(() => {
