@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/nicosaurus/tauri-schema-generator/main/schema/2.0.0/schema.json",
   "productName": "BluePad",
-  "version": "1.14.8",
+  "version": "1.14.9",
   "identifier": "brp.bluepad.desktop",
   "build": {
     "frontendDist": "../dist",
@@ -23,7 +23,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://bluepad-license-api.blueehdwp.workers.dev https://bluepad-download.blueehdwp.workers.dev"
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost https://bluepad-license-api.blueehdwp.workers.dev https://bluepad-download.blueehdwp.workers.dev"
     }
   },
   "bundle": {

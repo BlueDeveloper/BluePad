@@ -149,7 +149,9 @@ export function useFileManager() {
     dialogLabelsRef.current = labels;
   }, []);
 
-  const activeTab = tabs.find((t) => t.id === activeTabId) || tabs[0];
+  // tabs는 정상적으로는 절대 비지 않지만(복원 catch에서 빈 탭 보장), 어떤 경로로든
+  // 비게 되더라도 activeTab=undefined로 인한 렌더 크래시(흰 화면)를 막기 위한 최후 가드.
+  const activeTab = tabs.find((t) => t.id === activeTabId) || tabs[0] || createTab();
   contentRef.current = activeTab.content;
 
   // Helper to update a specific tab
@@ -476,8 +478,13 @@ export function useFileManager() {
               foundActiveId = tab.id;
             }
           } catch {
-            // 파일 없으면 탭 제거
-            setTabs((prev) => prev.filter((t) => t.id !== tab.id));
+            // 파일 없으면 탭 제거 — 단, 마지막 탭이면 빈 탭으로 대체한다.
+            // (탭이 0개가 되면 activeTab=undefined → activeTab.content 접근에서 앱 전체가
+            //  크래시되어 흰 화면이 된다. 복원 대상 파일이 삭제/이동된 경우 실제 발생.)
+            setTabs((prev) => {
+              const next = prev.filter((t) => t.id !== tab.id);
+              return next.length > 0 ? next : [createTab()];
+            });
           }
         }
       }
