@@ -73,7 +73,7 @@ export const ko = {
 
   // Tab Bar
   "tab.close": "닫기",
-  "tab.newTab": "새 탭 (Ctrl+N)",
+  "tab.newTab": "새 탭 (Ctrl+Shift+N) · 클릭 시 형식 선택",
 
   // Status Bar
   "status.newFile": "새 파일",

@@ -41,6 +41,17 @@ interface DialogLabels {
 
 export type FileType = "markdown" | "json" | "yaml" | "text" | "javascript" | "html" | "css";
 
+// 새 탭 생성 시 파일 타입별 기본 확장자 (Untitled 이름에 붙여 사용자가 타입을 인지하게)
+export const EXT_BY_TYPE: Record<FileType, string> = {
+  markdown: ".md",
+  text: ".txt",
+  html: ".html",
+  css: ".css",
+  javascript: ".js",
+  json: ".json",
+  yaml: ".yaml",
+};
+
 export interface Tab {
   id: string;
   filePath: string | null;
@@ -197,8 +208,8 @@ export function useFileManager() {
     []
   );
 
-  const newFile = useCallback(() => {
-    const tab = createTab();
+  const newFile = useCallback((fileType: FileType = "markdown") => {
+    const tab = createTab({ fileType, fileName: `Untitled${EXT_BY_TYPE[fileType]}` });
     setTabs((prev) => [...prev, tab]);
     setActiveTabId(tab.id);
   }, []);

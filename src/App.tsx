@@ -15,7 +15,7 @@ import { ProGate } from "./components/ProGate";
 import { InputDialog } from "./components/InputDialog";
 import { AlertDialog } from "./components/AlertDialog";
 import { UpdateDialog } from "./components/UpdateDialog";
-import { useFileManager } from "./hooks/useFileManager";
+import { useFileManager, type FileType } from "./hooks/useFileManager";
 import { useLicense } from "./hooks/useLicense";
 import { useUpdater } from "./hooks/useUpdater";
 import { useWritingStats } from "./hooks/useWritingStats";
@@ -251,12 +251,12 @@ function App() {
   }, [lang, fileManager.setDialogLabels, i18n]);
 
   // Tab limit for free users
-  const handleNewTab = useCallback(() => {
+  const handleNewTab = useCallback((fileType: FileType = "markdown") => {
     if (!license.isPro && fileManager.tabs.length >= license.maxTabs) {
       setProGateVisible(true);
       return;
     }
-    fileManager.newFile();
+    fileManager.newFile(fileType);
   }, [license, fileManager]);
 
   // Recent files
@@ -687,6 +687,10 @@ ${editorEl.innerHTML}
       } else if (e.ctrlKey && e.key === "w") {
         e.preventDefault();
         fileManager.closeTab(fileManager.activeTabId);
+      } else if (e.ctrlKey && e.shiftKey && (e.key === "N" || e.key === "n")) {
+        // 새 탭 (기본 마크다운). 확장자 선택은 탭바의 + 버튼 드롭다운에서.
+        e.preventDefault();
+        handleNewTab();
       } else if (e.ctrlKey && e.key === "Tab") {
         e.preventDefault();
         const tabsList = fileManager.tabs;
@@ -701,7 +705,7 @@ ${editorEl.innerHTML}
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [changeFontSize, fileManager, handlePrint, handleFind, handleReplace]);
+  }, [changeFontSize, fileManager, handlePrint, handleFind, handleReplace, handleNewTab]);
 
   // ESC focus mode exit + fullscreen sync
   useEffect(() => {

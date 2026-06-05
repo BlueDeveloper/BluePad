@@ -61,8 +61,16 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
     const editorRef = useRef<HTMLDivElement>(null);
     const milkdownRef = useRef<MilkdownEditor | null>(null);
     const contentRef = useRef(content);
+    const writingModeRef = useRef(writingMode);
 
     contentRef.current = content;
+    writingModeRef.current = writingMode;
+
+    // 맞춤법 빨간 줄(spellcheck)은 작가 모드일 때만. 평상시 마크다운 편집엔 표시하지 않는다.
+    const applySpellcheck = useCallback(() => {
+      const pm = editorRef.current?.querySelector(".ProseMirror") as HTMLElement | null;
+      if (pm) pm.setAttribute("spellcheck", writingModeRef.current ? "true" : "false");
+    }, []);
 
     const run = (cmd: CmdPlugin, payload?: unknown) => {
       cmd.run?.(payload);
@@ -170,6 +178,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
       await renderMermaid();
       renderFrontMatter();
       renderTOC();
+      applySpellcheck();
     }, []);
 
     // Mermaid rendering
@@ -394,6 +403,11 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
         cancelAnimationFrame(raf);
       };
     }, [writingMode, fileVersion]);
+
+    // 작가 모드 토글 시 즉시 spellcheck 반영 (에디터 재생성 시엔 postRender가 적용).
+    useEffect(() => {
+      applySpellcheck();
+    }, [writingMode, fileVersion, applySpellcheck]);
 
     return (
       <div

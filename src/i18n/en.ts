@@ -73,7 +73,7 @@ export const en = {
 
   // Tab Bar
   "tab.close": "Close",
-  "tab.newTab": "New Tab (Ctrl+N)",
+  "tab.newTab": "New Tab (Ctrl+Shift+N) · click to pick type",
 
   // Status Bar
   "status.newFile": "New File",

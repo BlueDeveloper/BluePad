@@ -1,21 +1,34 @@
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { useI18n } from "../i18n";
-import type { Tab } from "../hooks/useFileManager";
+import type { Tab, FileType } from "../hooks/useFileManager";
 
 interface TabBarProps {
   tabs: Tab[];
   activeTabId: string;
   onSwitch: (tabId: string) => void;
   onClose: (tabId: string) => void;
-  onNew: () => void;
+  onNew: (fileType: FileType) => void;
   onReorder: (fromIdx: number, toIdx: number) => void;
 }
+
+// + 버튼 드롭다운에 노출할 파일 타입 목록 (확장자 함께 표기)
+const NEW_FILE_TYPES: { type: FileType; label: string }[] = [
+  { type: "markdown", label: "Markdown (.md)" },
+  { type: "text", label: "Text (.txt)" },
+  { type: "html", label: "HTML (.html)" },
+  { type: "css", label: "CSS (.css)" },
+  { type: "javascript", label: "JavaScript (.js)" },
+  { type: "json", label: "JSON (.json)" },
+  { type: "yaml", label: "YAML (.yaml)" },
+];
 
 export function TabBar({ tabs, activeTabId, onSwitch, onClose, onNew, onReorder }: TabBarProps) {
   const { t } = useI18n();
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
+  const [menuPos, setMenuPos] = useState<{ x: number; y: number } | null>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
+  const newBtnRef = useRef<HTMLButtonElement>(null);
 
   const handleDragStart = useCallback((e: React.DragEvent, idx: number) => {
     setDragIdx(idx);
@@ -57,6 +70,31 @@ export function TabBar({ tabs, activeTabId, onSwitch, onClose, onNew, onReorder 
     [onClose]
   );
 
+  // + 버튼: 파일 타입 드롭다운 토글. 메뉴는 탭바 overflow에 잘리지 않도록 fixed 위치.
+  const toggleMenu = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setMenuPos((prev) => {
+      if (prev) return null;
+      const r = newBtnRef.current?.getBoundingClientRect();
+      return r ? { x: r.left, y: r.bottom + 2 } : null;
+    });
+  }, []);
+
+  // 외부 클릭 / Esc 로 메뉴 닫기
+  useEffect(() => {
+    if (!menuPos) return;
+    const close = () => setMenuPos(null);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuPos(null);
+    };
+    window.addEventListener("click", close);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("click", close);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [menuPos]);
+
   return (
     <div className="tabbar">
       <div className="tabbar-tabs" ref={tabsRef}>
@@ -88,10 +126,41 @@ export function TabBar({ tabs, activeTabId, onSwitch, onClose, onNew, onReorder 
             </button>
           </div>
         ))}
+        {/* + 버튼 — 마지막 탭 바로 옆 */}
+        <button
+          ref={newBtnRef}
+          className={`tabbar-new ${menuPos ? "open" : ""}`}
+          onClick={toggleMenu}
+          title={t("tab.newTab")}
+          aria-haspopup="menu"
+          aria-expanded={menuPos ? true : false}
+        >
+          +
+        </button>
       </div>
-      <button className="tabbar-new" onClick={onNew} title={t("tab.newTab")}>
-        +
-      </button>
+
+      {menuPos && (
+        <div
+          className="tabbar-new-menu"
+          style={{ position: "fixed", left: menuPos.x, top: menuPos.y }}
+          onClick={(e) => e.stopPropagation()}
+          role="menu"
+        >
+          {NEW_FILE_TYPES.map((ft) => (
+            <button
+              key={ft.type}
+              className="tabbar-new-menu-item"
+              role="menuitem"
+              onClick={() => {
+                onNew(ft.type);
+                setMenuPos(null);
+              }}
+            >
+              {ft.label}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

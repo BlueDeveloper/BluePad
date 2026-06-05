@@ -73,7 +73,7 @@ export const ja = {
 
   // Tab Bar
   "tab.close": "閉じる",
-  "tab.newTab": "新しいタブ (Ctrl+N)",
+  "tab.newTab": "新しいタブ (Ctrl+Shift+N) · クリックで形式選択",
 
   // Status Bar
   "status.newFile": "新規ファイル",
