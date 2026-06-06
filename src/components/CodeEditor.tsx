@@ -1,5 +1,5 @@
 import { useRef, useEffect, forwardRef, useImperativeHandle } from "react";
-import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter } from "@codemirror/view";
+import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter, drawSelection, rectangularSelection, crosshairCursor } from "@codemirror/view";
 import { EditorState } from "@codemirror/state";
 import { defaultKeymap, indentWithTab, history, historyKeymap } from "@codemirror/commands";
 import { syntaxHighlighting, bracketMatching, foldGutter, foldKeymap } from "@codemirror/language";
@@ -191,6 +191,12 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(({ conte
         lineNumbers(),
         highlightActiveLine(),
         highlightActiveLineGutter(),
+        // 멀티커서/다중 선택: Alt+클릭=커서 추가, Ctrl+D=다음 동일 단어 선택(searchKeymap),
+        // Ctrl+Alt+↑/↓=위·아래 줄 커서 추가(defaultKeymap), Alt+드래그=열(블록) 선택.
+        EditorState.allowMultipleSelections.of(true),
+        drawSelection(),
+        rectangularSelection(),
+        crosshairCursor(),
         bracketMatching(),
         foldGutter(),
         highlightSelectionMatches(),
