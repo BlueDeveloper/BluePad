@@ -43,6 +43,7 @@ export const en = {
   "toast.copyFailed": "Nothing to copy",
   "menu.feedback": "Send Feedback",
   "menu.sourceMode": "Source Mode",
+  "menu.htmlPreview": "HTML Preview",
   "menu.outlineSidebar": "Outline Sidebar",
   "menu.fileTree": "File Tree",
   "menu.focusMode": "Focus Mode",
@@ -117,6 +118,9 @@ export const en = {
 
   // Tooltips
   "tooltip.sourceMode": "Source Mode (Ctrl+/)",
+  "tooltip.htmlPreview": "HTML Preview ↔ Code (Ctrl+Shift+P)",
+  "htmlPreview.label": "HTML Preview (sandbox · scripts disabled)",
+  "htmlPreview.openInBrowser": "Open in default browser",
   "tooltip.fileTree": "File Tree",
   "tooltip.outlineSidebar": "Outline Sidebar (Ctrl+Shift+L)",
   "tooltip.focusMode": "Focus Mode (F11)",

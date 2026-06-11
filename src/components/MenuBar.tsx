@@ -24,6 +24,8 @@ interface MenuBarProps {
   onFormat: () => void;
   onSetWordTarget: () => void;
   onToggleSource: () => void;
+  htmlPreview: boolean;
+  onToggleHtmlPreview: () => void;
   onToggleSidebar: () => void;
   onToggleFocus: () => void;
   onToggleFileTree: () => void;
@@ -85,6 +87,8 @@ export function MenuBar({
   onFormat,
   onSetWordTarget,
   onToggleSource,
+  htmlPreview,
+  onToggleHtmlPreview,
   onToggleSidebar,
   onToggleFocus,
   onToggleFileTree,
@@ -166,6 +170,9 @@ export function MenuBar({
       label: t("menu.view"),
       items: [
         { label: t("menu.sourceMode"), shortcut: "Ctrl+/", action: onToggleSource, checked: sourceMode },
+        ...(fileType === "html" ? [
+          { label: t("menu.htmlPreview"), shortcut: "Ctrl+Shift+P", action: onToggleHtmlPreview, checked: htmlPreview },
+        ] as MenuItem[] : []),
         { label: t("menu.outlineSidebar"), shortcut: "Ctrl+Shift+L", action: onToggleSidebar, checked: sidebarVisible },
         { label: t("menu.fileTree"), action: onToggleFileTree, checked: fileTreeVisible },
         { label: t("menu.focusMode"), shortcut: "F11", action: proAction(onToggleFocus), checked: focusMode, pro: !isPro },
@@ -213,6 +220,7 @@ export function MenuBar({
       else if (e.ctrlKey && e.shiftKey && e.key === "F") { e.preventDefault(); onFormat(); }
       else if (e.ctrlKey && e.shiftKey && e.key === "C") { e.preventDefault(); onCopyPlainText(); }
       else if (e.ctrlKey && e.shiftKey && e.key === "W") { e.preventDefault(); onToggleWritingMode(); }
+      else if (e.ctrlKey && e.shiftKey && (e.key === "P" || e.key === "p")) { e.preventDefault(); onToggleHtmlPreview(); }
       else if (e.ctrlKey && e.key === "s") { e.preventDefault(); onSave(); }
       else if (e.ctrlKey && e.key === "/") { e.preventDefault(); onToggleSource(); }
       else if (e.ctrlKey && e.shiftKey && e.key === "L") { e.preventDefault(); onToggleSidebar(); }
@@ -220,7 +228,7 @@ export function MenuBar({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onNew, onOpen, onSave, onSaveAs, onFormat, onCopyPlainText, onToggleSource, onToggleSidebar, onToggleFocus, onToggleWritingMode]);
+  }, [onNew, onOpen, onSave, onSaveAs, onFormat, onCopyPlainText, onToggleSource, onToggleHtmlPreview, onToggleSidebar, onToggleFocus, onToggleWritingMode]);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -280,6 +288,15 @@ export function MenuBar({
         >
           {"</>"}
         </button>
+        {fileType === "html" && (
+          <button
+            className={`toggle-btn ${htmlPreview ? "active" : ""}`}
+            onClick={onToggleHtmlPreview}
+            title={t("tooltip.htmlPreview")}
+          >
+            &#128065;
+          </button>
+        )}
         <button
           className={`toggle-btn ${fileTreeVisible ? "active" : ""}`}
           onClick={onToggleFileTree}

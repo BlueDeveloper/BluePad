@@ -43,6 +43,7 @@ export const ko = {
   "toast.copyFailed": "복사할 내용이 없습니다",
   "menu.feedback": "피드백 보내기",
   "menu.sourceMode": "소스 모드",
+  "menu.htmlPreview": "HTML 미리보기",
   "menu.outlineSidebar": "개요 사이드바",
   "menu.fileTree": "파일 트리",
   "menu.focusMode": "집중 모드",
@@ -117,6 +118,9 @@ export const ko = {
 
   // Tooltips
   "tooltip.sourceMode": "소스 모드 (Ctrl+/)",
+  "tooltip.htmlPreview": "HTML 미리보기 ↔ 코드 (Ctrl+Shift+P)",
+  "htmlPreview.label": "HTML 미리보기 (sandbox · 스크립트 비실행)",
+  "htmlPreview.openInBrowser": "기본 브라우저로 열기",
   "tooltip.fileTree": "파일 트리",
   "tooltip.outlineSidebar": "개요 사이드바 (Ctrl+Shift+L)",
   "tooltip.focusMode": "집중 모드 (F11)",

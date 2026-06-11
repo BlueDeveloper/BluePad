@@ -5,6 +5,7 @@ import { Toolbar } from "./components/Toolbar";
 import { Editor } from "./components/Editor";
 import { SourceEditor } from "./components/SourceEditor";
 import { CodeEditor, formatCode, type CodeEditorHandle } from "./components/CodeEditor";
+import { HtmlPreview } from "./components/HtmlPreview";
 import { Sidebar } from "./components/Sidebar";
 import { FileTree } from "./components/FileTree";
 import { StatusBar } from "./components/StatusBar";
@@ -37,6 +38,7 @@ const LANG_KEY = "bluepad_lang";
 const WORD_TARGET_KEY = "bluepad_word_target";
 const LAST_VERSION_KEY = "bluepad_last_version";
 const SOURCE_MODE_KEY = "bluepad_source_mode";
+const HTML_PREVIEW_KEY = "bluepad_html_preview";
 const SIDEBAR_KEY = "bluepad_sidebar";
 const FILETREE_KEY = "bluepad_filetree";
 const AUTOSAVE_KEY = "bluepad_autosave";
@@ -57,6 +59,10 @@ function App() {
   const [wordCount, setWordCount] = useState({ chars: 0, words: 0, lines: 0 });
   const [sourceMode, setSourceMode] = useState(() => {
     try { return localStorage.getItem(SOURCE_MODE_KEY) === "1"; } catch { return false; }
+  });
+  // HTML 파일 미리보기(렌더) 모드. 기본 false = 코드로 열림. HTML 탭에서만 의미 있음.
+  const [htmlPreview, setHtmlPreview] = useState(() => {
+    try { return localStorage.getItem(HTML_PREVIEW_KEY) === "1"; } catch { return false; }
   });
   const [sidebarVisible, setSidebarVisible] = useState(() => {
     try { return localStorage.getItem(SIDEBAR_KEY) === "1"; } catch { return false; }
@@ -154,6 +160,9 @@ function App() {
   useEffect(() => {
     try { localStorage.setItem(SOURCE_MODE_KEY, sourceMode ? "1" : "0"); } catch {}
   }, [sourceMode]);
+  useEffect(() => {
+    try { localStorage.setItem(HTML_PREVIEW_KEY, htmlPreview ? "1" : "0"); } catch {}
+  }, [htmlPreview]);
   useEffect(() => {
     try { localStorage.setItem(SIDEBAR_KEY, sidebarVisible ? "1" : "0"); } catch {}
   }, [sidebarVisible]);
@@ -529,6 +538,15 @@ ${editorEl.innerHTML}
     setWritingMode((v) => !v);
   }, [license.isPro]);
 
+  // HTML 미리보기(렌더) ↔ 코드 토글. HTML 파일에서만 의미 있음.
+  const handleToggleHtmlPreview = useCallback(() => {
+    if (fileManager.activeTab.fileType !== "html") {
+      showToast("미리보기는 HTML 파일에서만 동작합니다");
+      return;
+    }
+    setHtmlPreview((v) => !v);
+  }, [fileManager.activeTab.fileType, showToast]);
+
   const handleCopyPlainText = useCallback(async () => {
     // markdown 외 파일에서도 동작하도록 가드 완화 — 텍스트/JSON/YAML/코드 모두 raw 클립보드 복사
     const ft = fileManager.activeTab.fileType;
@@ -762,6 +780,8 @@ ${editorEl.innerHTML}
             onFormat={handleFormat}
             onSetWordTarget={handleSetWordTarget}
             onToggleSource={handleToggleSourceGuarded}
+            htmlPreview={htmlPreview}
+            onToggleHtmlPreview={handleToggleHtmlPreview}
             onToggleSidebar={() => setSidebarVisible((s) => !s)}
             onToggleFocus={handleToggleFocus}
             onToggleFileTree={() => setFileTreeVisible((s) => !s)}
@@ -809,7 +829,9 @@ ${editorEl.innerHTML}
               replaceMode={findReplaceMode}
               onClose={() => setFindVisible(false)}
             />
-            {["json", "yaml", "javascript", "html", "css"].includes(fileManager.activeTab.fileType) ? (
+            {fileManager.activeTab.fileType === "html" && htmlPreview ? (
+              <HtmlPreview key={fileManager.activeTabId} content={fileManager.content} />
+            ) : ["json", "yaml", "javascript", "html", "css"].includes(fileManager.activeTab.fileType) ? (
               <CodeEditor
                 key={fileManager.activeTabId}
                 ref={codeEditorRef}

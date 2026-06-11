@@ -43,6 +43,7 @@ export const ja = {
   "toast.copyFailed": "コピーする内容がありません",
   "menu.feedback": "フィードバックを送信",
   "menu.sourceMode": "ソースモード",
+  "menu.htmlPreview": "HTMLプレビュー",
   "menu.outlineSidebar": "アウトライン",
   "menu.fileTree": "ファイルツリー",
   "menu.focusMode": "集中モード",
@@ -117,6 +118,9 @@ export const ja = {
 
   // Tooltips
   "tooltip.sourceMode": "ソースモード (Ctrl+/)",
+  "tooltip.htmlPreview": "HTMLプレビュー ↔ コード (Ctrl+Shift+P)",
+  "htmlPreview.label": "HTMLプレビュー (sandbox · スクリプト無効)",
+  "htmlPreview.openInBrowser": "既定のブラウザで開く",
   "tooltip.fileTree": "ファイルツリー",
   "tooltip.outlineSidebar": "アウトライン (Ctrl+Shift+L)",
   "tooltip.focusMode": "集中モード (F11)",
