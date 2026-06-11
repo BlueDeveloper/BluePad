@@ -204,8 +204,11 @@ git push 2>&1 | tail -1
 # ── 8. 검증 ──
 echo ""
 echo "✅ [7/8] 검증..."
-HTTP_CODE=$(curl -sI "${WORKER_BASE}/download/${R2_MSI_NAME}" | head -1 | awk '{print $2}')
-UPDATE_VER=$(curl -s "${WORKER_BASE}/update.json" | grep -o '"version":"[^"]*"' | grep -o '[0-9][0-9.]*')
+# curl -sI | head 는 head가 파이프를 먼저 닫으며 curl이 SIGPIPE로 종료 → set -e가 스크립트를
+# 즉사시켜 이후 GitHub Release/IndexNow가 누락됨(v1.11.2~1.15.2 만성 이슈). -o /dev/null -w 로 대체하고
+# grep 실패도 || true 로 가드해 검증 단계가 절대 배포를 중단시키지 않게 한다.
+HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' "${WORKER_BASE}/download/${R2_MSI_NAME}" || true)
+UPDATE_VER=$(curl -s "${WORKER_BASE}/update.json" | grep -o '"version":"[^"]*"' | grep -o '[0-9][0-9.]*' || true)
 
 echo "   다운로드 HTTP: ${HTTP_CODE}"
 echo "   update.json 버전: ${UPDATE_VER}"
