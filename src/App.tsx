@@ -661,21 +661,10 @@ ${editorEl.innerHTML}
     return () => window.removeEventListener("focus", handler);
   }, [fileManager]);
 
-  // 드래그앤드롭: Windows 탐색기에서 BluePad 창으로 파일 드래그 시 새 탭으로 열림.
-  // tauri.conf.json의 dragDropEnabled: true 필요.
-  useEffect(() => {
-    let unlisten: (() => void) | undefined;
-    import("@tauri-apps/api/webviewWindow").then(({ getCurrentWebviewWindow }) => {
-      getCurrentWebviewWindow().onDragDropEvent((event) => {
-        if (event.payload.type === "drop") {
-          for (const p of event.payload.paths) {
-            fileManager.loadFileFromPath(p).catch(() => {});
-          }
-        }
-      }).then((un) => { unlisten = un; });
-    });
-    return () => { if (unlisten) unlisten(); };
-  }, [fileManager]);
+  // 참고: 예전엔 tauri.conf.json의 dragDropEnabled:true + onDragDropEvent로
+  // "탐색기에서 파일 드래그 → 새 탭 열기"를 지원했으나, 이 옵션이 Windows WebView2에서
+  // 일반 텍스트 에디터(textarea/CodeMirror)의 드래그 선택(하이라이트)을 방해해
+  // dragDropEnabled:false로 전환하며 제거했다. 파일 열기는 File>Open·파일트리·CLI로 대체.
 
   const changeFontSize = useCallback((delta: number) => {
     setFontSize((s) => Math.max(10, Math.min(28, s + delta)));
