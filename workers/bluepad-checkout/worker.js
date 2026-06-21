@@ -219,6 +219,11 @@ body{font-family:-apple-system,system-ui,sans-serif;background:#09090b;color:#fa
 .secure{margin-top:8px;font-size:11px;color:#3f3f46}
 .legal{margin-top:16px;font-size:11px;color:#3f3f46;line-height:1.6}
 .legal a{color:#52525b}
+@media (max-width:480px){
+  body{padding:16px 12px}
+  .card{padding:32px 22px;border-radius:14px}
+  .features{margin-left:2px}
+}
 </style>
 </head>
 <body>
