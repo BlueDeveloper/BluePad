@@ -264,5 +264,20 @@
     })();
   </script>
 
+  <!-- GA4 download conversion tracking -->
+  <script>
+  (function(){
+    document.addEventListener('click', function(e){
+      var a = e.target && e.target.closest && e.target.closest('a[href*="bluepad-download.blueehdwp.workers.dev/download/"]');
+      if(!a) return;
+      var url = a.href;
+      var file = url.split('/').pop().split('?')[0];
+      var os = a.getAttribute('data-os') || '';
+      if(typeof gtag === 'function'){
+        gtag('event','file_download',{file_name:file, link_url:url, os:os});
+      }
+    });
+  })();
+  </script>
 </body>
 </html>
