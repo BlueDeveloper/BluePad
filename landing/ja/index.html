@@ -60,6 +60,40 @@
     "publisher": { "@type": "Organization", "name": "BRP (BlueRedPolarity)", "url": "https://bluepad.work" }
   }
   </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "inLanguage": "ja",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "BluePadは無料ですか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "はい。基本編集、マルチタブ、WYSIWYG・ソースモード、JSON・YAML編集、自動保存などの日常的な執筆機能は無料です。無制限タブ、全テーマ、集中モード、HTML・PDFエクスポートなどの高度な機能はPro（$10.99、買い切り・永久所有）で提供され、14日間の無料体験が可能です。" }
+      },
+      {
+        "@type": "Question",
+        "name": "BluePadとTyporaの違いは何ですか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "BluePadはElectronではなくTauri（Rust）ベースのため、インストール容量が約4〜7MBと軽く、起動も高速です。WYSIWYG編集を無料で提供し、Proもサブスクではなく買い切りで永久に使えます。" }
+      },
+      {
+        "@type": "Question",
+        "name": "Windows以外にLinuxも対応していますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "はい。Windows 10/11向けMSIと、Linux向けAppImage・deb・rpmを提供しています。（現在macOSは非対応です。）" }
+      },
+      {
+        "@type": "Question",
+        "name": "インストール時にSmartScreenの警告が出ますが安全ですか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "コード署名証明書がまだ適用されていないため、Windowsで警告が表示される場合があります。「詳細情報 → 実行」でインストールでき、BluePadはオープンソースベースでマルウェアを含みません。" }
+      },
+      {
+        "@type": "Question",
+        "name": "Proライセンスはサブスクリプションですか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "いいえ。Proは$10.99の買い切りで、永久アップデートが含まれます。月額・年額料金はありません。" }
+      }
+    ]
+  }
+  </script>
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
   <meta name="naver-site-verification" content="9b479417f022befdffd0b837c015469b604758d3" />
@@ -592,6 +626,36 @@
           </ul>
           <a href="https://bluepad.work/buy" class="price-btn price-btn-fill">Proを購入</a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq" style="padding:80px 0;border-top:1px solid var(--c-border-subtle)">
+    <div class="wrap" style="max-width:760px">
+      <div class="sec-label" style="text-align:center">FAQ</div>
+      <h2 class="sec-title" style="text-align:center">よくある質問</h2>
+      <div style="margin-top:40px;display:flex;flex-direction:column;gap:12px">
+        <details style="border:1px solid var(--c-border);border-radius:10px;padding:18px 22px;background:var(--c-bg-raised)">
+          <summary style="cursor:pointer;font-weight:620;font-size:15.5px;color:var(--c-text)">BluePadは無料ですか？</summary>
+          <p style="margin-top:12px;color:var(--c-text-2);font-size:14.5px;line-height:1.75">はい。基本編集、マルチタブ、WYSIWYG・ソースモード、JSON・YAML編集、自動保存などの日常的な執筆機能は無料です。無制限タブ、全テーマ、集中モード、HTML・PDFエクスポートなどの高度な機能はPro（$10.99、買い切り・永久所有）で提供され、14日間の無料体験が可能です。</p>
+        </details>
+        <details style="border:1px solid var(--c-border);border-radius:10px;padding:18px 22px;background:var(--c-bg-raised)">
+          <summary style="cursor:pointer;font-weight:620;font-size:15.5px;color:var(--c-text)">BluePadとTyporaの違いは何ですか？</summary>
+          <p style="margin-top:12px;color:var(--c-text-2);font-size:14.5px;line-height:1.75">BluePadはElectronではなくTauri（Rust）ベースのため、インストール容量が約4〜7MBと軽く、起動も高速です。WYSIWYG編集を無料で提供し、Proもサブスクではなく買い切りで永久に使えます。</p>
+        </details>
+        <details style="border:1px solid var(--c-border);border-radius:10px;padding:18px 22px;background:var(--c-bg-raised)">
+          <summary style="cursor:pointer;font-weight:620;font-size:15.5px;color:var(--c-text)">Windows以外にLinuxも対応していますか？</summary>
+          <p style="margin-top:12px;color:var(--c-text-2);font-size:14.5px;line-height:1.75">はい。Windows 10/11向けMSIと、Linux向けAppImage・deb・rpmを提供しています。（現在macOSは非対応です。）</p>
+        </details>
+        <details style="border:1px solid var(--c-border);border-radius:10px;padding:18px 22px;background:var(--c-bg-raised)">
+          <summary style="cursor:pointer;font-weight:620;font-size:15.5px;color:var(--c-text)">インストール時にSmartScreenの警告が出ますが安全ですか？</summary>
+          <p style="margin-top:12px;color:var(--c-text-2);font-size:14.5px;line-height:1.75">コード署名証明書がまだ適用されていないため、Windowsで警告が表示される場合があります。「詳細情報 → 実行」でインストールでき、BluePadはオープンソースベースでマルウェアを含みません。</p>
+        </details>
+        <details style="border:1px solid var(--c-border);border-radius:10px;padding:18px 22px;background:var(--c-bg-raised)">
+          <summary style="cursor:pointer;font-weight:620;font-size:15.5px;color:var(--c-text)">Proライセンスはサブスクリプションですか？</summary>
+          <p style="margin-top:12px;color:var(--c-text-2);font-size:14.5px;line-height:1.75">いいえ。Proは$10.99の買い切りで、永久アップデートが含まれます。月額・年額料金はありません。</p>
+        </details>
       </div>
     </div>
   </section>

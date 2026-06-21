@@ -1,0 +1,40 @@
+# BluePad
+
+> BluePad is a fast, distraction-free Markdown editor for Windows and Linux, built with Tauri (Rust + WebView) instead of Electron. It offers real-time WYSIWYG editing, multiple themes, a focus mode, multi-tab editing, Mermaid/KaTeX rendering, and HTML/PDF export. It is positioned as a lightweight, one-time-purchase alternative to Typora.
+
+Key facts:
+- Platforms: Windows 10/11 (MSI), Linux (AppImage/deb/rpm)
+- Pricing: Free tier + Pro one-time purchase ($10.99 USD, lifetime license, no subscription). 14-day Pro trial, no signup required.
+- Built with Tauri (native, ~4–7 MB), not Electron
+- Vendor: BRP (BlueRedPolarity), Korea
+- Website: https://bluepad.work
+
+## Product
+
+- [Home (English)](https://bluepad.work/en/): Product overview, features, pricing
+- [Home (Korean)](https://bluepad.work/ko/): 제품 개요·기능·가격
+- [Home (Japanese)](https://bluepad.work/ja/): 製品概要・機能・価格
+- [Download](https://bluepad.work/en/download/): Windows and Linux downloads
+- [Changelog](https://bluepad.work/changelog/): Release notes and version history
+
+## Blog (SEO / guides)
+
+- [Best Markdown Editors 2026](https://bluepad.work/en/blog/best-markdown-editors-2026): Comparison of markdown editors
+- [Typora Free Alternative](https://bluepad.work/en/blog/typora-free-alternative): Free WYSIWYG markdown editor for Windows
+- [Markdown Editor for Developers](https://bluepad.work/en/blog/markdown-editor-for-developers): Markdown workflow for developers
+- [Focus Mode & Distraction-Free Writing](https://bluepad.work/en/blog/focus-mode-distraction-free-writing): Focus mode guide
+- [Writing Mode for Writers](https://bluepad.work/en/blog/writing-mode-for-writers): Word goals, typewriter mode, sentence analysis
+- [Lightweight Note App for Windows](https://bluepad.work/en/blog/lightweight-note-app-windows): Lightweight note-taking
+- [Markdown Writing Tips](https://bluepad.work/en/blog/markdown-writing-tips): Markdown syntax and tips
+
+## Legal
+
+- [Privacy Policy](https://bluepad.work/legal/privacy)
+- [EULA](https://bluepad.work/legal/eula)
+- [Open Source Notices](https://bluepad.work/legal/opensource)
+- [Refund Policy](https://bluepad.work/legal/refund)
+
+## Contact
+
+- Email: blueehdwp@gmail.com
+- Support: https://bluepad.work/support/

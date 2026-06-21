@@ -60,6 +60,40 @@
     "publisher": { "@type": "Organization", "name": "BRP (BlueRedPolarity)", "url": "https://bluepad.work" }
   }
   </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "inLanguage": "en",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is BluePad free?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Everyday writing features — core editing, multi-tab, WYSIWYG and source modes, JSON/YAML editing, and auto-save — are free. Advanced features such as unlimited tabs, all themes, focus mode, and HTML/PDF export are part of Pro ($10.99, one-time purchase, lifetime ownership), with a free 14-day trial." }
+      },
+      {
+        "@type": "Question",
+        "name": "How is BluePad different from Typora?",
+        "acceptedAnswer": { "@type": "Answer", "text": "BluePad is built with Tauri (Rust) instead of Electron, so it installs at roughly 4–7 MB and launches fast. WYSIWYG editing is free, and Pro is a one-time purchase you own for life — not a subscription." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does BluePad support Linux as well as Windows?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. We provide an MSI for Windows 10/11 and AppImage, deb, and rpm packages for Linux. (macOS is not supported yet.)" }
+      },
+      {
+        "@type": "Question",
+        "name": "I see a SmartScreen warning on install — is it safe?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A code-signing certificate is not applied yet, so Windows may show a warning. You can install via 'More info → Run anyway'. BluePad is open-source-based and contains no malware." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the Pro license a subscription?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. Pro is a one-time $10.99 purchase that includes lifetime updates. There is no monthly or yearly fee." }
+      }
+    ]
+  }
+  </script>
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
   <meta name="naver-site-verification" content="9b479417f022befdffd0b837c015469b604758d3" />
@@ -592,6 +626,36 @@
           </ul>
           <a href="https://bluepad.work/buy" class="price-btn price-btn-fill">Buy Pro</a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq" style="padding:80px 0;border-top:1px solid var(--c-border-subtle)">
+    <div class="wrap" style="max-width:760px">
+      <div class="sec-label" style="text-align:center">FAQ</div>
+      <h2 class="sec-title" style="text-align:center">Frequently asked questions</h2>
+      <div style="margin-top:40px;display:flex;flex-direction:column;gap:12px">
+        <details style="border:1px solid var(--c-border);border-radius:10px;padding:18px 22px;background:var(--c-bg-raised)">
+          <summary style="cursor:pointer;font-weight:620;font-size:15.5px;color:var(--c-text)">Is BluePad free?</summary>
+          <p style="margin-top:12px;color:var(--c-text-2);font-size:14.5px;line-height:1.75">Yes. Everyday writing features — core editing, multi-tab, WYSIWYG and source modes, JSON/YAML editing, and auto-save — are free. Advanced features such as unlimited tabs, all themes, focus mode, and HTML/PDF export are part of Pro ($10.99, one-time purchase, lifetime ownership), with a free 14-day trial.</p>
+        </details>
+        <details style="border:1px solid var(--c-border);border-radius:10px;padding:18px 22px;background:var(--c-bg-raised)">
+          <summary style="cursor:pointer;font-weight:620;font-size:15.5px;color:var(--c-text)">How is BluePad different from Typora?</summary>
+          <p style="margin-top:12px;color:var(--c-text-2);font-size:14.5px;line-height:1.75">BluePad is built with Tauri (Rust) instead of Electron, so it installs at roughly 4–7 MB and launches fast. WYSIWYG editing is free, and Pro is a one-time purchase you own for life — not a subscription.</p>
+        </details>
+        <details style="border:1px solid var(--c-border);border-radius:10px;padding:18px 22px;background:var(--c-bg-raised)">
+          <summary style="cursor:pointer;font-weight:620;font-size:15.5px;color:var(--c-text)">Does BluePad support Linux as well as Windows?</summary>
+          <p style="margin-top:12px;color:var(--c-text-2);font-size:14.5px;line-height:1.75">Yes. We provide an MSI for Windows 10/11 and AppImage, deb, and rpm packages for Linux. (macOS is not supported yet.)</p>
+        </details>
+        <details style="border:1px solid var(--c-border);border-radius:10px;padding:18px 22px;background:var(--c-bg-raised)">
+          <summary style="cursor:pointer;font-weight:620;font-size:15.5px;color:var(--c-text)">I see a SmartScreen warning on install — is it safe?</summary>
+          <p style="margin-top:12px;color:var(--c-text-2);font-size:14.5px;line-height:1.75">A code-signing certificate is not applied yet, so Windows may show a warning. You can install via "More info → Run anyway". BluePad is open-source-based and contains no malware.</p>
+        </details>
+        <details style="border:1px solid var(--c-border);border-radius:10px;padding:18px 22px;background:var(--c-bg-raised)">
+          <summary style="cursor:pointer;font-weight:620;font-size:15.5px;color:var(--c-text)">Is the Pro license a subscription?</summary>
+          <p style="margin-top:12px;color:var(--c-text-2);font-size:14.5px;line-height:1.75">No. Pro is a one-time $10.99 purchase that includes lifetime updates. There is no monthly or yearly fee.</p>
+        </details>
       </div>
     </div>
   </section>

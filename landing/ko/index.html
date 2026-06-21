@@ -60,6 +60,40 @@
     "publisher": { "@type": "Organization", "name": "BRP (BlueRedPolarity)", "url": "https://bluepad.work" }
   }
   </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "inLanguage": "ko",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "BluePad는 무료인가요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "네. 기본 편집, 멀티탭, 위지윅·소스 모드, JSON·YAML 편집, 자동 저장 등 일상 글쓰기 기능은 무료로 제공합니다. 무제한 탭, 전체 테마, 집중 모드, HTML·PDF 내보내기 같은 고급 기능은 Pro($10.99, 일회성 결제·평생 소유)에서 제공하며 14일 무료 체험이 가능합니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "BluePad와 Typora의 차이는 무엇인가요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "BluePad는 Electron이 아닌 Tauri(Rust) 기반이라 설치 용량이 약 4~7MB로 가볍고 실행이 빠릅니다. 위지윅 편집을 무료로 제공하며, Pro도 구독이 아닌 일회성 결제로 평생 사용합니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "Windows 외에 Linux도 지원하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "네. Windows 10·11용 MSI와 Linux용 AppImage·deb·rpm을 제공합니다. (현재 macOS는 미지원입니다.)" }
+      },
+      {
+        "@type": "Question",
+        "name": "설치 시 SmartScreen 경고가 나오는데 안전한가요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "코드 서명 인증서가 아직 적용되지 않아 Windows에서 경고가 표시될 수 있습니다. '추가 정보 → 실행'으로 설치할 수 있으며, BluePad는 오픈소스 기반으로 악성코드를 포함하지 않습니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "Pro 라이선스는 구독인가요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "아니요. Pro는 $10.99 일회성 결제이며 평생 업데이트가 포함됩니다. 월·연 구독료가 없습니다." }
+      }
+    ]
+  }
+  </script>
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
   <meta name="naver-site-verification" content="9b479417f022befdffd0b837c015469b604758d3" />
@@ -591,6 +625,36 @@
           </ul>
           <a href="https://bluepad.work/buy" class="price-btn price-btn-fill">Pro 구매</a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq" style="padding:80px 0;border-top:1px solid var(--c-border-subtle)">
+    <div class="wrap" style="max-width:760px">
+      <div class="sec-label" style="text-align:center">FAQ</div>
+      <h2 class="sec-title" style="text-align:center">자주 묻는 질문</h2>
+      <div style="margin-top:40px;display:flex;flex-direction:column;gap:12px">
+        <details style="border:1px solid var(--c-border);border-radius:10px;padding:18px 22px;background:var(--c-bg-raised)">
+          <summary style="cursor:pointer;font-weight:620;font-size:15.5px;color:var(--c-text)">BluePad는 무료인가요?</summary>
+          <p style="margin-top:12px;color:var(--c-text-2);font-size:14.5px;line-height:1.75">네. 기본 편집, 멀티탭, 위지윅·소스 모드, JSON·YAML 편집, 자동 저장 등 일상 글쓰기 기능은 무료로 제공합니다. 무제한 탭, 전체 테마, 집중 모드, HTML·PDF 내보내기 같은 고급 기능은 Pro($10.99, 일회성 결제·평생 소유)에서 제공하며 14일 무료 체험이 가능합니다.</p>
+        </details>
+        <details style="border:1px solid var(--c-border);border-radius:10px;padding:18px 22px;background:var(--c-bg-raised)">
+          <summary style="cursor:pointer;font-weight:620;font-size:15.5px;color:var(--c-text)">BluePad와 Typora의 차이는 무엇인가요?</summary>
+          <p style="margin-top:12px;color:var(--c-text-2);font-size:14.5px;line-height:1.75">BluePad는 Electron이 아닌 Tauri(Rust) 기반이라 설치 용량이 약 4~7MB로 가볍고 실행이 빠릅니다. 위지윅 편집을 무료로 제공하며, Pro도 구독이 아닌 일회성 결제로 평생 사용합니다.</p>
+        </details>
+        <details style="border:1px solid var(--c-border);border-radius:10px;padding:18px 22px;background:var(--c-bg-raised)">
+          <summary style="cursor:pointer;font-weight:620;font-size:15.5px;color:var(--c-text)">Windows 외에 Linux도 지원하나요?</summary>
+          <p style="margin-top:12px;color:var(--c-text-2);font-size:14.5px;line-height:1.75">네. Windows 10·11용 MSI와 Linux용 AppImage·deb·rpm을 제공합니다. (현재 macOS는 미지원입니다.)</p>
+        </details>
+        <details style="border:1px solid var(--c-border);border-radius:10px;padding:18px 22px;background:var(--c-bg-raised)">
+          <summary style="cursor:pointer;font-weight:620;font-size:15.5px;color:var(--c-text)">설치 시 SmartScreen 경고가 나오는데 안전한가요?</summary>
+          <p style="margin-top:12px;color:var(--c-text-2);font-size:14.5px;line-height:1.75">코드 서명 인증서가 아직 적용되지 않아 Windows에서 경고가 표시될 수 있습니다. "추가 정보 → 실행"으로 설치할 수 있으며, BluePad는 오픈소스 기반으로 악성코드를 포함하지 않습니다.</p>
+        </details>
+        <details style="border:1px solid var(--c-border);border-radius:10px;padding:18px 22px;background:var(--c-bg-raised)">
+          <summary style="cursor:pointer;font-weight:620;font-size:15.5px;color:var(--c-text)">Pro 라이선스는 구독인가요?</summary>
+          <p style="margin-top:12px;color:var(--c-text-2);font-size:14.5px;line-height:1.75">아니요. Pro는 $10.99 일회성 결제이며 평생 업데이트가 포함됩니다. 월·연 구독료가 없습니다.</p>
+        </details>
       </div>
     </div>
   </section>
