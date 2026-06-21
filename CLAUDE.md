@@ -90,6 +90,7 @@ prompt: 트리거 메모리 [[seo-cron]] (`feedback_seo_mail_check.md`) 의 prom
 
 ### 분석/SEO
 - Microsoft Clarity ID: `wkokfmayny`
+- **Google Analytics 4 측정 ID: `G-3PRY6YKV05`** (속성 `bluepad.work`, 웹 스트림 `15125433851`, 계정 BRP_archive, 시간대 KST·통화 USD — 2026-06-21 도입, 전 랜딩 페이지 `<head>` 삽입, admin 제외). GA4 API는 서비스계정 불가 → 본인 Gmail OAuth Desktop+ADC만 가능. 상세: 글로벌 메모리 [[ga4-clarity-api]]
 - Naver 인증 메타: `9b479417f022befdffd0b837c015469b604758d3`
 - Google Search Console: **도메인 속성**(`sc-domain:bluepad.work`)으로 등록
 - sitemap: https://bluepad.work/sitemap.xml (42개 URL — 2026-05-21 root `/` 제거)
