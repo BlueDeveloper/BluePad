@@ -4,3 +4,7 @@ src-tauri/target/
 .wrangler/
 linux-artifacts/
 .claude/
+
+# Python bytecode cache (analytics scripts)
+__pycache__/
+*.pyc
