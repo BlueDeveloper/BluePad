@@ -1,17 +1,11 @@
 User-agent: *
 Allow: /
 
-# 생성형 AI 검색 크롤러 명시 허용 (GEO — AI 답변 인용 후보 진입)
-User-agent: GPTBot
-Allow: /
-
+# AI 검색 인용 봇 — 허용 (실시간 인용·검색 노출 유도)
 User-agent: OAI-SearchBot
 Allow: /
 
 User-agent: ChatGPT-User
-Allow: /
-
-User-agent: ClaudeBot
 Allow: /
 
 User-agent: Claude-Web
@@ -20,7 +14,20 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
+# AI 학습 크롤러 — 차단 (콘텐츠 학습데이터 수집 거부; 인용엔 영향 없음)
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
 User-agent: Google-Extended
-Allow: /
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
 
 Sitemap: https://bluepad.work/sitemap.xml
