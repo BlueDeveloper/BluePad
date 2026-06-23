@@ -41,6 +41,14 @@ recurring: true
 prompt: 트리거 메모리 [[seo-cron]] (`feedback_seo_mail_check.md`) 의 prompt 본문 그대로
 ```
 
+### 3. 3시간 주기 신규 블로그 글 자동 푸시
+
+```
+cron: "41 */3 * * *"
+recurring: true
+prompt: 트리거 메모리 [[blog-autopush-cron]] (`feedback_blog_autopush_cron.md`) 의 prompt 본문 그대로
+```
+
 > ⚠ **session-only 한계**: `durable: true` 명시해도 디스크 미저장 → 본 세션 종료 시 cron 사라짐 → 다음 세션 시작 시 자동 재등록 필요. 본 트리거가 영구 자동화의 핵심.
 > ⚠ 7일 후 자동 만료. 매 세션 점검 시 만료 직전이면 새로 등록.
 
