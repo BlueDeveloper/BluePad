@@ -52,6 +52,33 @@ export const EXT_BY_TYPE: Record<FileType, string> = {
   yaml: ".yaml",
 };
 
+// 저장 다이얼로그 필터 정의 (type 매핑 포함)
+const SAVE_FILTER_DEFS: { type: FileType; name: string; extensions: string[] }[] = [
+  { type: "markdown", name: "Markdown", extensions: ["md"] },
+  { type: "json", name: "JSON", extensions: ["json"] },
+  { type: "yaml", name: "YAML", extensions: ["yaml", "yml"] },
+  { type: "javascript", name: "JavaScript/TypeScript", extensions: ["js", "ts"] },
+  { type: "html", name: "HTML", extensions: ["html"] },
+  { type: "css", name: "CSS", extensions: ["css"] },
+  { type: "text", name: "Text", extensions: ["txt"] },
+];
+
+// 현재 파일 타입의 필터를 맨 앞으로 정렬해 반환.
+// Tauri save 다이얼로그는 첫 필터를 기본 선택하므로, 새 파일이 만들어진 형식(예: .txt)으로 저장되게 한다.
+function saveFiltersFor(fileType: FileType) {
+  const ordered = [
+    ...SAVE_FILTER_DEFS.filter((f) => f.type === fileType),
+    ...SAVE_FILTER_DEFS.filter((f) => f.type !== fileType),
+  ];
+  return ordered.map(({ name, extensions }) => ({ name, extensions }));
+}
+
+// 저장 다이얼로그의 기본 파일명/경로 — 기존 경로가 있으면 그대로, 없으면 타입에 맞는 확장자를 붙인 이름.
+function saveDefaultPath(tab: Tab) {
+  if (tab.filePath) return tab.filePath;
+  return /\.[^./\\]+$/.test(tab.fileName) ? tab.fileName : `Untitled${EXT_BY_TYPE[tab.fileType]}`;
+}
+
 export interface Tab {
   id: string;
   filePath: string | null;
@@ -314,15 +341,8 @@ export function useFileManager() {
       updateTab(tab.id, { savedContent: tab.content, isModified: false, lastReadMtime: Date.now() });
     } else {
       const selected = await save({
-        filters: [
-          { name: "Markdown", extensions: ["md"] },
-          { name: "JSON", extensions: ["json"] },
-          { name: "YAML", extensions: ["yaml", "yml"] },
-          { name: "JavaScript/TypeScript", extensions: ["js", "ts"] },
-          { name: "HTML", extensions: ["html"] },
-          { name: "CSS", extensions: ["css"] },
-          { name: "Text", extensions: ["txt"] },
-        ],
+        defaultPath: saveDefaultPath(tab),
+        filters: saveFiltersFor(tab.fileType),
       });
       if (selected) {
         await writeTextFile(selected, tab.content);
@@ -343,15 +363,8 @@ export function useFileManager() {
     if (!tab) return;
 
     const selected = await save({
-      filters: [
-        { name: "Markdown", extensions: ["md"] },
-        { name: "JSON", extensions: ["json"] },
-        { name: "YAML", extensions: ["yaml", "yml"] },
-        { name: "JavaScript/TypeScript", extensions: ["js", "ts"] },
-        { name: "HTML", extensions: ["html"] },
-        { name: "CSS", extensions: ["css"] },
-        { name: "Text", extensions: ["txt"] },
-      ],
+      defaultPath: saveDefaultPath(tab),
+      filters: saveFiltersFor(tab.fileType),
     });
     if (selected) {
       await writeTextFile(selected, tab.content);
@@ -404,15 +417,8 @@ export function useFileManager() {
             updateTab(tab.id, { savedContent: tab.content, isModified: false, lastReadMtime: Date.now() });
           } else {
             const selected = await save({
-              filters: [
-                { name: "Markdown", extensions: ["md"] },
-                { name: "JSON", extensions: ["json"] },
-                { name: "YAML", extensions: ["yaml", "yml"] },
-                { name: "JavaScript/TypeScript", extensions: ["js", "ts"] },
-                { name: "HTML", extensions: ["html"] },
-                { name: "CSS", extensions: ["css"] },
-                { name: "Text", extensions: ["txt"] },
-              ],
+              defaultPath: saveDefaultPath(tab),
+              filters: saveFiltersFor(tab.fileType),
             });
             if (!selected) return; // 저장 취소 → 닫지 않음
             await writeTextFile(selected, tab.content);
