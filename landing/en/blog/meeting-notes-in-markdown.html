@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Take Meeting Notes in Markdown (A Simple System) | BluePad Blog</title>
+  <meta name="description" content="A repeatable system for taking meeting notes in Markdown — a clean template, fast shortcuts, and a way to turn discussion into action items you actually follow up on.">
+  <meta name="keywords" content="meeting notes in markdown, markdown meeting notes template, how to take meeting notes, markdown note-taking system, action items markdown">
+  <link rel="canonical" href="https://bluepad.work/en/blog/meeting-notes-in-markdown">
+  <link rel="alternate" hreflang="en" href="https://bluepad.work/en/blog/meeting-notes-in-markdown">
+  <link rel="alternate" hreflang="x-default" href="https://bluepad.work/en/blog/meeting-notes-in-markdown">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Take Meeting Notes in Markdown (A Simple System)">
+  <meta property="og:description" content="A reusable Markdown template and a few habits that turn messy meetings into clear notes and trackable action items.">
+  <meta property="og:url" content="https://bluepad.work/en/blog/meeting-notes-in-markdown">
+  <meta property="og:site_name" content="BluePad">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Take Meeting Notes in Markdown (A Simple System)">
+  <meta name="twitter:description" content="A clean Markdown template plus simple habits that turn messy meetings into clear, trackable notes.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Take Meeting Notes in Markdown (A Simple System)",
+    "datePublished": "2026-06-24",
+    "dateModified": "2026-06-24",
+    "author": { "@type": "Organization", "name": "BluePad Team" },
+    "publisher": { "@type": "Organization", "name": "BluePad" },
+    "description": "A reusable Markdown template and a few habits that turn messy meetings into clear notes and trackable action items.",
+    "mainEntityOfPage": "https://bluepad.work/en/blog/meeting-notes-in-markdown"
+  }
+  </script>
+
+
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wkokfmayny");</script>
+<!-- Google Analytics 4 (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3PRY6YKV05"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-3PRY6YKV05');</script>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<meta name="naver-site-verification" content="9b479417f022befdffd0b837c015469b604758d3" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --c-bg: #09090b;
+      --c-bg-raised: #111113;
+      --c-bg-card: #18181b;
+      --c-border: #27272a;
+      --c-border-subtle: #1c1c1f;
+      --c-text: #fafafa;
+      --c-text-2: #a1a1aa;
+      --c-text-3: #52525b;
+      --c-accent: #155dfc;
+      --c-accent-hover: #3b7dff;
+      --font: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { font-family: var(--font); background: var(--c-bg); color: var(--c-text); overflow-x: hidden; }
+    ::selection { background: rgba(21,93,252,0.3); color: #fff; }
+
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+
+    /* NAV */
+    .nav-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      background: rgba(9,9,11,0.75);
+      border-bottom: 1px solid var(--c-border-subtle);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--c-text);
+      font-weight: 720; font-size: 17px; letter-spacing: -0.03em;
+    }
+    .nav-mark {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: var(--c-accent); color: #fff;
+      display: grid; place-items: center;
+      font-size: 14px; font-weight: 800;
+    }
+    .nav-links { display: flex; align-items: center; gap: 6px; list-style: none; }
+    .nav-links a {
+      display: block; padding: 6px 14px; border-radius: 7px;
+      color: var(--c-text-2); text-decoration: none;
+      font-size: 13.5px; font-weight: 500;
+      transition: color .15s, background .15s;
+    }
+    .nav-links a:hover { color: var(--c-text); background: rgba(255,255,255,0.05); }
+    .nav-dl {
+      background: var(--c-accent) !important; color: #fff !important;
+      font-weight: 620 !important; transition: background .15s !important;
+    }
+    .nav-dl:hover { background: var(--c-accent-hover) !important; }
+    .nav-lang {
+      display: flex; gap: 2px; margin-left: 8px;
+      border: 1px solid var(--c-border); border-radius: 7px; overflow: hidden;
+    }
+    .nav-lang a {
+      padding: 5px 10px !important; border-radius: 0 !important;
+      font-size: 12px !important; font-weight: 600 !important; letter-spacing: 0.02em;
+    }
+    .nav-lang a.on { background: rgba(255,255,255,0.08) !important; color: #fff !important; }
+
+    /* FOOTER */
+    .foot { border-top: 1px solid var(--c-border-subtle); padding: 32px 0; }
+    .foot-inner { display: flex; align-items: center; justify-content: space-between; }
+    .foot-copy { font-size: 13px; color: var(--c-text-3); }
+    .foot-copy strong { color: var(--c-text-2); font-weight: 600; }
+    .foot-links { display: flex; gap: 24px; list-style: none; }
+    .foot-links a { color: var(--c-text-3); text-decoration: none; font-size: 13px; transition: color .15s; }
+    .foot-links a:hover { color: var(--c-text); }
+
+    /* ARTICLE HEADER */
+    .article-hero {
+      padding: 140px 0 80px;
+      position: relative;
+    }
+    .article-hero::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--c-border) 20%, var(--c-border) 80%, transparent 100%);
+    }
+    .article-hero h1 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800; letter-spacing: -0.035em;
+      line-height: 1.15; color: var(--c-text);
+      max-width: 720px; margin-bottom: 16px;
+    }
+    .article-meta {
+      font-family: var(--font-mono);
+      font-size: 13px; color: var(--c-text-3); letter-spacing: 0.01em;
+    }
+
+    /* ARTICLE BODY */
+    .article-content {
+      max-width: 720px; margin: 0 auto;
+      padding: 64px 0 80px;
+      line-height: 1.85; font-size: 16px;
+    }
+    .article-content h2 {
+      font-size: 24px; font-weight: 720;
+      margin: 48px 0 16px; letter-spacing: -0.02em;
+      color: var(--c-text);
+    }
+    .article-content h3 {
+      font-size: 19px; font-weight: 640;
+      margin: 36px 0 12px; color: var(--c-text);
+    }
+    .article-content p { margin-bottom: 18px; color: var(--c-text-2); }
+    .article-content strong { color: var(--c-text); }
+    .article-content ul, .article-content ol {
+      margin: 0 0 18px 24px; color: var(--c-text-2);
+    }
+    .article-content li { margin-bottom: 8px; }
+    .article-content a { color: var(--c-accent); text-decoration: underline; text-underline-offset: 3px; }
+    .article-content a:hover { color: var(--c-accent-hover); }
+    .article-content code {
+      font-family: var(--font-mono); font-size: 13.5px;
+      background: var(--c-bg-raised); border: 1px solid var(--c-border);
+      border-radius: 5px; padding: 1px 6px; color: var(--c-text);
+    }
+
+    /* TABLE */
+    .comparison-table {
+      width: 100%; border-collapse: collapse;
+      margin: 24px 0 32px; font-size: 14px;
+    }
+    .comparison-table th, .comparison-table td {
+      padding: 12px 14px;
+      border: 1px solid var(--c-border);
+      text-align: left; color: var(--c-text-2);
+    }
+    .comparison-table th {
+      background: var(--c-bg-raised);
+      font-weight: 600; font-size: 12px;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      color: var(--c-text-3);
+    }
+    .comparison-table td strong { color: var(--c-text); }
+    .comparison-table tr:hover td { background: rgba(21,93,252,0.03); }
+
+    /* CODE EXAMPLE */
+    .code-example {
+      background: var(--c-bg-raised);
+      border: 1px solid var(--c-border);
+      border-radius: 10px; padding: 20px 24px;
+      font-family: var(--font-mono); font-size: 13.5px;
+      color: var(--c-text-2); line-height: 1.7;
+      margin: 16px 0 20px; overflow-x: auto;
+      white-space: pre-wrap;
+    }
+
+    /* TIP NUMBER */
+    .tip-number {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(21,93,252,0.12); color: var(--c-accent);
+      font-size: 13px; font-weight: 700; margin-right: 8px;
+    }
+
+    /* CTA */
+    .cta-banner {
+      margin-top: 56px;
+      border: 1px solid var(--c-border);
+      border-radius: 14px;
+      padding: 44px 32px;
+      text-align: center;
+      background: var(--c-bg-raised);
+    }
+    .cta-banner h3 { color: var(--c-text); font-size: 22px; font-weight: 720; margin-bottom: 10px; }
+    .cta-banner p { color: var(--c-text-2); margin-bottom: 24px; font-size: 15px; }
+    .cta-btn {
+      display: inline-block;
+      background: var(--c-accent); color: #fff;
+      padding: 13px 32px; border-radius: 9px;
+      font-size: 14.5px; font-weight: 620;
+      text-decoration: none; transition: background .15s, transform .1s;
+    }
+    .cta-btn:hover { background: var(--c-accent-hover); }
+    .cta-btn:active { transform: scale(0.97); }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .foot-inner { flex-direction: column; gap: 16px; text-align: center; }
+      .article-hero { padding: 110px 0 60px; }
+      .article-content { padding: 40px 0 60px; }
+      .comparison-table { font-size: 12px; }
+      .comparison-table th, .comparison-table td { padding: 8px 6px; }
+    }
+    @media (max-width: 480px) {
+      .wrap { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav-bar">
+    <div class="wrap nav-inner">
+      <a href="/en/" class="nav-brand">
+        <div class="nav-mark">B</div>BluePad
+      </a>
+      <ul class="nav-links">
+        <li><a href="/en/#features">Features</a></li>
+        <li><a href="/en/#pricing">Pricing</a></li>
+        <li><a href="/en/blog/">Blog</a></li>
+        <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="/en/download/" class="nav-dl">Download</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <section class="article-hero">
+    <div class="wrap">
+      <h1>How to Take Meeting Notes in Markdown (A Simple System)</h1>
+      <p class="article-meta">June 24, 2026 &middot; BluePad Team &middot; 6 min read</p>
+    </div>
+  </section>
+
+  <article class="article-content wrap">
+
+    <p>Most meeting notes die the moment the call ends. They sit in a chat thread, a sticky note, or a half-finished doc nobody opens again. A week later, two people remember the decision differently and the "obvious" next step never happened.</p>
+
+    <p>The fix is not a fancier app or a longer template. It is a small, repeatable system you can run in any plain-text editor. Markdown is perfect for this: it is fast to type while someone is still talking, it reads cleanly even in raw form, and the files outlive whatever tool you happened to use this year. Here is a system that takes about thirty seconds to set up and pays you back every meeting after.</p>
+
+    <h2>Why Markdown Beats a Doc for Meeting Notes</h2>
+
+    <p>A word processor wants you to format. Markdown lets you capture. When the discussion is moving quickly, the last thing you want is to reach for the mouse to make a heading or a bullet. In Markdown you type <code>##</code> for a section and <code>-</code> for a list item, and you never leave the keyboard.</p>
+
+    <p>There is a durability angle too. A Markdown note is just a <code>.md</code> text file. It opens on any computer, syncs through any folder, and stays readable for years. No subscription, no proprietary format, no "this document was created in an older version" warning. If you have wondered <a href="https://bluepad.work/en/blog/markdown-editor-for-developers">why so many people write in Markdown</a> in the first place, meeting notes are one of the clearest payoffs.</p>
+
+    <h2>The Core Template</h2>
+
+    <p>Everything starts with one reusable skeleton. Keep it short — a template you dread filling out is a template you will abandon. Five sections cover almost every meeting:</p>
+
+    <div class="code-example"># &lt;Meeting name&gt; — 2026-06-24
+
+**Attendees:** Alex, Sam, Priya
+**Goal:** Decide the launch date for v2
+
+## Agenda
+- Review blockers
+- Confirm scope
+- Pick a date
+
+## Notes
+-
+
+## Decisions
+-
+
+## Action items
+- [ ] Owner — task — due date</div>
+
+    <p>That is the whole thing. The top block answers "who, when, and why" at a glance months later. The four headings give every sentence you type a home, so you are sorting as you go instead of untangling a wall of text afterward.</p>
+
+    <h2>The Three Sections That Actually Matter</h2>
+
+    <h3>Notes — capture, don't transcribe</h3>
+
+    <p>The Notes section is your scratchpad during the meeting. Resist the urge to write down everything word for word. Capture the shape of the discussion: the question raised, the options considered, the concern someone flagged. Indented bullets are your friend here — a sub-point sits under its parent with two spaces and a dash, and the structure mirrors how the conversation actually branched.</p>
+
+    <h3>Decisions — write them in the room</h3>
+
+    <p>This is the section most people skip, and it is the one that saves you. The moment a group agrees on something, type it as a single clear line under <strong>Decisions</strong>. "We are shipping v2 on July 15, scope frozen as of today." Saying the decision out loud as you write it also gives everyone a chance to correct it before the meeting ends, which is exactly when corrections are cheap.</p>
+
+    <h3>Action items — owner, task, due date</h3>
+
+    <p>An action item without an owner is a wish. Use Markdown task checkboxes so each one is a literal box you can tick later:</p>
+
+    <div class="code-example">## Action items
+- [ ] Sam — send the revised scope doc — Thu
+- [ ] Priya — book the launch review — this week
+- [x] Alex — confirm the staging server (done in call)</div>
+
+    <p>Every item gets a name, a verb, and a deadline. If you cannot assign all three, the task is not ready and the meeting is not finished. When you reopen the file before the next meeting, the unchecked boxes are your follow-up list — no separate tracker required.</p>
+
+    <h2>A Few Habits That Make It Stick</h2>
+
+    <ul>
+      <li><strong>Date every file in the name.</strong> Something like <code>2026-06-24-launch-sync.md</code> sorts chronologically and is searchable at a glance.</li>
+      <li><strong>Keep one folder per project.</strong> A flat folder of dated Markdown files is its own searchable archive — grep or your editor's search finds any decision in seconds.</li>
+      <li><strong>Send the raw note as the recap.</strong> Markdown is readable as plain text, so you can paste it straight into chat or email. No "let me clean this up first."</li>
+      <li><strong>Star the open items.</strong> Before the next meeting, copy any unchecked <code>- [ ]</code> lines to the top so follow-ups lead the agenda.</li>
+    </ul>
+
+    <h2>Where the Editor Comes In</h2>
+
+    <p>You can run this system in Notepad if you want — that is the beauty of plain text. But a dedicated Markdown editor removes the small frictions that add up over dozens of meetings. Live preview shows your headings and checkboxes rendered as you type, so the note is readable the second the call ends. Tabs let you keep last week's note open next to today's. And a fast, native app opens instantly, which matters when the meeting started ninety seconds ago.</p>
+
+    <p><a href="https://bluepad.work/en/">BluePad</a> is built for exactly this: a lightweight, native Windows Markdown editor that launches in under a second, renders your notes in real time, and keeps every project in its own set of tabs. It is free for everyday writing, so you can adopt the whole system today without paying for anything. If you take notes across a lot of meetings, it pairs naturally with a <a href="https://bluepad.work/en/blog/lightweight-note-app-windows">lightweight note-taking setup</a> rather than a heavy productivity suite.</p>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <h3>Do I need to know how to code to take notes in Markdown?</h3>
+    <p>No. Meeting notes use only the simplest parts of Markdown: <code>#</code> for headings, <code>-</code> for bullets, <code>**bold**</code> for emphasis, and <code>- [ ]</code> for checkboxes. You can learn all of it in about five minutes, and you will use the same handful of symbols in every note.</p>
+
+    <h3>How do I share Markdown notes with people who do not use Markdown?</h3>
+    <p>Raw Markdown is already readable as plain text, so you can paste it directly into chat or email and it makes sense. If you need a polished version, a Markdown editor can render or export the note to HTML or PDF so the recipient sees clean formatting without installing anything.</p>
+
+    <h3>Should I have one big notes file or one per meeting?</h3>
+    <p>One file per meeting, dated in the filename, is easier to scan and search than a single growing document. Keep them together in a per-project folder so the folder itself becomes a searchable history of decisions and action items.</p>
+
+    <div class="cta-banner">
+      <h3>Run the system in a real Markdown editor</h3>
+      <p>BluePad is a fast, native Markdown editor for Windows with live preview, tabs, and checkboxes — free for everyday note-taking.</p>
+      <a href="/en/download/" target="_blank" rel="noopener" class="cta-btn">Download for Windows</a>
+    </div>
+
+  </article>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <div class="foot-copy">&copy; 2026 <strong>BRP</strong></div>
+      <ul class="foot-links">
+        <li><a href="/en/blog/">Blog</a></li>
+        <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="/legal/privacy">Privacy Policy</a></li>
+        <li><a href="/legal/eula">EULA</a></li>
+        <li><a href="/legal/opensource">Open Source</a></li>
+      </ul>
+    </div>
+  </footer>
+
+</body>
+</html>
