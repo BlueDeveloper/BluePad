@@ -122,10 +122,25 @@ export default {
       return new Response(object.body, { headers });
     }
 
-    // Download stats
+    // Download stats — 사람/봇 구분 집계 (sandbox 환경 제외)
     if (url.pathname === "/api/stats") {
-      const result = await env.DB.prepare("SELECT COUNT(*) as count FROM downloads").first();
-      return new Response(JSON.stringify({ downloads: result.count }), {
+      const r = await env.DB.prepare(
+        "SELECT COUNT(*) AS total, " +
+        "SUM(CASE WHEN is_bot=0 THEN 1 ELSE 0 END) AS human, " +
+        "SUM(CASE WHEN is_bot=1 THEN 1 ELSE 0 END) AS bot, " +
+        "SUM(CASE WHEN is_bot=1 AND bot_reason='ua' THEN 1 ELSE 0 END) AS bot_ua, " +
+        "SUM(CASE WHEN is_bot=1 AND bot_reason='ratelimit' THEN 1 ELSE 0 END) AS bot_ratelimit " +
+        "FROM downloads WHERE environment IS NULL OR environment != 'sandbox'"
+      ).first();
+      const human = r?.human || 0, bot = r?.bot || 0;
+      return new Response(JSON.stringify({
+        downloads: human,
+        human,
+        bot,
+        bot_ua: r?.bot_ua || 0,
+        bot_ratelimit: r?.bot_ratelimit || 0,
+        total: r?.total || 0,
+      }), {
         headers: { "Content-Type": "application/json", ...corsHeaders },
       });
     }
@@ -191,26 +206,25 @@ export default {
       const userAgent = ua || "unknown";
       const country = request.headers.get("CF-IPCountry") || "unknown";
 
-      // 다운로드 카운트 왜곡 방지:
-      //  (1) 봇/크롤러 UA는 INSERT 제외
-      //  (2) 같은 IP에서 최근 1시간 내 3회 이상이면 INSERT 제외 (다운로드 자체는 허용)
-      const isCountableBot = /bot|spider|crawler|HeadlessChrome|GPTBot|ClaudeBot|Googlebot|Applebot|SemrushBot|YandexBot|Bingbot|DuckDuckBot|Baiduspider|fetch|curl|wget|python-requests|node-fetch/i.test(userAgent);
-      let shouldCount = !isCountableBot;
-      if (shouldCount && ip !== "unknown") {
+      // download classification (human vs bot reporting): record ALL, flag with is_bot.
+      //  bot_reason='ua'        : known bot/crawler User-Agent
+      //  bot_reason='ratelimit' : same IP 3+ times within 1 hour (scraper/retry suspect)
+      //  bot_reason=null(is_bot=0): human download
+      const isUaBot = /bot|spider|crawler|HeadlessChrome|GPTBot|ClaudeBot|Googlebot|Applebot|SemrushBot|YandexBot|Bingbot|DuckDuckBot|Baiduspider|fetch|curl|wget|python-requests|node-fetch/i.test(userAgent);
+      let botReason = isUaBot ? "ua" : null;
+      if (!botReason && ip !== "unknown") {
         try {
           const recent = await env.DB.prepare(
             "SELECT COUNT(*) as c FROM downloads WHERE ip = ? AND downloaded_at >= datetime('now','-1 hour')"
           ).bind(ip).first();
-          if ((recent?.c || 0) >= 3) shouldCount = false;
-        } catch (_) { /* 통계 실패는 다운로드 차단 사유 아님 */ }
+          if ((recent?.c || 0) >= 3) botReason = "ratelimit";
+        } catch (_) { /* stats failure must not block download */ }
       }
-      if (shouldCount) {
-        try {
-          await env.DB.prepare(
-            "INSERT INTO downloads (file_name, ip, user_agent, country) VALUES (?, ?, ?, ?)"
-          ).bind(fileName, ip, userAgent, country).run();
-        } catch (_) { /* ignore */ }
-      }
+      try {
+        await env.DB.prepare(
+          "INSERT INTO downloads (file_name, ip, user_agent, country, is_bot, bot_reason) VALUES (?, ?, ?, ?, ?, ?)"
+        ).bind(fileName, ip, userAgent, country, botReason ? 1 : 0, botReason).run();
+      } catch (_) { /* ignore */ }
 
       const headers = new Headers(corsHeaders);
       headers.set("Content-Type", "application/octet-stream");
