@@ -109,6 +109,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://bluepad.work/en/blog/markdown-diagrams-with-mermaid</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://bluepad.work/en/blog/meeting-notes-in-markdown</loc>
     <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>

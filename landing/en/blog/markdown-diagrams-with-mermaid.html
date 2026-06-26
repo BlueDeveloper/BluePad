@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Make Diagrams in Markdown with Mermaid (Beginner's Guide) | BluePad Blog</title>
+  <meta name="description" content="Turn plain text into flowcharts and sequence diagrams using Mermaid in Markdown. A beginner-friendly guide with copy-paste examples you can try right away.">
+  <meta name="keywords" content="markdown diagrams, mermaid markdown, flowchart in markdown, mermaid flowchart, diagrams as code, mermaid sequence diagram">
+  <link rel="canonical" href="https://bluepad.work/en/blog/markdown-diagrams-with-mermaid">
+  <link rel="alternate" hreflang="en" href="https://bluepad.work/en/blog/markdown-diagrams-with-mermaid">
+  <link rel="alternate" hreflang="x-default" href="https://bluepad.work/en/blog/markdown-diagrams-with-mermaid">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Make Diagrams in Markdown with Mermaid (Beginner's Guide)">
+  <meta property="og:description" content="Turn plain text into flowcharts and sequence diagrams using Mermaid in Markdown — with copy-paste examples.">
+  <meta property="og:url" content="https://bluepad.work/en/blog/markdown-diagrams-with-mermaid.html">
+  <meta property="og:site_name" content="BluePad">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Make Diagrams in Markdown with Mermaid">
+  <meta name="twitter:description" content="Turn plain text into flowcharts and sequence diagrams using Mermaid in Markdown.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Make Diagrams in Markdown with Mermaid (Beginner's Guide)",
+    "datePublished": "2026-06-26",
+    "dateModified": "2026-06-26",
+    "author": { "@type": "Organization", "name": "BluePad Team" },
+    "publisher": { "@type": "Organization", "name": "BluePad" },
+    "description": "Turn plain text into flowcharts and sequence diagrams using Mermaid in Markdown — with copy-paste examples.",
+    "mainEntityOfPage": "https://bluepad.work/en/blog/markdown-diagrams-with-mermaid.html"
+  }
+  </script>
+
+
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wkokfmayny");</script>
+<!-- Google Analytics 4 (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3PRY6YKV05"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-3PRY6YKV05');</script>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<meta name="naver-site-verification" content="9b479417f022befdffd0b837c015469b604758d3" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --c-bg: #09090b;
+      --c-bg-raised: #111113;
+      --c-bg-card: #18181b;
+      --c-border: #27272a;
+      --c-border-subtle: #1c1c1f;
+      --c-text: #fafafa;
+      --c-text-2: #a1a1aa;
+      --c-text-3: #52525b;
+      --c-accent: #155dfc;
+      --c-accent-hover: #3b7dff;
+      --font: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { font-family: var(--font); background: var(--c-bg); color: var(--c-text); overflow-x: hidden; }
+    ::selection { background: rgba(21,93,252,0.3); color: #fff; }
+
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+
+    /* NAV */
+    .nav-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      background: rgba(9,9,11,0.75);
+      border-bottom: 1px solid var(--c-border-subtle);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--c-text);
+      font-weight: 720; font-size: 17px; letter-spacing: -0.03em;
+    }
+    .nav-mark {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: var(--c-accent); color: #fff;
+      display: grid; place-items: center;
+      font-size: 14px; font-weight: 800;
+    }
+    .nav-links { display: flex; align-items: center; gap: 6px; list-style: none; }
+    .nav-links a {
+      display: block; padding: 6px 14px; border-radius: 7px;
+      color: var(--c-text-2); text-decoration: none;
+      font-size: 13.5px; font-weight: 500;
+      transition: color .15s, background .15s;
+    }
+    .nav-links a:hover { color: var(--c-text); background: rgba(255,255,255,0.05); }
+    .nav-dl {
+      background: var(--c-accent) !important; color: #fff !important;
+      font-weight: 620 !important; transition: background .15s !important;
+    }
+    .nav-dl:hover { background: var(--c-accent-hover) !important; }
+    .nav-lang {
+      display: flex; gap: 2px; margin-left: 8px;
+      border: 1px solid var(--c-border); border-radius: 7px; overflow: hidden;
+    }
+    .nav-lang a {
+      padding: 5px 10px !important; border-radius: 0 !important;
+      font-size: 12px !important; font-weight: 600 !important; letter-spacing: 0.02em;
+    }
+    .nav-lang a.on { background: rgba(255,255,255,0.08) !important; color: #fff !important; }
+
+    /* FOOTER */
+    .foot { border-top: 1px solid var(--c-border-subtle); padding: 32px 0; }
+    .foot-inner { display: flex; align-items: center; justify-content: space-between; }
+    .foot-copy { font-size: 13px; color: var(--c-text-3); }
+    .foot-copy strong { color: var(--c-text-2); font-weight: 600; }
+    .foot-links { display: flex; gap: 24px; list-style: none; }
+    .foot-links a { color: var(--c-text-3); text-decoration: none; font-size: 13px; transition: color .15s; }
+    .foot-links a:hover { color: var(--c-text); }
+
+    /* ARTICLE HEADER */
+    .article-hero {
+      padding: 140px 0 80px;
+      position: relative;
+    }
+    .article-hero::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--c-border) 20%, var(--c-border) 80%, transparent 100%);
+    }
+    .article-hero h1 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800; letter-spacing: -0.035em;
+      line-height: 1.15; color: var(--c-text);
+      max-width: 720px; margin-bottom: 16px;
+    }
+    .article-meta {
+      font-family: var(--font-mono);
+      font-size: 13px; color: var(--c-text-3); letter-spacing: 0.01em;
+    }
+
+    /* ARTICLE BODY */
+    .article-content {
+      max-width: 720px; margin: 0 auto;
+      padding: 64px 0 80px;
+      line-height: 1.85; font-size: 16px;
+    }
+    .article-content h2 {
+      font-size: 24px; font-weight: 720;
+      margin: 48px 0 16px; letter-spacing: -0.02em;
+      color: var(--c-text);
+    }
+    .article-content h3 {
+      font-size: 19px; font-weight: 640;
+      margin: 36px 0 12px; color: var(--c-text);
+    }
+    .article-content p { margin-bottom: 18px; color: var(--c-text-2); }
+    .article-content strong { color: var(--c-text); }
+    .article-content ul, .article-content ol {
+      margin: 0 0 18px 24px; color: var(--c-text-2);
+    }
+    .article-content li { margin-bottom: 8px; }
+    .article-content a { color: var(--c-accent); text-decoration: underline; text-underline-offset: 3px; }
+    .article-content a:hover { color: var(--c-accent-hover); }
+
+    /* TABLE */
+    .comparison-table {
+      width: 100%; border-collapse: collapse;
+      margin: 24px 0 32px; font-size: 14px;
+    }
+    .comparison-table th, .comparison-table td {
+      padding: 12px 14px;
+      border: 1px solid var(--c-border);
+      text-align: left; color: var(--c-text-2);
+    }
+    .comparison-table th {
+      background: var(--c-bg-raised);
+      font-weight: 600; font-size: 12px;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      color: var(--c-text-3);
+    }
+    .comparison-table td strong { color: var(--c-text); }
+    .comparison-table tr:hover td { background: rgba(21,93,252,0.03); }
+
+    /* CODE EXAMPLE */
+    .code-example {
+      background: var(--c-bg-raised);
+      border: 1px solid var(--c-border);
+      border-radius: 10px; padding: 20px 24px;
+      font-family: var(--font-mono); font-size: 13.5px;
+      color: var(--c-text-2); line-height: 1.7;
+      margin: 16px 0 20px; overflow-x: auto;
+      white-space: pre;
+    }
+
+    /* TIP NUMBER */
+    .tip-number {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(21,93,252,0.12); color: var(--c-accent);
+      font-size: 13px; font-weight: 700; margin-right: 8px;
+    }
+
+    /* CTA */
+    .cta-banner {
+      margin-top: 56px;
+      border: 1px solid var(--c-border);
+      border-radius: 14px;
+      padding: 44px 32px;
+      text-align: center;
+      background: var(--c-bg-raised);
+    }
+    .cta-banner h3 { color: var(--c-text); font-size: 22px; font-weight: 720; margin-bottom: 10px; }
+    .cta-banner p { color: var(--c-text-2); margin-bottom: 24px; font-size: 15px; }
+    .cta-btn {
+      display: inline-block;
+      background: var(--c-accent); color: #fff;
+      padding: 13px 32px; border-radius: 9px;
+      font-size: 14.5px; font-weight: 620;
+      text-decoration: none; transition: background .15s, transform .1s;
+    }
+    .cta-btn:hover { background: var(--c-accent-hover); }
+    .cta-btn:active { transform: scale(0.97); }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .foot-inner { flex-direction: column; gap: 16px; text-align: center; }
+      .article-hero { padding: 110px 0 60px; }
+      .article-content { padding: 40px 0 60px; }
+      .comparison-table { font-size: 12px; }
+      .comparison-table th, .comparison-table td { padding: 8px 6px; }
+    }
+    @media (max-width: 480px) {
+      .wrap { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav-bar">
+    <div class="wrap nav-inner">
+      <a href="/en/" class="nav-brand">
+        <div class="nav-mark">B</div>BluePad
+      </a>
+      <ul class="nav-links">
+        <li><a href="/en/#features">Features</a></li>
+        <li><a href="/en/#pricing">Pricing</a></li>
+        <li><a href="/en/blog/">Blog</a></li>
+        <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="/en/download/" class="nav-dl">Download</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <section class="article-hero">
+    <div class="wrap">
+      <h1>How to Make Diagrams in Markdown with Mermaid (Beginner's Guide)</h1>
+      <p class="article-meta">June 26, 2026 &middot; BluePad Team &middot; 6 min read</p>
+    </div>
+  </section>
+
+  <article class="article-content wrap">
+
+    <p>Most people reach for a separate drawing app the moment they need a flowchart. They open a canvas, drag boxes around, fiddle with arrow alignment, export a PNG, and then paste it into their document. A week later the process changes, and that image is suddenly wrong and impossible to edit without starting over.</p>
+
+    <p>There is a faster way. With <strong>Mermaid</strong>, you describe a diagram in a few lines of plain text inside your Markdown file, and the editor renders it as a real diagram. No dragging, no exporting, no stale screenshots. Change one line and the picture updates instantly.</p>
+
+    <h2>What Is Mermaid?</h2>
+
+    <p>Mermaid is an open-source, JavaScript-based diagramming tool that turns Markdown-style text definitions into diagrams. Instead of pointing and clicking, you write a short description of what you want, and Mermaid draws it for you. This approach is often called "diagrams as code."</p>
+
+    <p>It supports a range of diagram types that cover most everyday needs, including flowcharts, sequence diagrams, Gantt charts, class diagrams, state diagrams, pie charts, and Git graphs. For most writers and note-takers, flowcharts and sequence diagrams will handle the vast majority of cases.</p>
+
+    <p>The reason this matters for Markdown users is simple: your diagram lives inside the same plain-text file as everything else. It is version-control friendly, searchable, and never gets separated from the document it belongs to.</p>
+
+    <h2>How to Write a Mermaid Diagram</h2>
+
+    <p>A Mermaid diagram goes inside a fenced code block, but instead of marking the language as something like <strong>python</strong> or <strong>js</strong>, you mark it as <strong>mermaid</strong>. An editor that supports Mermaid will then render that block as a diagram instead of showing raw code.</p>
+
+    <p>Here is what that fenced block looks like in your Markdown source:</p>
+
+    <div class="code-example">```mermaid
+flowchart TD
+    A[Start] --&gt; B{Is it working?}
+    B --&gt;|Yes| C[Ship it]
+    B --&gt;|No| D[Fix the bug]
+    D --&gt; B
+```</div>
+
+    <p>That is the whole trick. The opening line tells Mermaid what kind of diagram you want, and the lines after it describe the pieces and how they connect.</p>
+
+    <h2>Building Your First Flowchart</h2>
+
+    <p>Flowcharts are the most common starting point, so let us break the example above down piece by piece.</p>
+
+    <h3>1. Pick a direction</h3>
+
+    <p>The first line, <strong>flowchart TD</strong>, sets the layout. <strong>TD</strong> (or <strong>TB</strong>) means top-to-bottom, and <strong>LR</strong> means left-to-right. If your diagram feels cramped vertically, switching to <strong>LR</strong> often makes it easier to read.</p>
+
+    <h3>2. Define your nodes</h3>
+
+    <p>Each box is a node with an ID and a label. The shape of the brackets controls the shape of the box:</p>
+
+    <ul>
+      <li><strong>A[Text]</strong> — a rectangle, used for normal steps</li>
+      <li><strong>B{Text}</strong> — a diamond, used for decisions</li>
+      <li><strong>C(Text)</strong> — a rounded box, often used for start and end points</li>
+    </ul>
+
+    <h3>3. Connect them with arrows</h3>
+
+    <p>The <strong>--&gt;</strong> symbol draws an arrow from one node to another. You can also label an arrow by adding text between pipes, like <strong>--&gt;|Yes|</strong>, which is perfect for showing the outcomes of a decision. Notice in the example that node <strong>D</strong> loops back to <strong>B</strong> — diagrams can branch and loop however you need.</p>
+
+    <h2>Sequence Diagrams in a Few Lines</h2>
+
+    <p>When you want to show a back-and-forth between two parties over time — a user and an app, or a browser and a server — a sequence diagram is the right tool. The syntax stays just as readable:</p>
+
+    <div class="code-example">```mermaid
+sequenceDiagram
+    User-&gt;&gt;App: Click "Save"
+    App-&gt;&gt;Server: Send document
+    Server--&gt;&gt;App: Confirm saved
+    App--&gt;&gt;User: Show success message
+```</div>
+
+    <p>Two arrow styles do most of the work here. A solid arrow (<strong>-&gt;&gt;</strong>) shows a request or action moving forward, and a dashed arrow (<strong>--&gt;&gt;</strong>) shows a response or return coming back. Read it top to bottom and it reads almost like a short story of what happens, step by step.</p>
+
+    <h2>When Should You Use Mermaid?</h2>
+
+    <p>Mermaid is not the right choice for every diagram. It shines for structured, logical diagrams and struggles with free-form, pixel-perfect artwork. Here is a quick way to decide.</p>
+
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Great fit for Mermaid</th>
+          <th>Better with a drawing app</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Flowcharts and process steps</strong></td>
+          <td>Hand-drawn or freeform sketches</td>
+        </tr>
+        <tr>
+          <td><strong>Sequence and state diagrams</strong></td>
+          <td>Precise visual layouts and posters</td>
+        </tr>
+        <tr>
+          <td><strong>Diagrams that change often</strong></td>
+          <td>One-off images you will never edit</td>
+        </tr>
+        <tr>
+          <td><strong>Docs kept in version control</strong></td>
+          <td>Heavy use of custom colors and icons</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>If your diagram is mostly boxes, arrows, and logic — and especially if it will change over time — Mermaid will save you a lot of fiddling.</p>
+
+    <h2>Seeing Your Diagrams Render</h2>
+
+    <p>Writing Mermaid text is only half the experience. The magic happens when an editor renders that text into an actual diagram as you type, so you can catch a typo or a tangled arrow immediately instead of after an export.</p>
+
+    <p>Many tools support Mermaid, but a native editor keeps everything fast and offline. <a href="https://bluepad.work">BluePad</a> renders Mermaid diagrams (along with math via KaTeX) right inside the editor, with no plugins to install and no internet connection required. You write the fenced <strong>mermaid</strong> block, and the diagram appears beside your words.</p>
+
+    <p>If you are still getting comfortable with Markdown itself, our <a href="/en/blog/markdown-editor-for-developers">beginner's guide to Markdown</a> is a good place to start, and the <a href="/en/blog/markdown-writing-tips">10 Markdown tips</a> post covers handy everyday tricks. Once your diagrams look right, you can also <a href="/en/blog/export-markdown-to-pdf-windows">export the whole document to PDF</a> with the diagrams baked in.</p>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <h3>Do I need to know how to code to use Mermaid?</h3>
+
+    <p>No. Mermaid uses a simple, readable text syntax that looks more like writing an outline than writing code. If you can type a list, you can build a basic flowchart. The "diagrams as code" name refers to the text-based approach, not to traditional programming.</p>
+
+    <h3>Will Mermaid diagrams show up everywhere my Markdown does?</h3>
+
+    <p>Only in tools that support Mermaid rendering. Some platforms render it automatically, while plain text viewers will just show the raw code block. To see live diagrams as you write, use an editor with built-in Mermaid support so what you type renders instantly.</p>
+
+    <h3>Is Mermaid free?</h3>
+
+    <p>Yes. Mermaid is an open-source project, so the diagramming engine itself is free to use. The editors that integrate it may have their own pricing, but the Mermaid technology is open and free.</p>
+
+    <div class="cta-banner">
+      <h3>Download BluePad Free</h3>
+      <p>Write Markdown and watch your Mermaid diagrams render live — fast, offline, and free.</p>
+      <a href="/en/download/" target="_blank" rel="noopener" class="cta-btn">Download for Windows</a>
+    </div>
+
+  </article>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <div class="foot-copy">&copy; 2026 <strong>BRP</strong></div>
+      <ul class="foot-links">
+        <li><a href="/en/blog/">Blog</a></li>
+        <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="/legal/privacy">Privacy Policy</a></li>
+        <li><a href="/legal/eula">EULA</a></li>
+        <li><a href="/legal/opensource">Open Source</a></li>
+      </ul>
+    </div>
+  </footer>
+
+</body>
+</html>
