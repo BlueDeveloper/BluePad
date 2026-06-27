@@ -117,7 +117,7 @@ const WORKER_URL = 'https://bluepad-license-api.blueehdwp.workers.dev';
 
 // 문의 알림 메일 — web3forms 클라이언트 호출(무료, 서버사이드는 차단됨).
 // ▼ web3forms.com 에서 BluePad 전용 access_key 발급 후 아래 값 교체.
-const WEB3FORMS_KEY = 'PASTE_BLUEPAD_WEB3FORMS_ACCESS_KEY_HERE';
+const WEB3FORMS_KEY = '86f196a0-c631-473e-9835-452131cbdbc9';
 async function notifyWeb3forms(data) {
   if (!WEB3FORMS_KEY || WEB3FORMS_KEY.startsWith('PASTE_')) return; // 키 미설정 시 조용히 skip (티켓은 저장됨)
   try {
