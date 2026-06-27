@@ -23,31 +23,21 @@
 
 ## ⚡ 세션 시작 즉시 실행 (자동 트리거 — 사용자 지시 불필요)
 
-세션이 `C:\BLUE\Project\blue\SAAS\BluePad` 경로에서 시작되면 다음 cron 두 개를 점검·등록한다. **`CronList`로 이미 등록된 id를 먼저 확인하고 없는 것만 신규 등록**. 한 줄 리포트 자동 출력은 하지 않는다(2026-05-21 사용자 명시 비활성화).
+세션이 `C:\BLUE\Project\blue\SAAS\BluePad` 경로에서 시작되면 다음 cron을 점검·등록한다. **`CronList`로 이미 등록된 id를 먼저 확인하고 없는 것만 신규 등록**. 한 줄 리포트 자동 출력은 하지 않는다(2026-05-21 사용자 명시 비활성화).
 
-### 1. 5일 주기 운영 모니터링
-
-```
-cron: "7 9 */5 * *"
-recurring: true
-prompt: 트리거 메모리 [[feedback_session_monitoring]] 의 출력 형식·필터 그대로 사용
-```
-
-### 2. 5시간 주기 SEO 메일 점검
+### 1. 3시간 주기(정각) 신규 블로그 글 자동 푸시 + work-log 검토·개선
 
 ```
-cron: "23 */5 * * *"
-recurring: true
-prompt: 트리거 메모리 [[seo-cron]] (`feedback_seo_mail_check.md`) 의 prompt 본문 그대로
-```
-
-### 3. 3시간 주기 신규 블로그 글 자동 푸시
-
-```
-cron: "41 */3 * * *"
+cron: "0 */3 * * *"   # Memoria와 동일하게 정각 (2026-06-27 변경, 기존 41분 → 정각)
 recurring: true
 prompt: 트리거 메모리 [[blog-autopush-cron]] (`feedback_blog_autopush_cron.md`) 의 prompt 본문 그대로
 ```
+
+- **(A) 블로그 자동 배포**: `landing/{en,ko,ja}/blog/`·`landing/blog/`·`landing/sitemap.xml`의 신규/변경(완결된 `</html>`)만 한글 커밋 후 `git push`(Pages 자동 배포). 앱코드·worker·docs는 건드리지 않음.
+- **(B) work-log 검토·개선** (2026-06-27 추가): `docs/work-log/` 문서(특히 코워크/타 세션 작성 최신본)를 읽어 미해결 이슈·개선 제안을 파악 → 명확·안전하면 자동 처리(앱·worker는 deploy.sh/wrangler, 랜딩은 git push), 판단 필요/파괴적(DB삭제·결제·라이선스·대규모)은 보고만.
+- tsc 사전검증은 BluePad 랜딩이 정적 HTML이라 해당 없음(Memoria는 `npx tsc --noEmit` 수행 — 구조 차이).
+
+> ⛔ **운영 모니터링(`7 9 */5 * *`)·SEO 메일 점검(`23 */5 * * *`) cron은 자동 등록하지 않는다** (2026-06-27 사용자 지시). 필요 시 사용자가 "cron 등록해" 등으로 명시 요청할 때만 등록한다. 출력 형식 메모리([[feedback_session_monitoring]], [[seo-cron]])는 수동 호출용으로 보존.
 
 > ⚠ **session-only 한계**: `durable: true` 명시해도 디스크 미저장 → 본 세션 종료 시 cron 사라짐 → 다음 세션 시작 시 자동 재등록 필요. 본 트리거가 영구 자동화의 핵심.
 > ⚠ 7일 후 자동 만료. 매 세션 점검 시 만료 직전이면 새로 등록.

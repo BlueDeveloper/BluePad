@@ -489,6 +489,8 @@ function parseUA(ua) {
   return os + '/' + br;
 }
 function isBot(ua) { return parseUA(ua).startsWith('🤖') || parseUA(ua) === 'curl'; }
+// 봇 판정: DB의 is_bot 컬럼(worker가 ua/ratelimit/scanner로 분류) 우선 + 구형 행 대비 UA 폴백.
+function isBotRow(d) { return d.is_bot == 1 || isBot(d.user_agent); }
 
 async function loadLicenses() {
   const token = getToken();
@@ -764,7 +766,7 @@ async function loadDownloads() {
     const data = await res.json();
     rawDownloads = data.downloads || [];
     // 카드 카운트 = 실사용자(봇 제외, 현재 환경)
-    document.getElementById('stat-downloads').textContent = rawDownloads.filter(d => envMatches(d) && !isBot(d.user_agent)).length.toLocaleString();
+    document.getElementById('stat-downloads').textContent = rawDownloads.filter(d => envMatches(d) && !isBotRow(d)).length.toLocaleString();
     // 국가 드롭다운 동적 생성
     const countries = [...new Set(rawDownloads.map(d => d.country || '-'))].sort();
     const sel = document.getElementById('f-dl-country');
@@ -781,7 +783,7 @@ function renderDownloads() {
   const ipFilter = document.getElementById('f-dl-ip').value.toLowerCase();
   let list = rawDownloads.filter(d => {
     if (!envMatches(d)) return false;
-    if (noBot && isBot(d.user_agent)) return false;
+    if (noBot && isBotRow(d)) return false;
     if (country && (d.country || '-') !== country) return false;
     if (ipFilter && !d.ip.includes(ipFilter)) return false;
     return true;

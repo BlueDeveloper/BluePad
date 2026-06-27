@@ -72,6 +72,33 @@ function json(data, status = 200, request) {
   });
 }
 
+// ── 이메일 발송 (Resend) ──
+// MailChannels 무료 API가 Cloudflare Workers용으로 종료(2024)되어 401 반환 → Resend로 교체(2026-06-27).
+// 필요: RESEND_API_KEY 시크릿 + bluepad.work 도메인 Resend 인증(DNS). 키 없으면 ok:false 반환(호출부에서 error_logs 기록).
+async function sendEmail(env, { to, subject, text, replyTo, fromName = "BluePad Support", fromEmail = "support@bluepad.work" }) {
+  if (!env.RESEND_API_KEY) return { ok: false, status: 0, error: "RESEND_API_KEY_missing" };
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { "Authorization": "Bearer " + env.RESEND_API_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from: `${fromName} <${fromEmail}>`,
+        to: [to],
+        subject,
+        text,
+        ...(replyTo ? { reply_to: replyTo } : {}),
+      }),
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      return { ok: false, status: res.status, error: body.slice(0, 200) };
+    }
+    return { ok: true, status: res.status };
+  } catch (e) {
+    return { ok: false, status: 0, error: String(e).slice(0, 200) };
+  }
+}
+
 // ── License Key ──
 // 환경별 키 접두사 — Live: "BP-", Sandbox: "BPSB-"
 function generateKey(environment = "live") {
@@ -360,34 +387,19 @@ export default {
           "INSERT INTO support_tickets (type, email, message, license_key) VALUES (?, ?, ?, ?)"
         ).bind(type, email, message, license_key || null).run();
 
-        // 이메일 알림 (best-effort) — 실패 시 error_logs 기록 (관리자가 티켓 누락 파악 가능)
+        // 이메일 알림 (best-effort) — 실패해도 티켓은 이미 저장됨. 실패 시 error_logs 기록(관리자가 누락 파악).
         const typeMap = { refund: "환불 요청", bug: "버그 신고", feature: "기능 요청", feedback: "피드백", other: "기타 문의" };
-        try {
-          const mailRes = await fetch("https://api.mailchannels.net/tx/v1/send", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              personalizations: [{ to: [{ email: "blueehdwp@gmail.com", name: "BluePad Admin" }] }],
-              from: { email: "noreply@bluepad.work", name: "BluePad Support" },
-              subject: "[BluePad] " + (typeMap[type] || type) + " - " + email,
-              content: [{
-                type: "text/plain",
-                value: "유형: " + (typeMap[type] || type) + "\n이메일: " + email + "\n라이선스: " + (license_key || "없음") + "\n\n내용:\n" + message + "\n\n---\n관리자: https://bluepad.work/admin/",
-              }],
-            }),
-          });
-          if (!mailRes.ok) {
-            try {
-              await env.DB.prepare(
-                "INSERT INTO error_logs (worker, path, error, ip) VALUES (?, ?, ?, ?)"
-              ).bind("license-api", "/api/support", `mailchannels HTTP ${mailRes.status}: ticket=${type}/${email}`, ip).run();
-            } catch (_) {}
-          }
-        } catch (e) {
+        const mailRes = await sendEmail(env, {
+          to: "blueehdwp@gmail.com",
+          replyTo: email, // 관리자가 메일에서 바로 회신하면 문의자에게 전달
+          subject: "[BluePad] " + (typeMap[type] || type) + " - " + email,
+          text: "유형: " + (typeMap[type] || type) + "\n이메일: " + email + "\n라이선스: " + (license_key || "없음") + "\n\n내용:\n" + message + "\n\n---\n관리자: https://bluepad.work/admin/",
+        });
+        if (!mailRes.ok) {
           try {
             await env.DB.prepare(
               "INSERT INTO error_logs (worker, path, error, ip) VALUES (?, ?, ?, ?)"
-            ).bind("license-api", "/api/support", `mailchannels exception: ${String(e).slice(0, 200)} ticket=${type}/${email}`, ip).run();
+            ).bind("license-api", "/api/support", `resend notify fail (HTTP ${mailRes.status}: ${mailRes.error}) ticket=${type}/${email}`, ip).run();
           } catch (_) {}
         }
         return json({ success: true }, 200, request);
@@ -472,24 +484,23 @@ export default {
         const { email, reply, ticket_id } = await request.json();
         if (!email || !reply) return json({ error: "missing_fields" }, 400, request);
 
-        // MailChannels로 이메일 발송
-        try {
-          await fetch("https://api.mailchannels.net/tx/v1/send", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              personalizations: [{ to: [{ email, name: email }] }],
-              from: { email: "support@bluepad.work", name: "BluePad Support" },
-              subject: "[BluePad] 문의 답변",
-              content: [{
-                type: "text/plain",
-                value: reply + "\n\n---\nBluePad Support\nhttps://bluepad.work",
-              }],
-            }),
-          });
-        } catch {}
+        // Resend로 문의자에게 답변 발송
+        const replyRes = await sendEmail(env, {
+          to: email,
+          subject: "[BluePad] 문의 답변",
+          text: reply + "\n\n---\nBluePad Support\nhttps://bluepad.work",
+        });
+        // 발송 실패 시: 티켓을 resolved로 바꾸지 않고 에러 반환(관리자가 미전송 인지 가능)
+        if (!replyRes.ok) {
+          try {
+            await env.DB.prepare(
+              "INSERT INTO error_logs (worker, path, error, ip) VALUES (?, ?, ?, ?)"
+            ).bind("license-api", "/api/admin/reply", `resend reply fail (HTTP ${replyRes.status}: ${replyRes.error}) to=${email}`, request.headers.get("CF-Connecting-IP") || "unknown").run();
+          } catch (_) {}
+          return json({ error: "email_send_failed", detail: replyRes.error }, 502, request);
+        }
 
-        // 티켓 상태 업데이트
+        // 발송 성공 시에만 티켓 상태 업데이트
         if (ticket_id) {
           await env.DB.prepare("UPDATE support_tickets SET status = 'resolved' WHERE id = ?").bind(ticket_id).run();
         }
