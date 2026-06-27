@@ -72,34 +72,8 @@ function json(data, status = 200, request) {
   });
 }
 
-// ── 문의 알림 메일 (Resend, 무도메인) ──
-// MailChannels 무료 API 종료(2024)로 401 → Resend로 교체(2026-06-27). web3forms는 무료플랜이 서버사이드 호출
-// 차단(403, Pro 필요)이라 부적합. Resend는 도메인 미인증이어도 발신 onboarding@resend.dev → '내 계정 메일'로는
-// 발송 가능 → 알림 대상이 관리자 본인 메일이라 DNS 불필요. replyto에 문의자 메일을 넣어 관리자가 Gmail "답장"으로 회신.
-// 키 없으면 ok:false(호출부에서 error_logs 기록, 티켓은 이미 저장됨).
-async function notifyEmail(env, { subject, message, replyto, to = "blueehdwp@gmail.com" }) {
-  if (!env.RESEND_API_KEY) return { ok: false, status: 0, error: "RESEND_API_KEY_missing" };
-  try {
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { "Authorization": "Bearer " + env.RESEND_API_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: "BluePad Support <onboarding@resend.dev>",
-        to: [to],
-        subject,
-        text: message,
-        ...(replyto ? { reply_to: replyto } : {}),
-      }),
-    });
-    if (!res.ok) {
-      const body = await res.text().catch(() => "");
-      return { ok: false, status: res.status, error: body.slice(0, 200) };
-    }
-    return { ok: true, status: res.status };
-  } catch (e) {
-    return { ok: false, status: 0, error: String(e).slice(0, 200) };
-  }
-}
+// 문의 알림 메일은 클라이언트(landing/support)에서 web3forms로 발송한다.
+// (MailChannels 종료·Resend 도메인인증 부담·web3forms 서버사이드 차단을 모두 회피 — Archive와 동일한 클라이언트 방식)
 
 // ── License Key ──
 // 환경별 키 접두사 — Live: "BP-", Sandbox: "BPSB-"
@@ -389,20 +363,8 @@ export default {
           "INSERT INTO support_tickets (type, email, message, license_key) VALUES (?, ?, ?, ?)"
         ).bind(type, email, message, license_key || null).run();
 
-        // 이메일 알림 (best-effort) — 실패해도 티켓은 이미 저장됨. 실패 시 error_logs 기록(관리자가 누락 파악).
-        const typeMap = { refund: "환불 요청", bug: "버그 신고", feature: "기능 요청", feedback: "피드백", other: "기타 문의" };
-        const mailRes = await notifyEmail(env, {
-          subject: "[BluePad] " + (typeMap[type] || type) + " - " + email,
-          replyto: email, // 관리자가 Gmail에서 바로 "답장"하면 문의자에게 전달됨
-          message: "유형: " + (typeMap[type] || type) + "\n이메일: " + email + "\n라이선스: " + (license_key || "없음") + "\n\n내용:\n" + message + "\n\n---\n관리자: https://bluepad.work/admin/",
-        });
-        if (!mailRes.ok) {
-          try {
-            await env.DB.prepare(
-              "INSERT INTO error_logs (worker, path, error, ip) VALUES (?, ?, ?, ?)"
-            ).bind("license-api", "/api/support", `resend notify fail (HTTP ${mailRes.status}: ${mailRes.error}) ticket=${type}/${email}`, ip).run();
-          } catch (_) {}
-        }
+        // 이메일 알림은 클라이언트(landing/support)에서 web3forms로 발송한다(무료플랜은 서버사이드 호출 차단).
+        // 이 엔드포인트는 D1 티켓 저장만 담당. 관리자는 대시보드 '문의' 탭 + web3forms 알림 메일로 확인.
         return json({ success: true }, 200, request);
       }
 

@@ -115,6 +115,27 @@ textarea{resize:vertical;min-height:120px}
 <script>
 const WORKER_URL = 'https://bluepad-license-api.blueehdwp.workers.dev';
 
+// 문의 알림 메일 — web3forms 클라이언트 호출(무료, 서버사이드는 차단됨).
+// ▼ web3forms.com 에서 BluePad 전용 access_key 발급 후 아래 값 교체.
+const WEB3FORMS_KEY = 'PASTE_BLUEPAD_WEB3FORMS_ACCESS_KEY_HERE';
+async function notifyWeb3forms(data) {
+  if (!WEB3FORMS_KEY || WEB3FORMS_KEY.startsWith('PASTE_')) return; // 키 미설정 시 조용히 skip (티켓은 저장됨)
+  try {
+    await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        access_key: WEB3FORMS_KEY,
+        from_name: 'BluePad Support',
+        subject: '[BluePad] ' + data.type + ' - ' + data.email,
+        replyto: data.email, // 관리자가 Gmail '답장'으로 바로 회신
+        email: data.email,
+        message: 'Type: ' + data.type + '\nEmail: ' + data.email + '\nLicense: ' + (data.license_key || 'N/A') + '\n\n' + data.message,
+      }),
+    });
+  } catch (_) { /* 알림 실패해도 티켓은 이미 저장됨 */ }
+}
+
 const i18n = {
   ko: {
     title: '문의하기',
@@ -235,6 +256,8 @@ async function submitForm(e) {
   };
 
   try {
+    // dual-path: (1) web3forms로 관리자 알림 메일 (2) /api/support로 D1 티켓 저장
+    notifyWeb3forms(data); // best-effort, 응답 대기 안 함
     const res = await fetch(WORKER_URL + '/api/support', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
