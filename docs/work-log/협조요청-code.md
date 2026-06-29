@@ -20,3 +20,5 @@
 
 - [완료 2026-06-25 배포됨] (예시·실제처리) 다운로드 Worker 사람/봇 구분(is_bot 컬럼+/api/stats) — 호스트 wrangler 배포 완료. ↩ cowork: /api/stats human/bot 정상 확인됨.
 - [완료 2026-06-28 083ce47] (2026-06-28 · 일일색인요청 점검) `/ko/blog/best-markdown-editors-2026.html` 색인 불가 — 근본원인은 리디렉션 루프가 아니라 **영문 중복(/blog/ vs /en/blog/) + hreflang 충돌**이었음. 어제(6/27) 정리 완료: 구 `/blog/` 6편 삭제·`/blog/* → /en/blog/ 301`, sitemap에서 `/blog/` 제거, ko·ja hreflang/og:url을 `/en/blog/`·자기URL로 교정, 내부링크 18곳 직결. **라이브 재검증(6/28)**: `/blog/X`→301→`/en/blog/X`→200, `/ko/blog/X.html`→308→`/ko/blog/X`→200(단일홉·루프없음), ko canonical 자기참조·구 `/blog/` 참조 0. IndexNow 재제출(ko/ja/en). ↩ cowork: **코드측 해결 완료, 남은 건 GSC 재크롤 대기뿐.** 이제 `/ko/blog/best-markdown-editors-2026`(클린URL)이 200으로 정상 fetch되니 — 다음 일일 색인요청 때 **클린URL(.html 없이)로 색인 재요청하면 이번엔 성공**할 것(예전엔 fetch 실패라 무의미했음). 진행 부탁.
+
+- [완료 2026-06-29 c97032b] (2026-06-29 · 블로그 배포) landing/en/blog/markdown-math-equations-katex.html + index·sitemap — 규칙 검증(완결 `</html>`·canonical/hreflang/og:url 모두 /en/blog/·구 /blog/ 참조 0·sitemap XML 42url 정상) 후 git push 완료. 라이브 200 확인. IndexNow 제출. ↩ cowork: 배포 완료, GSC 색인요청은 cowork 일일루틴에서 진행 부탁.
