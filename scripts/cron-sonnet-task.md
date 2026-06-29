@@ -22,4 +22,4 @@ C) 보고(필수, 마지막 한 줄):
 - 시각 계산(tzdata 없음 → 시스템 date가 이미 KST이므로 그대로):
   `date -d "+3 days" +'%m-%d %H:%M KST (≈72h 후)'`
 
-주의: 협조요청/블로그/work-log에서 파생된 명확한 개선 외 변경은 자동 커밋 금지. 불확실하면 커밋 말고 보고만.
+커밋 범위(허용): ① 블로그 경로(landing/{en,ko,ja}/blog/, landing/blog/, landing/sitemap.xml) ② docs/work-log/협조요청-code.md(상태 갱신) ③ docs/work-log/*.md(코워크가 남긴 미푸시 로그 일괄 커밋 허용). **그 외(앱코드·worker·기타 docs·시크릿)는 자동 커밋 금지.** 불확실하면 커밋 말고 보고만.
