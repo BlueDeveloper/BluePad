@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Write Math Equations in Markdown with KaTeX (Beginner's Guide) | BluePad Blog</title>
+  <meta name="description" content="Add clean, professional math equations to your Markdown using KaTeX and LaTeX syntax. A beginner-friendly guide with copy-paste examples for inline and block math.">
+  <meta name="keywords" content="markdown math, katex markdown, latex in markdown, math equations markdown, inline math markdown, render math markdown">
+  <link rel="canonical" href="https://bluepad.work/en/blog/markdown-math-equations-katex">
+  <link rel="alternate" hreflang="en" href="https://bluepad.work/en/blog/markdown-math-equations-katex">
+  <link rel="alternate" hreflang="x-default" href="https://bluepad.work/en/blog/markdown-math-equations-katex">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Write Math Equations in Markdown with KaTeX (Beginner's Guide)">
+  <meta property="og:description" content="Add clean math equations to your Markdown using KaTeX and LaTeX syntax — with copy-paste examples for inline and block math.">
+  <meta property="og:url" content="https://bluepad.work/en/blog/markdown-math-equations-katex.html">
+  <meta property="og:site_name" content="BluePad">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Write Math Equations in Markdown with KaTeX">
+  <meta name="twitter:description" content="Add clean math equations to your Markdown using KaTeX and LaTeX syntax.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Write Math Equations in Markdown with KaTeX (Beginner's Guide)",
+    "datePublished": "2026-06-29",
+    "dateModified": "2026-06-29",
+    "author": { "@type": "Organization", "name": "BluePad Team" },
+    "publisher": { "@type": "Organization", "name": "BluePad" },
+    "description": "Add clean math equations to your Markdown using KaTeX and LaTeX syntax — with copy-paste examples for inline and block math.",
+    "mainEntityOfPage": "https://bluepad.work/en/blog/markdown-math-equations-katex.html"
+  }
+  </script>
+
+
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wkokfmayny");</script>
+<!-- Google Analytics 4 (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3PRY6YKV05"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-3PRY6YKV05');</script>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<meta name="naver-site-verification" content="9b479417f022befdffd0b837c015469b604758d3" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --c-bg: #09090b;
+      --c-bg-raised: #111113;
+      --c-bg-card: #18181b;
+      --c-border: #27272a;
+      --c-border-subtle: #1c1c1f;
+      --c-text: #fafafa;
+      --c-text-2: #a1a1aa;
+      --c-text-3: #52525b;
+      --c-accent: #155dfc;
+      --c-accent-hover: #3b7dff;
+      --font: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { font-family: var(--font); background: var(--c-bg); color: var(--c-text); overflow-x: hidden; }
+    ::selection { background: rgba(21,93,252,0.3); color: #fff; }
+
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+
+    /* NAV */
+    .nav-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      background: rgba(9,9,11,0.75);
+      border-bottom: 1px solid var(--c-border-subtle);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--c-text);
+      font-weight: 720; font-size: 17px; letter-spacing: -0.03em;
+    }
+    .nav-mark {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: var(--c-accent); color: #fff;
+      display: grid; place-items: center;
+      font-size: 14px; font-weight: 800;
+    }
+    .nav-links { display: flex; align-items: center; gap: 6px; list-style: none; }
+    .nav-links a {
+      display: block; padding: 6px 14px; border-radius: 7px;
+      color: var(--c-text-2); text-decoration: none;
+      font-size: 13.5px; font-weight: 500;
+      transition: color .15s, background .15s;
+    }
+    .nav-links a:hover { color: var(--c-text); background: rgba(255,255,255,0.05); }
+    .nav-dl {
+      background: var(--c-accent) !important; color: #fff !important;
+      font-weight: 620 !important; transition: background .15s !important;
+    }
+    .nav-dl:hover { background: var(--c-accent-hover) !important; }
+    .nav-lang {
+      display: flex; gap: 2px; margin-left: 8px;
+      border: 1px solid var(--c-border); border-radius: 7px; overflow: hidden;
+    }
+    .nav-lang a {
+      padding: 5px 10px !important; border-radius: 0 !important;
+      font-size: 12px !important; font-weight: 600 !important; letter-spacing: 0.02em;
+    }
+    .nav-lang a.on { background: rgba(255,255,255,0.08) !important; color: #fff !important; }
+
+    /* FOOTER */
+    .foot { border-top: 1px solid var(--c-border-subtle); padding: 32px 0; }
+    .foot-inner { display: flex; align-items: center; justify-content: space-between; }
+    .foot-copy { font-size: 13px; color: var(--c-text-3); }
+    .foot-copy strong { color: var(--c-text-2); font-weight: 600; }
+    .foot-links { display: flex; gap: 24px; list-style: none; }
+    .foot-links a { color: var(--c-text-3); text-decoration: none; font-size: 13px; transition: color .15s; }
+    .foot-links a:hover { color: var(--c-text); }
+
+    /* ARTICLE HEADER */
+    .article-hero {
+      padding: 140px 0 80px;
+      position: relative;
+    }
+    .article-hero::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--c-border) 20%, var(--c-border) 80%, transparent 100%);
+    }
+    .article-hero h1 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800; letter-spacing: -0.035em;
+      line-height: 1.15; color: var(--c-text);
+      max-width: 720px; margin-bottom: 16px;
+    }
+    .article-meta {
+      font-family: var(--font-mono);
+      font-size: 13px; color: var(--c-text-3); letter-spacing: 0.01em;
+    }
+
+    /* ARTICLE BODY */
+    .article-content {
+      max-width: 720px; margin: 0 auto;
+      padding: 64px 0 80px;
+      line-height: 1.85; font-size: 16px;
+    }
+    .article-content h2 {
+      font-size: 24px; font-weight: 720;
+      margin: 48px 0 16px; letter-spacing: -0.02em;
+      color: var(--c-text);
+    }
+    .article-content h3 {
+      font-size: 19px; font-weight: 640;
+      margin: 36px 0 12px; color: var(--c-text);
+    }
+    .article-content p { margin-bottom: 18px; color: var(--c-text-2); }
+    .article-content strong { color: var(--c-text); }
+    .article-content ul, .article-content ol {
+      margin: 0 0 18px 24px; color: var(--c-text-2);
+    }
+    .article-content li { margin-bottom: 8px; }
+    .article-content a { color: var(--c-accent); text-decoration: underline; text-underline-offset: 3px; }
+    .article-content a:hover { color: var(--c-accent-hover); }
+
+    /* TABLE */
+    .comparison-table {
+      width: 100%; border-collapse: collapse;
+      margin: 24px 0 32px; font-size: 14px;
+    }
+    .comparison-table th, .comparison-table td {
+      padding: 12px 14px;
+      border: 1px solid var(--c-border);
+      text-align: left; color: var(--c-text-2);
+    }
+    .comparison-table th {
+      background: var(--c-bg-raised);
+      font-weight: 600; font-size: 12px;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      color: var(--c-text-3);
+    }
+    .comparison-table td strong { color: var(--c-text); }
+    .comparison-table tr:hover td { background: rgba(21,93,252,0.03); }
+
+    /* CODE EXAMPLE */
+    .code-example {
+      background: var(--c-bg-raised);
+      border: 1px solid var(--c-border);
+      border-radius: 10px; padding: 20px 24px;
+      font-family: var(--font-mono); font-size: 13.5px;
+      color: var(--c-text-2); line-height: 1.7;
+      margin: 16px 0 20px; overflow-x: auto;
+      white-space: pre;
+    }
+
+    /* TIP NUMBER */
+    .tip-number {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(21,93,252,0.12); color: var(--c-accent);
+      font-size: 13px; font-weight: 700; margin-right: 8px;
+    }
+
+    /* CTA */
+    .cta-banner {
+      margin-top: 56px;
+      border: 1px solid var(--c-border);
+      border-radius: 14px;
+      padding: 44px 32px;
+      text-align: center;
+      background: var(--c-bg-raised);
+    }
+    .cta-banner h3 { color: var(--c-text); font-size: 22px; font-weight: 720; margin-bottom: 10px; }
+    .cta-banner p { color: var(--c-text-2); margin-bottom: 24px; font-size: 15px; }
+    .cta-btn {
+      display: inline-block;
+      background: var(--c-accent); color: #fff;
+      padding: 13px 32px; border-radius: 9px;
+      font-size: 14.5px; font-weight: 620;
+      text-decoration: none; transition: background .15s, transform .1s;
+    }
+    .cta-btn:hover { background: var(--c-accent-hover); }
+    .cta-btn:active { transform: scale(0.97); }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .foot-inner { flex-direction: column; gap: 16px; text-align: center; }
+      .article-hero { padding: 110px 0 60px; }
+      .article-content { padding: 40px 0 60px; }
+      .comparison-table { font-size: 12px; }
+      .comparison-table th, .comparison-table td { padding: 8px 6px; }
+    }
+    @media (max-width: 480px) {
+      .wrap { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav-bar">
+    <div class="wrap nav-inner">
+      <a href="/en/" class="nav-brand">
+        <div class="nav-mark">B</div>BluePad
+      </a>
+      <ul class="nav-links">
+        <li><a href="/en/#features">Features</a></li>
+        <li><a href="/en/#pricing">Pricing</a></li>
+        <li><a href="/en/blog/">Blog</a></li>
+        <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="/en/download/" class="nav-dl">Download</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <section class="article-hero">
+    <div class="wrap">
+      <h1>How to Write Math Equations in Markdown with KaTeX (Beginner's Guide)</h1>
+      <p class="article-meta">June 29, 2026 &middot; BluePad Team &middot; 6 min read</p>
+    </div>
+  </section>
+
+  <article class="article-content wrap">
+
+    <p>If you have ever tried to write a fraction, an exponent, or a summation symbol in a plain text note, you know how quickly it falls apart. You end up with something like <strong>x^2 + (a/b)</strong> and hope the reader can decode it. For homework, lecture notes, technical docs, or research write-ups, that is not good enough — math needs to actually look like math.</p>
+
+    <p>The good news is that you do not need a heavyweight equation editor. With <strong>KaTeX</strong>, you write equations in a compact LaTeX-style syntax right inside your Markdown file, and the editor renders them as clean, typeset formulas. Write <strong>x^2</strong> and you see a proper superscript; write a fraction and you get a real stacked fraction with a horizontal bar.</p>
+
+    <h2>What Is KaTeX?</h2>
+
+    <p>KaTeX is an open-source math typesetting library, originally built by Khan Academy, that renders LaTeX math notation into clean formulas. LaTeX has been the standard for writing mathematics in academia for decades, and KaTeX brings a large, practical subset of that syntax to the web and to Markdown editors.</p>
+
+    <p>The key idea is the same one behind Markdown itself: you write in plain, readable text, and the tool handles the visual formatting. You type a short description of the equation using familiar commands, and KaTeX draws the typeset result. Because it focuses on rendering quickly, math appears almost instantly as you write rather than after a delay.</p>
+
+    <p>For Markdown users this matters because the equation lives inside the same plain-text file as the rest of your writing. It stays searchable, copy-pasteable, and version-control friendly — there is no separate image to manage or regenerate when a number changes.</p>
+
+    <h2>Inline Math vs Block Math</h2>
+
+    <p>There are two ways to place math in Markdown, and the difference is simply where the equation sits relative to your text.</p>
+
+    <p><strong>Inline math</strong> sits inside a sentence and is wrapped in single dollar signs. It is perfect for referring to a variable or a small expression mid-paragraph:</p>
+
+    <div class="code-example">The area of a circle is $A = \pi r^2$, where $r$ is the radius.</div>
+
+    <p><strong>Block math</strong> stands on its own line, centered, and is wrapped in double dollar signs. Use it for important equations you want to highlight:</p>
+
+    <div class="code-example">$$
+a^2 + b^2 = c^2
+$$</div>
+
+    <p>That is the entire system. Single dollars keep an expression in the flow of a sentence; double dollars give it its own line and a bit more breathing room.</p>
+
+    <h2>Writing Common Equations</h2>
+
+    <p>LaTeX math syntax looks intimidating at first, but a handful of commands cover the vast majority of everyday equations. Here are the ones worth memorizing first.</p>
+
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>What you want</th>
+          <th>What you type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Exponent / superscript</strong></td>
+          <td>x^2</td>
+        </tr>
+        <tr>
+          <td><strong>Subscript</strong></td>
+          <td>x_1</td>
+        </tr>
+        <tr>
+          <td><strong>Fraction</strong></td>
+          <td>\frac{a}{b}</td>
+        </tr>
+        <tr>
+          <td><strong>Square root</strong></td>
+          <td>\sqrt{x}</td>
+        </tr>
+        <tr>
+          <td><strong>Greek letters</strong></td>
+          <td>\alpha, \beta, \pi, \theta</td>
+        </tr>
+        <tr>
+          <td><strong>Summation</strong></td>
+          <td>\sum_{i=1}^{n}</td>
+        </tr>
+        <tr>
+          <td><strong>Integral</strong></td>
+          <td>\int_{a}^{b}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Two rules unlock most of this. First, the caret (<strong>^</strong>) raises and the underscore (<strong>_</strong>) lowers — so <strong>x^2</strong> is a square and <strong>x_1</strong> is a subscript. Second, anything longer than a single character goes inside curly braces. To write x to the tenth power you need <strong>x^{10}</strong>, not <strong>x^10</strong>, otherwise only the 1 gets raised.</p>
+
+    <p>Putting a few pieces together, here is a complete block equation — the quadratic formula:</p>
+
+    <div class="code-example">$$
+x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+$$</div>
+
+    <h2>Tips for Readable Math</h2>
+
+    <p>A few small habits keep your equations clean and easy to fix later.</p>
+
+    <ul>
+      <li><strong>Always brace multi-character groups.</strong> Use <strong>x^{n+1}</strong> and <strong>a_{ij}</strong> so the whole group is raised or lowered, not just the first character.</li>
+      <li><strong>Use <strong>\left(</strong> and <strong>\right)</strong> for tall brackets.</strong> They automatically grow to fit fractions or roots inside them, so the parentheses do not look tiny next to a big expression.</li>
+      <li><strong>Add spacing with <strong>\,</strong> or <strong>\quad</strong>.</strong> KaTeX ignores most plain spaces in math mode, so use these commands when you want a visible gap.</li>
+      <li><strong>Keep one equation per block.</strong> If a derivation has several steps, separate them rather than cramming everything into a single line.</li>
+    </ul>
+
+    <h2>Seeing Your Equations Render Live</h2>
+
+    <p>Writing LaTeX is only half the experience. The real benefit comes when an editor renders that text into a typeset equation as you write, so you catch a missing brace or a mismatched bracket immediately instead of after exporting.</p>
+
+    <p>Many tools support math, but a native editor keeps everything fast and offline. <a href="https://bluepad.work">BluePad</a> renders KaTeX math (along with diagrams via Mermaid) right inside the editor, with no plugins to install and no internet connection required. You type your <strong>$...$</strong> or <strong>$$...$$</strong> and the equation appears beside your words.</p>
+
+    <p>If you are still getting comfortable with Markdown itself, our <a href="/en/blog/markdown-editor-for-developers">beginner's guide to Markdown</a> is a good place to start, and the <a href="/en/blog/markdown-writing-tips">10 Markdown tips</a> post covers handy everyday tricks. Once you are comfortable with equations, you may also want to add <a href="/en/blog/markdown-diagrams-with-mermaid">diagrams with Mermaid</a> for flowcharts and sequence diagrams.</p>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <h3>Do I need to know LaTeX to use KaTeX?</h3>
+
+    <p>Not really. You only need a small set of commands — superscripts, subscripts, fractions, roots, and Greek letters cover most everyday math. You can keep a short cheat sheet nearby and pick up the rest as you go. Full LaTeX is a much larger system, but KaTeX math syntax is the approachable core of it.</p>
+
+    <h3>Does KaTeX support every LaTeX command?</h3>
+
+    <p>KaTeX supports a large and practical subset of LaTeX math, which covers the vast majority of common equations. A small number of niche or highly specialized commands are not included, but for notes, homework, and technical documentation you are very unlikely to hit a wall.</p>
+
+    <h3>Will my equations show up everywhere my Markdown does?</h3>
+
+    <p>Only in tools that support math rendering. Some platforms render <strong>$...$</strong> and <strong>$$...$$</strong> automatically, while plain text viewers will just show the raw syntax. To see live equations as you type, use an editor with built-in KaTeX support so what you write renders instantly.</p>
+
+    <div class="cta-banner">
+      <h3>Download BluePad Free</h3>
+      <p>Write Markdown and watch your KaTeX equations render live — fast, offline, and free.</p>
+      <a href="/en/download/" target="_blank" rel="noopener" class="cta-btn">Download for Windows</a>
+    </div>
+
+  </article>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <div class="foot-copy">&copy; 2026 <strong>BRP</strong></div>
+      <ul class="foot-links">
+        <li><a href="/en/blog/">Blog</a></li>
+        <li><a href="https://github.com/BlueDeveloper/BluePad" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="/legal/privacy">Privacy Policy</a></li>
+        <li><a href="/legal/eula">EULA</a></li>
+        <li><a href="/legal/opensource">Open Source</a></li>
+      </ul>
+    </div>
+  </footer>
+
+</body>
+</html>
