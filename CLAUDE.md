@@ -21,28 +21,18 @@
 
 ---
 
-## ⚡ 세션 시작 즉시 실행 (자동 트리거 — 사용자 지시 불필요)
+## ⚡ 세션 시작 즉시 실행 (자동 트리거)
 
-세션이 `C:\BLUE\Project\blue\SAAS\BluePad` 경로에서 시작되면 다음 cron을 점검·등록한다. **`CronList`로 이미 등록된 id를 먼저 확인하고 없는 것만 신규 등록**. 한 줄 리포트 자동 출력은 하지 않는다(2026-05-21 사용자 명시 비활성화).
+> ⛔ **자동 cron 등록 전면 비활성화 (2026-06-30 사용자 지시).** 세션 시작 시 어떤 cron도 자동 등록하지 않는다. 사용자가 "cron 등록해" 등으로 **명시 요청할 때만** 등록한다.
 
-### 1. 72시간(3일) 주기 협조요청 + 블로그 푸시 + work-log 검토 (헤드리스 Sonnet 위임)
+### (보류) 72시간 협조요청 + 블로그 푸시 + work-log 검토 (헤드리스 Sonnet 위임)
 
-```
-cron: "0 0 */3 * *"   # 72h(3일) 근사 — 2026-06-29 변경(기존 0 */3 3h → 토큰비용 절감)
-recurring: true
-prompt: 트리거 메모리 [[blog-autopush-cron]] (`feedback_blog_autopush_cron.md`) 의 prompt 본문 그대로
-```
+2026-06-30 사용자 요청으로 **자동 등록 중단·삭제**. 필요 시 아래 사양으로 수동 재등록:
+- cron `0 0 */3 * *`, recurring·durable, prompt = 메모리 [[blog-autopush-cron]] 본문(얇은 위임 래퍼)
+- 실행: `cd .../BluePad && claude -p --model sonnet --dangerously-skip-permissions < scripts/cron-sonnet-task.md` → 마지막 보고 줄만 relay. 실제 작업은 헤드리스 Sonnet 수행. 체크리스트 정본: [`scripts/cron-sonnet-task.md`](scripts/cron-sonnet-task.md).
+- ⚠ **부작용**: 이 cron이 cowork↔code 협조요청 큐(`docs/work-log/협조요청-code.md`)를 폴링했으므로, 비활성화 동안 **`[열림]` 협조요청은 자동 처리되지 않음** → 관리자가 수동으로 처리하거나 cron을 다시 켜야 함. 블로그 배포는 호스트 `scripts/deploy-blog.ps1`(작업 스케줄러)가 별도로 담당.
 
-- **실행 방식 (2026-06-29 변경)**: cron 프롬프트는 얇은 위임 래퍼 — `cd .../BluePad && claude -p --model sonnet --dangerously-skip-permissions < scripts/cron-sonnet-task.md` 한 줄을 실행하고 마지막 보고 줄만 relay. **실제 작업(협조요청·블로그·work-log)은 헤드리스 Sonnet이 깨끗한 컨텍스트로 수행** → Opus 세션의 전체 맥락 재처리 회피(비용 절감, 검토=Sonnet). 작업 체크리스트 정본: [`scripts/cron-sonnet-task.md`](scripts/cron-sonnet-task.md).
-- **(A0) ★협조요청 우선 처리**: `docs/work-log/협조요청-code.md`의 `[열림]` 항목 처리(안전·명확하면 즉시, 파괴적·모호하면 `[보류]`) → `[완료 …]`로 갱신·`↩ cowork:` 회신. **cowork↔code 협업의 메인 통로.**
-- **(A) 블로그 자동 배포**: `landing/{en,ko,ja}/blog/`·`landing/sitemap.xml`의 신규/변경(완결 `</html>`)만 한글 커밋 후 `git push`(Pages 자동). 앱코드·worker·docs는 건드리지 않음.
-- **(B) work-log 검토·개선**: `docs/work-log/` 최신본의 미해결 이슈·개선을 명확·안전하면 자동 처리, 판단필요/파괴적은 보고만.
-- ⚠ 72h+7일 자동만료라 세션이 7일 이상 안 열리면 cron 소멸 → 다음 세션 시작 시 본 트리거로 재등록이 전제.
-
-> ⛔ **운영 모니터링(`7 9 */5 * *`)·SEO 메일 점검(`23 */5 * * *`) cron은 자동 등록하지 않는다** (2026-06-27 사용자 지시). 필요 시 사용자가 "cron 등록해" 등으로 명시 요청할 때만 등록한다. 출력 형식 메모리([[feedback_session_monitoring]], [[seo-cron]])는 수동 호출용으로 보존.
-
-> ⚠ **session-only 한계**: `durable: true` 명시해도 디스크 미저장 → 본 세션 종료 시 cron 사라짐 → 다음 세션 시작 시 자동 재등록 필요. 본 트리거가 영구 자동화의 핵심.
-> ⚠ 7일 후 자동 만료. 매 세션 점검 시 만료 직전이면 새로 등록.
+> ⛔ 운영 모니터링·SEO 메일 점검 cron도 자동 등록 안 함(2026-06-27). 출력 형식 메모리([[feedback_session_monitoring]], [[seo-cron]])는 수동 호출용으로 보존.
 
 ---
 
