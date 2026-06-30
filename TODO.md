@@ -178,6 +178,8 @@
 
 * [ ] 마크다운 → 일반 텍스트 복사 (Ctrl+Shift+C, 선택 영역의 마크업 제거 후 클립보드)
 
+* [ ] 파일 트리 우클릭 컨텍스트 메뉴 — 파일 삭제(휴지통 이동 권장) : FileTree.tsx onContextMenu + 커스텀 메뉴, AlertDialog 확인(window.confirm 금지), Tauri fs 삭제 커맨드, 삭제 후 트리 새로고침 + 열린 탭이면 닫기(useFileManager ref), i18n ko/en/ja. (2026-06-30 등록)
+
 ### 작가용 기능 묶음
 
 #### 1차 (Pro 가치 강화)
